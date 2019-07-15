@@ -1,0 +1,14 @@
+Package: G4iMGrinder
+Type: Package
+Title: G4iMGrinder: G4 Quadruplex, i-Motif and higher-order structures in DNA and RNA sequences search and analysis tool.
+Version: 1.5.6
+Author: Efres Belmonte-Reche
+Maintainer: Efres Belmonte-Reche <efresbr@gmail.com>
+Description: A fast and adaptable algorithm to identify, characterize and analyse G4 Quadruplex, i-Motif and higher-order structures in DNA and RNA sequences.    Probability of in vitro structure formation, structure frequency analysis and known G4 structures to compare with any obtained results are included.
+License: GPL3
+Encoding: UTF-8
+LazyData: true
+Imports:
+  stringr, stringi, plyr, seqinr, stats, parallel, doParallel, beepr, stats4, dplyr, BiocManager, BiocGenerics, S4Vectors
+Suggests:
+RoxygenNote: 6.1.1
