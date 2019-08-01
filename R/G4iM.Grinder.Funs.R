@@ -4,8 +4,8 @@
 #################            G4-iM Grinder         #######################
 ##########################################################################
 ####    Efres Belmonte Reche            efresbr@gmail.com             ####
-####    Revised                         2019-07-03                    ####
-####    Version                         1.5.6                         ####
+####    Revised                         2019-08-01                    ####
+####    Version                         1.5.7                         ####
 ##########################################################################
 ##########################################################################
 ####
@@ -16,6 +16,8 @@
 ####
 ####
 ####  Log
+#### V1.5.7
+#### - Fixed Bug in .PQSfinder function for when analysing quadruplexes with no bulges (BulgeSize = 0).
 #### V1.5.6
 #### - Fixed GiGList.Analyzer for when analysing empty GiGLists.
 #### V1.5.5

@@ -593,8 +593,8 @@
         df$pqsfinder <- round(
           (
             (((df$mRun-1)* Bt)+Ts)^Et -                                             # Tetrad Stacking effect
-              ((df$IL*(Pb+1)*(MinNRuns/df$Runs))+Is)^Ei -                            # interloop in run penalizations
-              ((Fm*(df$Length-df$IL-(df$mRun*df$Runs))/(df$Runs-1))+Ls)^Em            # Loop penalizations
+              ((ifelse(is.null(df$IL), yes = 0, no = df$IL) *(Pb+1)*(MinNRuns/df$Runs))+Is)^Ei -                            # interloop in run penalizations
+              ((Fm*(df$Length-ifelse(is.null(df$IL), yes = 0, no = df$IL) -(df$mRun*df$Runs))/(df$Runs-1))+Ls)^Em            # Loop penalizations
           )^Em
           ,0)
         if (RunComposition == "C") {df$pqsfinder <- df$pqsfinder*-1}
