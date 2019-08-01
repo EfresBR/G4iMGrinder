@@ -3,21 +3,21 @@ G4-iM Grinder is a fast, robust and highly adaptable algorithm. It is capable of
 
 <img src="images/Abstract.png" align="middle" height="500" />
 
-Please report in the issue section if you find bugs, problems or wish to see some features added. 
+Please report in the issue section if you find bugs, problems or wish to see some features added.
 
 ###       G4-iM Grinder's Results
-The genomic results of humans and 49 other pathogenic species can be found through a [one drive link](https://1drv.ms/u/s!AvVGQg2rNIwDgSLY11SVpU3ysfVG?e=2mba6N)(as the file was to large to be hosted in github). Please report in the issue section if the link is broken. 
+The genomic results of humans and 49 other pathogenic species can be found through a [one drive link](https://1drv.ms/u/s!AvVGQg2rNIwDgSLY11SVpU3ysfVG?e=2mba6N)(as the file was to large to be hosted in github). Please report in the issue section if the link is broken.
 
 The 1.5 Gb .RAR compressed file hosts four RData images of the results.
 
 1. `hg39PQS.RData` for Human G-based PQS analysis
-2. `hg39PiMS.RData` for Human C-based PiMS analysis 
-3. `NonHumanPQS.RData` for non-human G-based PQS analysis 
-4. `NonHumanPiMS.RData` for non-human C-based PiMS analysis. 
+2. `hg39PiMS.RData` for Human C-based PiMS analysis
+3. `NonHumanPQS.RData` for non-human G-based PQS analysis
+4. `NonHumanPiMS.RData` for non-human C-based PiMS analysis.
 
 
 ###       Package prerequisites
-G4-iM Grinder can be download from github: EfresBR/G4iMGrinder. G4-iM Grinder requires the installation of other CRAN based and Bioconductor packages. Please, ensure all required packages are installed and R version is at least 3.6.1. G4-iM Grinder was successfully downloaded and tested in MacOS 10.12.6, Windows 10 (x64), Ubuntu 18.04.2 (x64), Mint 19.1 (x64) and Fedora-workstation 30 whilst running R 3.6.1 and R studio 1.2.1335. In Linux based systems, the installation of devtools may require further effort ([Check this link](https://stackoverflow.com/questions/20923209/problems-installing-the-devtools-package)). Other OS including x86 systems have not been tested. 
+G4-iM Grinder can be download from github: EfresBR/G4iMGrinder. G4-iM Grinder requires the installation of other CRAN based and Bioconductor packages. Please, ensure all required packages are installed and R version is at least 3.6.1. G4-iM Grinder was successfully downloaded and tested in MacOS 10.12.6, Windows 10 (x64), Ubuntu 18.04.2 (x64), Mint 19.1 (x64) and Fedora-workstation 30 whilst running R 3.6.1 and R studio 1.2.1335. In Linux based systems, the installation of devtools may require further effort ([Check this link](https://stackoverflow.com/questions/20923209/problems-installing-the-devtools-package)). Other OS including x86 systems have not been tested.
 ```ruby
 
 pck <- c("stringr", "stringi", "plyr", "seqinr", "stats", "parallel", "doParallel", "beepr", "stats4", "devtools", "dplyr", "BiocManager")
@@ -53,8 +53,8 @@ library(G4iMGrinder)
 
 
 
-###      Installation fails 
-The most common reasons for failing during the installation of G4-iM Grinder are , 
+###      Installation fails
+The most common reasons for failing during the installation of G4-iM Grinder are ,
 
 1. 	Some of G4-iM Grinder's dependencies have not been installed,
 2. 	R version is not at least 3.6.0.
@@ -122,7 +122,7 @@ G4-iM Grinder allows huge flexibility to adapt to any of the users requirements.
 
 ###       G4-iM Grinder's variables and their predifined values
 <img src="images/Variable.jpg" align="middle" height="1000" />
-NB. Several other parameters regarding PQSFinder are available for modification.
+N.B. Several other parameters regarding PQSFinder are available for modification.
 
 
 ###       Summarizing G4-iM Grinder results
@@ -196,42 +196,31 @@ Rs_iM2 <- GiGList.Updater(GiGList = Rs, ChangeRunComposition = TRUE)
 
 ```
 
-###       Comments and Limitations of G4-iM Grinder's Search Engine
+###       Comments on G4-iM Grinder's Search Engine
 
-G4-iM Grinder locates all overlapping and nested results that fit the user-defined (or predefined if none were inserted) parameters. 
-For example using predefined parameters, five possible PQS (in *italics*) results will be located for the genomic sequence 
+G4-iM Grinder locates all overlapping and nested results that fit the user-defined (or predefined if none were inserted) parameters.
+For example using predefined parameters, five possible PQS (in _italics_) results will be located for the genomic sequence
 
-> **GGGG**TTAT**GGG**TTATT**GGTGG**TTATT**GGCG**TT**GGG** 
+> **GGGG**TTAT**GGG**TTATT**GGTGG**TTATT**GGCG**TT**GGG**
 
-1.	***GGGG**TTAT**GGG**TTATT**GGTGG**TTATT**GGCG***(~~TTGGG~~)
-2.	***GGGG**TTAT**GGG**TTATT**GGTGG**TTATT**GGCG**TT**GGG***
-3.	(~~G~~)***GGG**TTAT**GGG**TTATT**GGTGG**TTATT**GGCG***(~~TTGGG~~)  
-4.	(~~G~~)***GGG**TTAT**GGG**TTATT**GGTGG**TTATT**GGCG**TT**GGG***
-5.	(~~GGGGTTAT~~)***GGG**TTATT**GGTGG**TTATT**GGCG**TT**GGG*** 
+1.	_**GGGG**TTAT**GGG**TTATT**GGTGG**TTATT**GGCG**_(~~TTGGG~~)
+2.	_**GGGG**TTAT**GGG**TTATT**GGTGG**TTATT**GGCG**TT**GGG**_
+3.	(~~G~~)_**GGG**TTAT**GGG**TTATT**GGTGG**TTATT**GGCG**_(~~TTGGG~~)  
+4.	(~~G~~)_**GGG**TTAT**GGG**TTATT**GGTGG**TTATT**GGCG**TT**GGG**_
+5.	(~~GGGGTTAT~~)_**GGG**TTATT**GGTGG**TTATT**GGCG**TT**GGG**_
 
-The only current limitation of the search engine is when a perfect (for example, **GGG**) and an imperfect (for example, **GCGG**) run coexist within the same run (for example, **GCGGG**). Although it is possible that **GCGGG** forms a run, the perfect run (**GGG**) is favored to improve computing performance and the location of more likely to form sequences. For the Genomic Sequence 
+The only current limitation of the search engine is when a perfect (for example, **GGG**) and an imperfect (for example, **GCGG**) run coexist within the same run (for example, **GCGGG**). Although it is possible that **GCGGG** forms a run, the perfect run (**GGG**) is favored to improve computing performance and the location of more likely to form sequences. For the Genomic Sequence
 
 > **GCGGG**TTA**GGG**TTATTT**GGG**TTA**GGG**
 
 using predefined parameters will result in the detection of:
 
--	(~~GC~~)***GGG**TTA**GGG**TTATTT**GGG**TTA**GGG***
+-	(~~GC~~)_**GGG**TTA**GGG**TTATTT**GGG**TTA**GGG**_
 
 whilst
 
--	***GCGGG**TTA**GGG**TTATTT**GGG**TTA**GGG*** 
+-	_**GCGGG**TTA**GGG**TTATTT**GGG**TTA**GGG**_
 
-will not be detected. 
-	
-Regarding frequency of the quadruplex results, Quadruplexes may actually be repeated because they form part of repetitive nucleotide sequences, including transposon families. For example, several authors have already located recurrent PQS in such repetitive elements (both human and non-human species), which depending on the location and context, may potentially grant different biological significance to the same recurrent quadruplex. 
+will not be detected.
 
-
-
-
-
-
-
-
-
-
-
+Regarding frequency of the quadruplex results, Quadruplexes may actually be repeated because they form part of repetitive nucleotide sequences, including transposon families. For example, several authors have already located recurrent PQS in such repetitive elements (both human and non-human species), which depending on the location and context, may potentially grant different biological significance to the same recurrent quadruplex.
