@@ -1,23 +1,23 @@
 # G4-iM Grinder
 G4-iM Grinder is a fast, robust and highly adaptable algorithm. It is capable of locating, identifying, qualifying and quantifying DNA and RNA potential quadruplex structures, such as G-quadruplex, i-Motifs and their higher order versions.
 
+Read the open-access paper: [G4-iM Grinder: when size and frequency matter. G-Quadruplex, i-Motif and higher order structure search and analysis tool](https://)
+
+
 <img src="images/Abstract.png" align="middle" height="500" />
 
 Please report in the issue section if you find bugs, problems or wish to see some features added.
 
-###       G4-iM Grinder's Results
-The genomic results of humans and 49 other pathogenic species can be found through a [one drive link](https://1drv.ms/u/s!AvVGQg2rNIwDgSLY11SVpU3ysfVG?e=2mba6N)(as the file was to large to be hosted in github). Please report in the issue section if the link is broken.
 
-The 1.5 Gb .RAR compressed file hosts four RData images of the results.
+###       G4-iM Grinder's quadruplex database
+800 more known to form and known to not form Quadruplex and i-Motif sequences were upload to G4-iM Grinder.
+fix more (......................................)
 
-1. `hg39PQS.RData` for Human G-based PQS analysis
-2. `hg39PiMS.RData` for Human C-based PiMS analysis
-3. `NonHumanPQS.RData` for non-human G-based PQS analysis
-4. `NonHumanPiMS.RData` for non-human C-based PiMS analysis.
+
 
 
 ###       Package prerequisites
-G4-iM Grinder can be download from github: EfresBR/G4iMGrinder. G4-iM Grinder requires the installation of other CRAN based and Bioconductor packages. Please, ensure all required packages are installed and R version is at least 3.6.1. G4-iM Grinder was successfully downloaded and tested in MacOS 10.12.6, Windows 10 (x64), Ubuntu 18.04.2 (x64), Mint 19.1 (x64) and Fedora-workstation 30 whilst running R 3.6.1 and R studio 1.2.1335. In Linux based systems, the installation of devtools may require further effort ([Check this link](https://stackoverflow.com/questions/20923209/problems-installing-the-devtools-package)). Other OS including x86 systems have not been tested.
+G4-iM Grinder can be download from github: EfresBR/G4iMGrinder. G4-iM Grinder requires the installation of other CRAN based and Bioconductor packages. Please, ensure all required packages are installed and R version is at least 3.6.1. G4-iM Grinder was successfully downloaded and tested in MacOS 10.12.6, Windows 10 (x64), Ubuntu 18.04.2 (x64), Mint 19.1 (x64) and Fedora-workstation 30 whilst running R 3.6.1 and R studio 1.2.5001. In Linux based systems, the installation of devtools may require further effort ([Check this link](https://stackoverflow.com/questions/20923209/problems-installing-the-devtools-package)). Other OS including x86 systems have not been tested.
 ```ruby
 
 pck <- c("stringr", "stringi", "plyr", "seqinr", "stats", "parallel", "doParallel", "beepr", "stats4", "devtools", "dplyr", "BiocManager")
@@ -158,7 +158,8 @@ Finding the reference for the Known-To-Form Quadruplex structures of an interest
 ```ruby
 
 # The PHOQS structure in row 126 has the known-to-form sequence 93del.
-RefPHOQS126 <- Known_to_form_Quadruplex[Known_to_form_Quadruplex$Name == "93del",c("Ref", "DOI")]
+RefPHOQS126 <- GiG.DB$GiG.DB.Refs[GiG.DB$GiG.DB.Refs$Name == "93del", ]
+
 
 ```
 
@@ -224,3 +225,14 @@ whilst
 will not be detected.
 
 Regarding frequency of the quadruplex results, Quadruplexes may actually be repeated because they form part of repetitive nucleotide sequences, including transposon families. For example, several authors have already located recurrent PQS in such repetitive elements (both human and non-human species), which depending on the location and context, may potentially grant different biological significance to the same recurrent quadruplex.
+
+
+###       G4-iM Grinder's Results
+The genomic results of humans and 49 other pathogenic species can be found through a [one drive link](https://1drv.ms/u/s!AvVGQg2rNIwDgSLY11SVpU3ysfVG?e=2mba6N)(as the file was to large to be hosted in github). Please report in the issue section if the link is broken.
+
+The 1.5 Gb .RAR compressed file hosts four RData images of the results.
+
+1. `hg39PQS.RData` for Human G-based PQS analysis
+2. `hg39PiMS.RData` for Human C-based PiMS analysis
+3. `NonHumanPQS.RData` for non-human G-based PQS analysis
+4. `NonHumanPiMS.RData` for non-human C-based PiMS analysis.

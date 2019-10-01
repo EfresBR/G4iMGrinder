@@ -5,7 +5,7 @@
 ##########################################################################
 ####    Efres Belmonte Reche            efresbr@gmail.com             ####
 ####    Revised                         2019-08-01                    ####
-####    Version                         1.5.7                         ####
+####    Version                         1.5.8                         ####
 ##########################################################################
 ##########################################################################
 ####
@@ -16,6 +16,14 @@
 ####
 ####
 ####  Log
+####
+####
+####
+#### V1.5.8
+####  - Divided Known to Form Sequences DDBB into three DDBB. TmDF stores Tm values of each Sequence, REf stores the bibliographical aspects, and BioInformatic for G4-iM grinder use..
+####  - Added 800 new Seqs to BioInformatic and Refs, as reversals of the original secs.
+####  - Created a function to manage the DB.
+####  - Updated G4-iM Grinder REf DT, Biophysical DT,  and README(!!!!). Updated subfunction for Quadruplex detection.
 #### V1.5.7
 #### - Fixed Bug in .PQSfinder function for when analysing quadruplexes with no bulges (BulgeSize = 0).
 #### V1.5.6

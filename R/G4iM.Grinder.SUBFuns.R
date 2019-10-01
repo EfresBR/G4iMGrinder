@@ -454,7 +454,7 @@
       }
 
       if(KnownQuadruplex == TRUE){
-        Ref <- filter(G4iMGrinder::Known_to_form_Quadruplex, Quadruplex == TRUE)
+        Ref <- filter(G4iMGrinder::GiG.DB$GiG.DB.BioInformatic, Quadruplex == TRUE)
         if(DNA == TRUE){
           Ref <- filter(Ref, Genome == "DNA")} else {Ref <- filter(Ref, Genome == "RNA")}
         if(RunComposition == "G"){
@@ -488,7 +488,7 @@
       }
 
       if(KnownNOTQuadruplex == TRUE){
-        Ref <- filter(G4iMGrinder::Known_to_form_Quadruplex, Quadruplex == FALSE)
+        Ref <- filter(G4iMGrinder::GiG.DB$GiG.DB.BioInformatic, Quadruplex == FALSE)
         if(DNA == TRUE){
           Ref <- filter(Ref, Genome == "DNA")} else {Ref <- filter(Ref, Genome == "RNA")}
         if(RunComposition == "G"){
