@@ -1,17 +1,12 @@
 # G4-iM Grinder
 G4-iM Grinder is a fast, robust and highly adaptable algorithm. It is capable of locating, identifying, qualifying and quantifying DNA and RNA potential quadruplex structures, such as G-quadruplex, i-Motifs and their higher order versions.
 
-Read the open-access paper: [G4-iM Grinder: when size and frequency matter. G-Quadruplex, i-Motif and higher order structure search and analysis tool](https://)
+Read the open-access paper: [G4-iM Grinder: when size and frequency matter. G-Quadruplex, i-Motif and higher order structure search and analysis tool](https://academic.oup.com/nargab/article/2/1/lqz005/5576141)
 
 
 <img src="images/Abstract.png" align="middle" height="500" />
 
 Please report in the issue section if you find bugs, problems or wish to see some features added.
-
-
-###       G4-iM Grinder's quadruplex database
-800 more known to form and known to not form Quadruplex and i-Motif sequences were upload to G4-iM Grinder.
-fix more (......................................)
 
 
 
@@ -197,6 +192,20 @@ Rs_iM2 <- GiGList.Updater(GiGList = Rs, ChangeRunComposition = TRUE)
 
 ```
 
+
+###       G4-iM Grinder's quadruplex database
+800 new known-to-form and known-not-form-Quadruplex and i-Motif sequences have been added to the database (V1.5.8).  
+Structure of database has been modified, in preparation for the release of an app that allows adding sequences to the database by  the public  (shinny app).
+
+
+
+###       G4-iM Grinder's Results
+The genomic results of humans and 49 other pathogenic species can be found through a [one drive link](https://1drv.ms/u/s!AvVGQg2rNIwDgSLY11SVpU3ysfVG?e=2mba6N)(as the file was to large to be hosted in github). Please report in the issue section if the link is broken.
+
+The 1.5 Gb .RAR compressed file hosts four RData images of the results.
+
+
+
 ###       Comments on G4-iM Grinder's Search Engine
 
 G4-iM Grinder locates all overlapping and nested results that fit the user-defined (or predefined if none were inserted) parameters.
@@ -225,12 +234,6 @@ whilst
 will not be detected.
 
 Regarding frequency of the quadruplex results, Quadruplexes may actually be repeated because they form part of repetitive nucleotide sequences, including transposon families. For example, several authors have already located recurrent PQS in such repetitive elements (both human and non-human species), which depending on the location and context, may potentially grant different biological significance to the same recurrent quadruplex.
-
-
-###       G4-iM Grinder's Results
-The genomic results of humans and 49 other pathogenic species can be found through a [one drive link](https://1drv.ms/u/s!AvVGQg2rNIwDgSLY11SVpU3ysfVG?e=2mba6N)(as the file was to large to be hosted in github). Please report in the issue section if the link is broken.
-
-The 1.5 Gb .RAR compressed file hosts four RData images of the results.
 
 1. `hg39PQS.RData` for Human G-based PQS analysis
 2. `hg39PiMS.RData` for Human C-based PiMS analysis
