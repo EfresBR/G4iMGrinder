@@ -9,6 +9,15 @@ Read the open-access paper: [G4-iM Grinder: when size and frequency matter. G-Qu
 Please report in the issue section if you find bugs, problems or wish to see some features added.
 
 
+###       G4-iM Grinder's Results
+The genomic results of humans and 49 other pathogenic species can be found through this [--link--](https://1drv.ms/u/s!AvVGQg2rNIwDgSLY11SVpU3ysfVG?e=2mba6N). Please report in the issue section if the link is broken.
+
+The 1.5 Gb .RAR compressed file hosts four RData images of the results.
+
+1. `hg39PQS.RData` for Human G-based PQS analysis
+2. `hg39PiMS.RData` for Human C-based PiMS analysis
+3. `NonHumanPQS.RData` for non-human G-based PQS analysis
+4. `NonHumanPiMS.RData` for non-human C-based PiMS analysis.
 
 
 ###       Package prerequisites
@@ -199,12 +208,6 @@ Structure of database has been modified, in preparation for the release of an ap
 
 
 
-###       G4-iM Grinder's Results
-The genomic results of humans and 49 other pathogenic species can be found through a [one drive link](https://1drv.ms/u/s!AvVGQg2rNIwDgSLY11SVpU3ysfVG?e=2mba6N)(as the file was to large to be hosted in github). Please report in the issue section if the link is broken.
-
-The 1.5 Gb .RAR compressed file hosts four RData images of the results.
-
-
 
 ###       Comments on G4-iM Grinder's Search Engine
 
@@ -235,7 +238,4 @@ will not be detected.
 
 Regarding frequency of the quadruplex results, Quadruplexes may actually be repeated because they form part of repetitive nucleotide sequences, including transposon families. For example, several authors have already located recurrent PQS in such repetitive elements (both human and non-human species), which depending on the location and context, may potentially grant different biological significance to the same recurrent quadruplex.
 
-1. `hg39PQS.RData` for Human G-based PQS analysis
-2. `hg39PiMS.RData` for Human C-based PiMS analysis
-3. `NonHumanPQS.RData` for non-human G-based PQS analysis
-4. `NonHumanPiMS.RData` for non-human C-based PiMS analysis.
+
