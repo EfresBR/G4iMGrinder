@@ -14,8 +14,8 @@ The genomic results of humans and 49 other pathogenic species can be found throu
 
 The 1.5 Gb .RAR compressed file hosts four RData images of the results.
 
-1. `hg38PQS.RData` for Human G-based PQS analysis
-2. `hg38PiMS.RData` for Human C-based PiMS analysis
+1. `HumanPQS.RData` for Human G-based PQS analysis
+2. `HumanPiMS.RData` for Human C-based PiMS analysis
 3. `NonHumanPQS.RData` for non-human G-based PQS analysis
 4. `NonHumanPiMS.RData` for non-human C-based PiMS analysis.
 
