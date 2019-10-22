@@ -10,8 +10,8 @@ Please report in the issue section if you find bugs, problems or wish to see som
 
 
 ###       G4-iM Grinder's Results
-The genomic results of humans and 49 other pathogenic species can be found through a [one drive link](https://1drv.ms/u/s!AvVGQg2rNIwDgSLY11SVpU3ysfVG?e=2mba6N)
-Please report in the issue section if the link is broken.
+The genomic results of humans and 49 other pathogenic species can be found through a [one drive link](https://1drv.ms/u/s!AvVGQg2rNIwDgSLY11SVpU3ysfVG?e=2mba6N).
+
 The 1.5 Gb .RAR compressed file hosts four RData images of the results.
 
 1. `hg38PQS.RData` for Human G-based PQS analysis
@@ -19,9 +19,11 @@ The 1.5 Gb .RAR compressed file hosts four RData images of the results.
 3. `NonHumanPQS.RData` for non-human G-based PQS analysis
 4. `NonHumanPiMS.RData` for non-human C-based PiMS analysis.
 
+Please report in the issue section if the link is broken.
+
 Genomes used:
-Human Genome - hg38, GRCh38.p12, Genome Reference Consortium Human Build 38, INSDC Assembly GCA_000001405.27 downloaded May 2019 from www.sanger.ac.uk. 
-Other genomes - Please see section 9 of supplementary material of the original article for more info.
+1. Human Genome - hg38, GRCh38.p12, Genome Reference Consortium Human Build 38, INSDC Assembly GCA_000001405.27 downloaded May 2019 from www.sanger.ac.uk. 
+2. Non-human genomes - Please see section 9 of supplementary material of the original article for more info.
 
 
 ###       Package prerequisites
