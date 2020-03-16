@@ -4,8 +4,8 @@
 #################            G4-iM Grinder         #######################
 ##########################################################################
 ####    Efres Belmonte Reche            efresbr@gmail.com             ####
-####    Revised                         2019-08-01                    ####
-####    Version                         1.5.8                         ####
+####    Revised                         2020-03-15                    ####
+####    Version                         1.5.9                         ####
 ##########################################################################
 ##########################################################################
 ####
@@ -16,9 +16,9 @@
 ####
 ####
 ####  Log
-####
-####
-####
+####  - G4-iM Grinder will save version of DDBB and GiG function in each Results within Configuration table.
+####  - Changed KTFQS function, to lower RAM usage by dividing large datasets in 5000 chunks
+####  - G4-iM Grinder will convert DNA sequences to RNA if DNA is FALSE, automatically (changing T for U). Also Reverse. Line 127-129.
 #### V1.5.8
 ####  - Divided Known to Form Sequences DDBB into three DDBB. TmDF stores Tm values of each Sequence, REf stores the bibliographical aspects, and BioInformatic for G4-iM grinder use..
 ####  - Added 800 new Seqs to BioInformatic and Refs, as reversals of the original secs.
@@ -124,6 +124,9 @@ G4iMGrinder <- function(Name, Sequence, DNA=TRUE, Complementary=TRUE, RunComposi
       Time[length(Time)+1] <- as.numeric(
         system.time({
           Sequence <- str_to_upper(Sequence)
+          ifelse(test = DNA == TRUE,
+             yes = Sequence <- stringr::str_replace_all(string = Sequence, pattern = "U", replacement = "T"),
+             no = Sequence <- stringr::str_replace_all(string = Sequence, pattern = "T", replacement = "U"))
           if (Complementary == TRUE){
             Sequence2 <- .CompSeqFun(DNA = DNA, Sequence)}}
         )[3]
@@ -364,7 +367,9 @@ G4iMGrinder <- function(Name, Sequence, DNA=TRUE, Complementary=TRUE, RunComposi
                            "MaxNRuns", "MinNRuns", "BulgeSize", "MaxIL", "MaxPQSSize", "MinPQSSize", "MaxLoopSize",
                            "MinLoopSize", "LoopSeq", "Method2", "Method3", "G4hunter", "PQSfinder", "PQSfinder.Bt",
                            "PQSfinder.Pb", "PQSfinder.Fm", "PQSfinder.Em","PQSfinder.Ts", "PQSfinder.Is", "PQSfinder.Ls", "PQSfinder.Et",
-                           "PQSfinder.Ei", "PQSfinder.ET", "cGcC", "WeightParameters", "FreqWeight", "KnownQuadruplex", "KnownNOTQuadruplex", "NCores", "SeqG%", "SeqC%")
+                           "PQSfinder.Ei", "PQSfinder.ET", "cGcC", "WeightParameters", "FreqWeight", "KnownQuadruplex", "KnownNOTQuadruplex", "NCores", "SeqG%", "SeqC%",
+                           "G4iMGrinder.Version", "GiG.DB.BioInformatic.Version", "GiG.DB.Refs.Version", "GiG.DB.BioPhysical.Version",
+                           "M1A.Results", "M1B.Results")
       Value <- c(
         Name, ifelse(Complementary == TRUE, yes = nchar(Sequence)*2, no = nchar(Sequence)),
         DNA, Complementary, RunComposition, MaxRunSize, MinRunSize,
@@ -376,7 +381,11 @@ G4iMGrinder <- function(Name, Sequence, DNA=TRUE, Complementary=TRUE, RunComposi
                          yes =  (str_count(Sequence,pattern = "C") + str_count(Sequence,pattern = "G"))/(nchar(Sequence)*2)), 1),
         round(100*ifelse(Complementary == TRUE,
                          no =  str_count(Sequence,pattern = "C")/nchar(Sequence),
-                         yes =  (str_count(Sequence,pattern = "C") + str_count(Sequence,pattern = "G"))/(nchar(Sequence)*2)), 1)
+                         yes =  (str_count(Sequence,pattern = "C") + str_count(Sequence,pattern = "G"))/(nchar(Sequence)*2)), 1),
+        packageDescription("G4iMGrinder")$Version,
+        GiG.DB$Version$Version[1:3],
+        as.numeric(nrow(PQSM1a) + ifelse(Complementary == TRUE, yes = nrow(PQSM1aCOMP), no = 0)),
+        as.numeric(nrow(PQSM1b) + ifelse(Complementary == TRUE, yes = nrow(PQSM1bCOMP), no = 0))
         )
       Configuration <- data.frame(Variable)
       Configuration$Value <- Value

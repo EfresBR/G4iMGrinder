@@ -1,4 +1,4 @@
-# G4-iM Grinder
+# **G4-iM Grinder**
 G4-iM Grinder is a fast, robust and highly adaptable algorithm. It is capable of locating, identifying, qualifying and quantifying DNA and RNA potential quadruplex structures, such as G-quadruplex, i-Motifs and their higher order versions.
 
 Read the open-access paper: [G4-iM Grinder: when size and frequency matter. G-Quadruplex, i-Motif and higher order structure search and analysis tool](https://academic.oup.com/nargab/article/2/1/lqz005/5576141)
@@ -8,26 +8,109 @@ Read the open-access paper: [G4-iM Grinder: when size and frequency matter. G-Qu
 
 Please report in the issue section if you find bugs, problems or wish to see some features added.
 
+###       **G4-iM Grinder's Updates & News**
+Version 1.5.9 of G4-iM Grinder is here (03-2020). 
 
-###       G4-iM Grinder's Results
-The genomic results of humans and 49 other pathogenic species can be found through a [one drive link](https://1drv.ms/u/s!AvVGQg2rNIwDgSLY11SVpU3ysfVG?e=2mba6N).
+Version 2.5 of G4-iM Grinder's database (GiG.DB) is also here (03-2020). Now it includes **2851 sequences** confirmed in literature to form (or not to form) tetraplex structures.
 
-The 1.5 Gb .RAR compressed file hosts four RData images of the results.
 
-1. `HumanPQS.RData` for Human G-based PQS analysis
-2. `HumanPiMS.RData` for Human C-based PiMS analysis
-3. `NonHumanPQS.RData` for non-human G-based PQS analysis
-4. `NonHumanPiMS.RData` for non-human C-based PiMS analysis.
+<details>
+
+The GiG.DB within the G4-iM Grinder package includes:
+
+**I. BioInformatic dataframe:** 
+
+		1. Each entry is a nucleotidic sequence published in a scientific journal in relationship with its capability of forming quadruplex structures.
+		2. Each entry includes 	
+					A. Quadruplex	TRUE for  forming quadruplex, FALSE for NOT
+					B. Genome		DNA or RNA 
+					C. Nucleotide	G or C, for G4s or i-Motif respectively
+					D. Name			value must be unique
+					E. Sequence		value must be unique
+					F. Length		Lenght of Sequence
+					G. Tm			Nº of biophysical results associated to the entry (within Biophysical dataframe)
+		3. Currently there are a total of 2851 entries. 
+					A. 2141 form tetraplex	 and 710  dont; 
+					B. 283  are i-Motifs 	 and 2568 are G4s; 
+					C. 1858 are DNA 		 and 993  are RNA.
+		4. Sequences which end in -ReV- are the reverse sequences of other entries.
+					For example 	
+									1. Name1 		GGTGGTGG**TTT**GG 
+									2. Name1-ReV- 	GG**TTT**GGTGGTGG
+							
+**II. Refs dataframe:**
+
+		1. Each entry is the literature reference for an BioInformatic dataframe entry.
+		2. Each entry includes: 
+					A. name 				value must be unique; Name of BioInformatic entry 
+					B. DOI					DOI identificator; for example: 10.1093/nargab/lqz005
+					C. Pubmed	 			PubmebID identificator (PMID); for example:	29109402
+					D. comments		 		Extra information, normally citing information 
+													For example: Nucleic Acids Res., 45, 7487–7493.
+		3. Currently there are a total of 2851 entries. 
+							
+**III. BioPhysical dataframe:**
+
+		1. Each entry is a Biophysical result found for a particular BioInformatic entry. 
+		2. Data includes Tm (ºC), pH, Concentrations of sequence (uM), K+ (mM) and Na+ (mM), and the found topology.
+		3. Currently there are 153 entries. 
+							
+Comments: If you find an error within GiG.DB or want to include other sequences, please open an issue request in Github, **"EfresBR/G4iMGrinder"**.
+
+</details>
+
+
+
+###       **G4-iM Grinder's Results**
+The genomic results of humans and 49 other pathogenic species can be found through a [one drive link](https://1drv.ms/u/s!AvVGQg2rNIwDgSVRBSqXju1t1B05?e=uvVk7M).
 
 Please report in the issue section if the link is broken.
 
+GiG.DB V.2.5 has been used to update these results (03-2020) and now include the localization of the **2851** known-to-form and known-NOT-to-form quadruplex in the database.
+
+As of V.2.5 of GiG.DB, the total amount of results (M2A) with at least one confirmed G4 within its sequence is **312072** (236483 more than in V1.0). 
+
+As of V.2.5 of GiG.DB, the total amount of results (M2A) with at least one confirmed i-Motif within its sequence is **160054** (74171 more than in V1.0)
+    
+
+<details>
+
+The 1.5 Gb .RAR compressed file hosts four RData images of the results.
+
+1. `Human.PQS.032020.RData` for Human G-based PQS analysis
+2. `Human.PiMS.032020.RData` for Human C-based PiMS analysis
+3. `NonHuman.PQS.032020.RData` for non-human G-based PQS analysis
+4. `NonHuman.PiMS.032020.RData` for non-human C-based PiMS analysis.
+
+
 Genomes used:
-1. Human Genome - hg38, GRCh38.p12, Genome Reference Consortium Human Build 38, INSDC Assembly GCA_000001405.27 downloaded May 2019 from www.sanger.ac.uk. 
-2. Non-human genomes - Please see section 9 of supplementary material of the original article for more info.
+
+	1. Human Genome - hg38, GRCh38.p12, Genome Reference Consortium Human Build 38, INSDC Assembly GCA_000001405.27 downloaded May 2019 from www.sanger.ac.uk. 
+	2. Non-human genomes - Please see section 9 of supplementary material of the original article for more info.
+
+With this update, Figure 4 of G4-iM Grinder's article, which compared different tetraplex-related characteristics of each genome (including density [per 100000 nucleotides], uniqueness and Confirmed Quadruplex Sequences (CQS)) becomes:
+
+<img src="images/Data.Analysis.V1.59, V2.5.jpg" align="middle" height="1500" />
+
+Being the CQS columns what changes between both Figure 4.
+
+</details>
 
 
-###       Package prerequisites
+
+###       **G4-iM Grinder's Installation and User Guide**
+
+<details>
+
+####       **A.      Package prerequisites**
+
+<details>
+
 G4-iM Grinder can be download from github: EfresBR/G4iMGrinder. G4-iM Grinder requires the installation of other CRAN based and Bioconductor packages. Please, ensure all required packages are installed and R version is at least 3.6.1. G4-iM Grinder was successfully downloaded and tested in MacOS 10.12.6, Windows 10 (x64), Ubuntu 18.04.2 (x64), Mint 19.1 (x64) and Fedora-workstation 30 whilst running R 3.6.1 and R studio 1.2.5001. In Linux based systems, the installation of devtools may require further effort ([Check this link](https://stackoverflow.com/questions/20923209/problems-installing-the-devtools-package)). Other OS including x86 systems have not been tested.
+
+G4-iM Grinder has been sucessfully used in R 3.6.3 and R-studio 1.2.5033.
+
+
 ```ruby
 
 pck <- c("stringr", "stringi", "plyr", "seqinr", "stats", "parallel", "doParallel", "beepr", "stats4", "devtools", "dplyr", "BiocManager")
@@ -52,7 +135,14 @@ BiocManager::install(c("BiocGenerics", "S4Vectors") , ask = FALSE, update = TRUE
 
 ```
 
-###      Package installing and loading
+</details>
+
+
+
+####      **B.      Package installing and loading**
+
+<details>
+
 ```ruby
 
 devtools::install_github("EfresBR/G4iMGrinder")
@@ -61,9 +151,14 @@ library(G4iMGrinder)
 
 ```
 
+</details>
 
 
-###      Installation fails
+
+####      **C.      Installation fails**
+
+<details>
+
 The most common reasons for failing during the installation of G4-iM Grinder are ,
 
 1. 	Some of G4-iM Grinder's dependencies have not been installed,
@@ -110,8 +205,15 @@ The result of this code should be:
 
 If both the package dependencies and R version have passed the test, and still the installation fails, please, write an issue in the issue section stating the transcript of the executed commands and the full error received.
 
+</details>
 
-###       Running a G4-iM Grinder analysis
+
+
+####       **D.      Running a G4-iM Grinder analysis**
+
+
+<details>
+
 Executing a genomic G-Quadruplex analysis with G4iMGrinder function
 
 ```ruby
@@ -130,12 +232,26 @@ Rs2 <- G4iMGrinder(Name = "LmajorESTs", Sequence = Sequence, BulgeSize = 2,   Ma
 ```
 G4-iM Grinder allows huge flexibility to adapt to any of the users requirements.
 
-###       G4-iM Grinder's variables and their predifined values
+</details>
+
+
+
+####       **E.      G4-iM Grinder's variables and their predifined values**
+
+<details>
+
+
 <img src="images/Variable.jpg" align="middle" height="1000" />
 N.B. Several other parameters regarding PQSFinder are available for modification.
 
+</details>
 
-###       Summarizing G4-iM Grinder results
+
+
+####       **F.      Summarizing G4-iM Grinder results**
+
+
+<details>
 Summarizing an analysis with GiGList.Analysis function to compare the results between genomes. This will quantify the number of results and density of each analysis. It will also give the number of results that have at least a minimum frequency, score and size. These variables can be modified. See the package documentation for more information regarding GiGList.Analysis.
 
 ```ruby
@@ -149,33 +265,58 @@ ResultTable[2,] <- GiGList.Analysis(GiGList = Rs2, iden= "ForceLimit")
 
 ```
 
+</details>
 
 
-###       Potential Higher Order Analysis  
+
+####       **G.      Potential Higher Order Analysis**  
+
+
+<details>
+
 Executing an analysis of a higher order structure with GiG.M3Structure to analyze its potential subunit configuration. This will give all and the most interesting subunit conformations as stated in the article. See the package documentation for more information regarding GiG.M3Structure.
+
 ```ruby
 
-# analyzing the PHOQS structure in row 1 of data frame PQSM3A in Rs.
-PHOQS126 <- GiG.M3Structure(GiGList = Rs, M3ACandidate = 1, MAXite = 10000)
+# analyzing the longes PHOQS structure found in Rs$PQSM3A.
+
+# N is the row number of the PHOQS to analyze in PQSM3a, as a numeral.
+N <- as.numeric(rownames(Rs$PQSM3a[Rs$PQSM3a$Length == max(Rs$PQSM3a$Length),][1]))
+
+Longest_PHOQS <- GiG.M3Structure(GiGList = Rs, 
+								 M3ACandidate = N, 
+								 MAXite = 10000)
 
 
 ```
 
+</details>
 
 
-###       Locating the references of Known-To-Form and Known-NOT-To-Form sequences
+
+####       **H.      Locating the references of Known-To-Form and Known-NOT-To-Form sequences**
+
+
+<details>
+
 Finding the reference for the Known-To-Form Quadruplex structures of an interesting Result. This procedure is the same for Known-NOT-To-Form sequences.
+
 ```ruby
 
-# The PHOQS structure in row 126 has the known-to-form sequence 93del.
-RefPHOQS126 <- GiG.DB$GiG.DB.Refs[GiG.DB$GiG.DB.Refs$Name == "93del", ]
+# Finding the references of the known-to-form sequence 93del.
+Ref93del <- GiG.DB$GiG.DB.Refs[GiG.DB$GiG.DB.Refs$Name == "93del", ]
 
 
 ```
 
+</details>
 
 
-###       Updating results for a pre-existing analysis
+
+####       **I.      Updating results for a pre-existing analysis**
+
+
+<details>
 Updating a G4-iM Grinder analysis with different variables using the GiGList.Updater function. This will avoid doing a new search analysis on the sequence and hence will be more time and resource efficient.
 
 ```ruby
@@ -189,9 +330,15 @@ Rs3 <- GiGList.Updater(GiGList = Rs, KnownNOTQuadruplex = TRUE, KnownQuadruplex 
 
 ```
 
+</details>
 
 
-###       Grinding genomes in search of Potential i-Motif Sequences (PiMS)
+
+####       **J.      Grinding genomes in search of Potential i-Motif Sequences (PiMS)**
+
+
+<details>
+
 To search for potential i-Motifs in the genome we can repeat the analysis with G4iMGrinder function changing RunComposition = “C”. However, if a previous analysis of the genome has already been done with the complementary base-pair, we can also use the function GiGList.Updater to search for the resulting opposite structures.
 
 ```ruby
@@ -207,14 +354,13 @@ Rs_iM2 <- GiGList.Updater(GiGList = Rs, ChangeRunComposition = TRUE)
 
 ```
 
-
-###       G4-iM Grinder's quadruplex database
-800 new known-to-form and known-not-form-Quadruplex and i-Motif sequences have been added to the database (V1.5.8).  
-Structure of database has been modified, in preparation for the release of an app that allows adding sequences to the database by  the public  (shinny app).
+</details>
 
 
 
-###       Comments on G4-iM Grinder's Search Engine
+####       **H.      Comments on G4-iM Grinder's Search Engine**
+
+<details>
 
 G4-iM Grinder locates all overlapping and nested results that fit the user-defined (or predefined if none were inserted) parameters.
 For example using predefined parameters, five possible PQS (in _italics_) results will be located for the genomic sequence
@@ -242,5 +388,12 @@ whilst
 will not be detected.
 
 Regarding frequency of the quadruplex results, Quadruplexes may actually be repeated because they form part of repetitive nucleotide sequences, including transposon families. For example, several authors have already located recurrent PQS in such repetitive elements (both human and non-human species), which depending on the location and context, may potentially grant different biological significance to the same recurrent quadruplex.
+
+</details>
+
+
+
+</details>
+
 
 

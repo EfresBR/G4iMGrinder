@@ -2,7 +2,7 @@
 \alias{GiG.DB.rda}
 \docType{data}
 \title{
-Quadruplex database of G4-iM Grinder. In it, DNA and RNA Structures, G4 and i-Motif, and forming and non-forming structures are divided into their bioinfromatic, biophysical and bibliographical characteristics.
+Quadruplex database of G4-iM Grinder. In it, DNA and RNA Structures, G4 and i-Motif, and forming and non-forming structures are divided by their bioinformatic, biophysical and bibliographical characteristics.
 }
 \description{
 A list that contains three data frames.

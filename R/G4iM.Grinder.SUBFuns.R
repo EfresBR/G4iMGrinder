@@ -463,22 +463,30 @@
         G4Name <- NULL
         AAA <- NULL
 
+
+
         if(nrow(Ref)>0){
           if(nrow(df) == 1){
             AAA <- mapply(FUN = KG42, RefName = Ref$Name, RefSequence= Ref$Sequence, RefLength = Ref$Length, MoreArgs = list(df[,]))
             df$Conf.Quad.Seqs  <- paste0(AAA, collapse = "")
           } else {
-            if(nrow(df) > 200000){
-              cof <- floor(nrow(df)/200000)
+            if(nrow(df) > 10000){
+
+              Num <- 5000
+              cof <- floor(nrow(df)/Num)
+
+
               for(i in 1:cof){
-                AAA <- mapply(FUN = KG42, Ref$Name, Ref$Sequence, Ref$Length, MoreArgs = list(df[(1+((i-1)*200000)):(i*200000),]))
+                AAA <- mapply(FUN = KG42, Ref$Name, Ref$Sequence, Ref$Length, MoreArgs = list(df[(1+((i-1)*Num)):(i*Num),]))
                 G4Name <- c(G4Name, apply(AAA[,1:ncol(AAA)],1, paste0, collapse = ""))
                 rm(AAA)
               }
-              AAA <- mapply(FUN = KG42, Ref$Name, Ref$Sequence, Ref$Length,  MoreArgs = list(df[(1+(cof*200000)):nrow(df),]))
+
+              AAA <- mapply(FUN = KG42, Ref$Name, Ref$Sequence, Ref$Length,  MoreArgs = list(df[(1+(cof*Num)):nrow(df),]))
               G4Name <- c(G4Name, apply(AAA[,1:ncol(AAA)],1, paste0, collapse = ""))
               rm(AAA)
               df$Conf.Quad.Seqs <- G4Name
+
             } else {
               AAA <- mapply(FUN = KG42, RefName = Ref$Name, RefSequence= Ref$Sequence, RefLength = Ref$Length, MoreArgs = list(df[,]))
               df$Conf.Quad.Seqs  <- apply(AAA[,1:ncol(AAA)],1, paste0, collapse = "")
@@ -502,14 +510,19 @@
             AAA <- mapply(FUN = KG42, RefName = Ref$Name, RefSequence= Ref$Sequence, RefLength = Ref$Length, MoreArgs = list(df[,]))
             df$Conf.NOT.Quad.Seqs  <- paste0(AAA, collapse = "")
           } else {
-            if(nrow(df) > 200000){
-              cof <- floor(nrow(df)/200000)
+            if(nrow(df) > 50000){
+
+              Num <- 50000
+              cof <- floor(nrow(df)/Num)
+
+
+              cof <- floor(nrow(df)/Num)
               for(i in 1:cof){
-                AAA <- mapply(FUN = KG42, Ref$Name, Ref$Sequence, Ref$Length, MoreArgs = list(df[(1+((i-1)*200000)):(i*200000),]))
+                AAA <- mapply(FUN = KG42, Ref$Name, Ref$Sequence, Ref$Length, MoreArgs = list(df[(1+((i-1)*Num)):(i*Num),]))
                 G4Name <- c(G4Name, apply(AAA[,1:ncol(AAA)],1, paste0, collapse = ""))
                 rm(AAA)
               }
-              AAA <- mapply(FUN = KG42, Ref$Name, Ref$Sequence, Ref$Length,  MoreArgs = list(df[(1+(cof*200000)):nrow(df),]))
+              AAA <- mapply(FUN = KG42, Ref$Name, Ref$Sequence, Ref$Length,  MoreArgs = list(df[(1+(cof*Num)):nrow(df),]))
               G4Name <- c(G4Name, apply(AAA[,1:ncol(AAA)],1, paste0, collapse = ""))
               rm(AAA)
               df$Conf.NOT.Quad.Seqs <- G4Name
