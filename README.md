@@ -20,40 +20,40 @@ The GiG.DB within the G4-iM Grinder package includes:
 
 **I. BioInformatic dataframe:** 
 
-		1. Each entry is a nucleotidic sequence published in a scientific journal in relationship with its capability of forming quadruplex structures.
-		2. Each entry includes 	
-					A. Quadruplex		TRUE for  forming quadruplex, FALSE for NOT
-					B. Genome		DNA or RNA 
-					C. Nucleotide		G or C, for G4s or i-Motif respectively
-					D. Name			value must be unique
-					E. Sequence		value must be unique
-					F. Length		Lenght of Sequence
-					G. Tm			Nº of biophysical results associated to the entry (within Biophysical dataframe)
-		3. Currently there are a total of 2851 entries. 
-					A. 2141 form tetraplex	 and 710  dont; 
-					B. 283  are i-Motifs 	 and 2568 are G4s; 
-					C. 1858 are DNA 		 and 993  are RNA.
-		4. Sequences which end in -ReV- are the reverse sequences of other entries.
-					For example 	
-							1. Name1 	GGTGGTGG**TTT**GG 
-							2. Name1-ReV- 	GG**TTT**GGTGGTGG
+	1. Each entry is a nucleotidic sequence published in a scientific journal in relationship with its capability of forming quadruplex structures.
+	2. Each entry includes 	
+		A. Quadruplex		TRUE for  forming quadruplex, FALSE for NOT
+		B. Genome		DNA or RNA 
+		C. Nucleotide		G or C, for G4s or i-Motif respectively
+		D. Name			value must be unique
+		E. Sequence		value must be unique
+		F. Length		Lenght of Sequence
+		G. Tm			Nº of biophysical results associated to the entry (within Biophysical dataframe)
+	3. Currently there are a total of 2851 entries. 
+		A. 2141 form tetraplex	 and 710  dont; 
+		B. 283  are i-Motifs 	 and 2568 are G4s; 
+		C. 1858 are DNA 	 and 993  are RNA.
+	4. Sequences which end in -ReV- are the reverse sequences of other entries.
+		For example 	
+			1. Name1 	GGTGGTGG|TTT|GG 
+			2. Name1-ReV- 	GG|TTT|GGTGGTGG
 							
 **II. Refs dataframe:**
 
-		1. Each entry is the literature reference for an BioInformatic dataframe entry.
-		2. Each entry includes: 
-					A. name 				value must be unique; Name of BioInformatic entry 
-					B. DOI					DOI identificator; for example: 10.1093/nargab/lqz005
-					C. Pubmed	 			PubmebID identificator (PMID); for example:	29109402
-					D. comments		 		Extra information, normally citing information 
-													For example: Nucleic Acids Res., 45, 7487–7493.
-		3. Currently there are a total of 2851 entries. 
+	1. Each entry is the literature reference for an BioInformatic dataframe entry.
+	2. Each entry includes: 
+		A. name 		value must be unique; Name of BioInformatic entry 
+		B. DOI			DOI identificator; for example: 10.1093/nargab/lqz005
+		C. Pubmed	 	PubmebID identificator (PMID); for example:	29109402
+		D. comments		Extra information, normally citing information 
+					For example: Nucleic Acids Res., 45, 7487–7493.
+	3. Currently there are a total of 2851 entries. 
 							
 **III. BioPhysical dataframe:**
 
-		1. Each entry is a Biophysical result found for a particular BioInformatic entry. 
-		2. Data includes Tm (ºC), pH, Concentrations of sequence (uM), K+ (mM) and Na+ (mM), and the found topology.
-		3. Currently there are 153 entries. 
+	1. Each entry is a Biophysical result found for a particular BioInformatic entry. 
+	2. Data includes Tm (ºC), pH, Concentrations of sequence (uM), K+ (mM) and Na+ (mM), and the found topology.
+	3. Currently there are 153 entries. 
 							
 Comments: If you find an error within GiG.DB or want to include other sequences, please open an issue request in Github, **"EfresBR/G4iMGrinder"**.
 
@@ -90,7 +90,7 @@ Genomes used:
 
 With this update, Figure 4 of G4-iM Grinder's article, which compared different tetraplex-related characteristics of each genome (including density [per 100000 nucleotides], uniqueness and Confirmed Quadruplex Sequences (CQS)) becomes:
 
-<img src="images/Data.Analysis.V1.59, V2.5.jpg" align="middle" height="1500" />
+<img src="images/Data.Analysis.V1.59, V2.5.jpg" align="middle" height="1250" />
 
 Being the CQS columns what changes between both Figure 4.
 
@@ -283,9 +283,11 @@ Executing an analysis of a higher order structure with GiG.M3Structure to analyz
 # N is the row number of the PHOQS to analyze in PQSM3a, as a numeral.
 N <- as.numeric(rownames(Rs$PQSM3a[Rs$PQSM3a$Length == max(Rs$PQSM3a$Length),][1]))
 
-Longest_PHOQS <- GiG.M3Structure(GiGList = Rs, 
-		M3ACandidate = N, 
-		MAXite = 10000)
+Longest_PHOQS <- GiG.M3Structure(
+			GiGList = Rs, 
+			M3ACandidate = N, 
+			MAXite = 10000
+			)
 
 
 ```
