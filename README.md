@@ -22,9 +22,9 @@ The GiG.DB within the G4-iM Grinder package includes:
 
 		1. Each entry is a nucleotidic sequence published in a scientific journal in relationship with its capability of forming quadruplex structures.
 		2. Each entry includes 	
-					A. Quadruplex	TRUE for  forming quadruplex, FALSE for NOT
+					A. Quadruplex		TRUE for  forming quadruplex, FALSE for NOT
 					B. Genome		DNA or RNA 
-					C. Nucleotide	G or C, for G4s or i-Motif respectively
+					C. Nucleotide		G or C, for G4s or i-Motif respectively
 					D. Name			value must be unique
 					E. Sequence		value must be unique
 					F. Length		Lenght of Sequence
@@ -35,8 +35,8 @@ The GiG.DB within the G4-iM Grinder package includes:
 					C. 1858 are DNA 		 and 993  are RNA.
 		4. Sequences which end in -ReV- are the reverse sequences of other entries.
 					For example 	
-									1. Name1 		GGTGGTGG**TTT**GG 
-									2. Name1-ReV- 	GG**TTT**GGTGGTGG
+							1. Name1 	GGTGGTGG**TTT**GG 
+							2. Name1-ReV- 	GG**TTT**GGTGGTGG
 							
 **II. Refs dataframe:**
 
@@ -284,8 +284,8 @@ Executing an analysis of a higher order structure with GiG.M3Structure to analyz
 N <- as.numeric(rownames(Rs$PQSM3a[Rs$PQSM3a$Length == max(Rs$PQSM3a$Length),][1]))
 
 Longest_PHOQS <- GiG.M3Structure(GiGList = Rs, 
-								 M3ACandidate = N, 
-								 MAXite = 10000)
+		M3ACandidate = N, 
+		MAXite = 10000)
 
 
 ```
