@@ -83,15 +83,22 @@ Efres Belmonte-Reche
   require(G4iMGrinder)
   require(biomartr)
 
+  #Ebola virus genome identificator for the refseq database
   org <- "GCF_000855585.1"
+
   Sequence <- toString(biomartr::read_genome(biomartr::getGenome(db = "refseq", organism = "GCF_000855585.1", reference = F)))
   Name <- names(biomartr::read_genome(biomartr::getGenome(db = "refseq", organism = "GCF_000855585.1", reference = F)))
 
   # Creating the G4iMGrinder Results for the DNA search of G-quadruplex.
   Rs <- G4iMGrinder(Name = Name, Sequence = Sequence)
 
-  # Finding biological features with PQS within
+  # Finding biological features that colocate with the PQS results (overlapping size-restricted search).
   Rs.Features <- GiG.df.GenomicFeatures(df = Rs$PQSM2a, org = org, db = "refseq")
+
+  # Finding biological features that colocate with the Potential Higher Order Quadruplex Sequence (PHOQS) results (non-overlapping size-unrestricted search).
+  Rs.Features <- GiG.df.GenomicFeatures(df = Rs$PQSM3a, org = org, db = "refseq")
+
+  ### Please consider that the analysis cannot be done for the PQSM2b and PQSM3b dataframes as they do not have starting nor finishing positions.
 
 }
 % Add one or more standard keywords, see file 'KEYWORDS' in the
