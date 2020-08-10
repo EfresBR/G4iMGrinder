@@ -11,4 +11,4 @@ LazyData: true
 Imports:
   stringr, stringi, plyr, seqinr, stats, parallel, doParallel, beepr, stats4, dplyr, BiocManager, BiocGenerics, S4Vectors, biomartr, Biostrings
 Suggests:
-RoxygenNote: 7.0.2
+RoxygenNote: 7.1.0
