@@ -45,16 +45,15 @@ Efres Belmonte-Reche
 
   \item{M3}{data.frame, stores the desired PHOQS to analyze. Only 1 row is accepted.}
 
-  \item{Potential.Arrangements}{data .frame, stores all the sub unit potential conformations that can give rise to the PHOQS. These depend on number of iterations of random seat allocation given by \code{MAXite}. Please make sure all conformations are found - See \code{MAXite}.
+  \item{Potential.Arrangements}{data.frame, stores all the sub unit potential conformations that can give rise to the PHOQS. These depend on number of iterations of random seat allocation given by \code{MAXite}. Please make sure all conformations are found - See \code{MAXite}.
   }
 
-  \item{Best.Arrangements}{data.frame, A list that stores the best PHOQS conformations for the three analysis, HSA conformation, RAH conformation and RAnH conformation.
+  \item{Best.Arrangements}{list, stores the best PHOQS conformations for the three analysis, HSA conformation, RAH conformation and RAnH conformation.
 }
 }
 
 
-\seealso{\eqn{Column Meanings:}
-
+\section{Column Meanings}{
 
 \emph{RES}{: reference, of sub units (by row name) in the original GiGList$PQSM2A data frame.}
 

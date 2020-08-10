@@ -9,7 +9,7 @@ Allows the complete analytic potential on existing results (except cGcC).
 Allows detection of opposite base-pair quadruplex structures on the opposite strand, avoiding all together a new quadruplex search [it is more efficient than a new G4-iM Grinder analysis].
 }
 \usage{
-G4iMGrinder::GiGList.Updater(GiG.List, RunComposition = "G", LoopSeq = c("G", "T", "A", "C"), G4hunter = TRUE, PQSfinder = TRUE, Bt = 14, Pb = 17, Fm = 3, Em = 1, Ts = 4, Et = 1, Is = -19, Ei = 1, Ls = -16, ET = 1, WeightParameters = c(50, 50, 0), FreqWeight = 10, KnownQuadruplex = TRUE, KnownNOTQuadruplex = FALSE, NCores = 1 )
+G4iMGrinder::GiGList.Updater(GiG.List, RunComposition = "G", LoopSeq = c("G", "T", "A", "C"), G4hunter = TRUE, PQSfinder = TRUE, Bt = 14, Pb = 17, Fm = 3, Em = 1, Ts = 4, Et = 1, Is = -19, Ei = 1, Ls = -16, ET = 1, WeightParameters = c(50, 50, 0), FreqWeight = 0, KnownQuadruplex = TRUE, KnownNOTQuadruplex = FALSE, NCores = 1 )
 }
 %- maybe also 'usage' for other objects documented here.
 \arguments{
@@ -36,17 +36,17 @@ Efres Belmonte-Reche
 The result of the function is a GiGList with the new analysis.
 }
 %% ~Make other sections like Warning with \section{Warning }{....} ~
-
 \seealso{
 %% ~~objects to See Also as \code{\link{help}}, ~~~
 }
 \examples{
+
   # Creating the G4iMGrinder Results for the DNA search of G-quadruplex.
   Rs.G4 <- G4iMGrinder(Name = Name, Sequence = Sequence)
 
   # Finding the potential i-Motifs using the previous analysis,  and including known NOT quadruplex structures (by default OFF).
-  Rs.iM <- GiGList.Updater(Rs, ChangeRunComposition = TRUE, KnownNotQuadruplex = TRUE)
+  Rs.iM <- GiGList.Updater(Rs.G4, ChangeRunComposition = TRUE, KnownNotQuadruplex = TRUE)
 
   # Changing score weights and frequency importance in calculations of Final Score
-  Rs.iMScores <- GiGList.Updater(Rs, WeightParameters = c(100, 50, 0), FreqWeight = 50)
+  Rs.iMScores <- GiGList.Updater(Rs.iM, WeightParameters = c(100, 50, 0), FreqWeight = 50)
 }

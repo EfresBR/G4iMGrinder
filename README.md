@@ -1,19 +1,41 @@
 # **G4-iM Grinder**
 G4-iM Grinder is a fast, robust and highly adaptable algorithm. It is capable of locating, identifying, qualifying and quantifying DNA and RNA potential quadruplex structures, such as G-quadruplex, i-Motifs and their higher order versions.
 
-Read the open-access paper: [G4-iM Grinder: when size and frequency matter. G-Quadruplex, i-Motif and higher order structure search and analysis tool](https://academic.oup.com/nargab/article/2/1/lqz005/5576141)
+Read the open-access paper on the algorithm: [G4-iM Grinder: when size and frequency matter. G-Quadruplex, i-Motif and higher order structure search and analysis tool](https://academic.oup.com/nargab/article/2/1/lqz005/5576141)
 
+Soon to be published: "Exploring G and C-quadruplex structures as potential targets against the severe acute respiratory syndrome coronavirus 2". Preprint version soon to be linked. Results can be found in the result section.  
 
 <img src="images/Abstract.png" align="middle" height="500" />
 
 Please report in the issue section if you find bugs, problems or wish to see some features added.
 
 ###       **G4-iM Grinder's Updates & News**
-Version 1.5.9 of G4-iM Grinder is here (03-2020). 
+G4-iM Grinder latest version: 1.6.0 (08-2020). 
+<details>
+Changes:
+
+For Version 1.6.00:
+
+1. Changed `GiGList.Analysis` to accept vectors instead of just single numerals in its parameters. Changed also the results returned, with better summaries of the G4-iM Grinder function.
+2. Changed the concept of DNA and RNA sequences in the `G4-iM Grinder` main function and other related functions to be more efficient.
+3. The function to find confirmed quadruplex sequences was modified to be more efficient with RAM. This is to prevent problems with an growing database of confirmed quadruplex sequences.
+4. Added Biostrings and biomartr dependencies. Added the packages to the package loading function.
+5. G4-iM Grinder version and the G4-iM Grinder database version are now saved in the configuration dataframe of each result.
+6. Added a function to analyze the characteristic and runs of a genome (`GiG.Seq.Analysis`).
+7. Added a function to analyze the biological landmarks affected by the potential quadruplex results (`GiG.df.GenomicFeatures`).
+
+For Version 1.5.95:
+
+1. Fixed bug in PQSfinder algorithm, which incorrectly punctuated structures.
+2. Changed the way known G4s and i-Motifs structures are detected. It will now detect both DNA and RNA confirmed sequences within the results. 
+a. If the confirmed sequence is DNA, the results will include an asterisk (&ast;). 
+b. If the result sequence is RNA, it will include a circumflex (^). 
+c. Example: If the GUK1 DNA quadruplex was detected within the results one time, the Conf.Quad.Seqs column will state: GUK1 (1&ast;). If the 42.HIRA (WT) RNA quadruplex was detected within the results one time, the Conf.Quad.Seqs column will state: 42.HIRA (WT) (1^)
+</details>
+.
+
 
 Version 2.5 of G4-iM Grinder's database (GiG.DB) is also here (03-2020). Now it includes **2851 sequences** confirmed in literature to form (or not to form) tetraplex structures.
-
-
 <details>
 
 The GiG.DB within the G4-iM Grinder package includes:
@@ -27,7 +49,7 @@ The GiG.DB within the G4-iM Grinder package includes:
 		C. Nucleotide		G or C, for G4s or i-Motif respectively
 		D. Name			value must be unique
 		E. Sequence		value must be unique
-		F. Length		Lenght of Sequence
+		F. Length		Length of Sequence
 		G. Tm			Nº of biophysical results associated to the entry (within Biophysical dataframe)
 	3. Currently there are a total of 2851 entries. 
 		A. 2141 form tetraplex	 and 710  dont; 
@@ -58,22 +80,21 @@ The GiG.DB within the G4-iM Grinder package includes:
 Comments: If you find an error within GiG.DB or want to include other sequences, please open an issue request in Github, **"EfresBR/G4iMGrinder"**.
 
 </details>
-
-
+.
 
 ###       **G4-iM Grinder's Results**
-The genomic results of humans and 49 other pathogenic species can be found through a [one drive link](https://1drv.ms/u/s!AvVGQg2rNIwDgSVRBSqXju1t1B05?e=uvVk7M).
 
-Please report in the issue section if the link is broken.
+Please report in the issue section if any links are broken.
+
+1. **Result set 1**: The genomic results of humans and 49 other humman pathogenic species, analysed using the predefined parameter configuration of the algorithm and published in the article [G4-iM Grinder: when size and frequency matter. G-Quadruplex, i-Motif and higher order structure search and analysis tool](https://academic.oup.com/nargab/article/2/1/lqz005/5576141), can be found through a [one drive link](https://1drv.ms/u/s!AvVGQg2rNIwDgSVRBSqXju1t1B05?e=uvVk7M) as "1. March2020.V.1.5.9;GiGDB.V.2.5.RAR".
+
+<details>
 
 GiG.DB V.2.5 has been used to update these results (03-2020) and now include the localization of the **2851** known-to-form and known-NOT-to-form quadruplex in the database.
 
 As of V.2.5 of GiG.DB, the total amount of results (M2A) with at least one confirmed G4 within its sequence is **312072** (236483 more than in V1.0). 
 
 As of V.2.5 of GiG.DB, the total amount of results (M2A) with at least one confirmed i-Motif within its sequence is **160054** (74171 more than in V1.0)
-    
-
-<details>
 
 The 1.5 Gb .RAR compressed file hosts four RData images of the results.
 
@@ -92,11 +113,38 @@ With this update, Figure 4 of G4-iM Grinder's article, which compared different 
 
 <img src="images/Data.Analysis.V1.59, V2.5.jpg" align="middle" height="1250" />
 
-Being the CQS columns what changes between both Figure 4.
+Being the CQS columns what changes between both Figure 4s.
 
 </details>
 
+.
 
+2. **Result set 2**: The genomic results of the 2019-nCoV (SARS2 virus) and the entire virus realm, analysed using a lax configuration of parameters, from the article "Exploring G and C-quadruplex structures as potential targets against the severe acute respiratory syndrome coronavirus 2" (currently in peer review) can be found through a [one drive link](https://1drv.ms/u/s!AvVGQg2rNIwDgSYHCRcOOWiusrB6?e=cVv8fS) as "2.Ag.2020.Virus.V.1.6.0;GiGDB.V.2.5.RAR". 
+
+<details>
+
+The 2.5 Gb .RAR compressed file hosts two group of files.
+
+**RAW DATA**: 
+1.	`Virus.Results.RDS`, includes the raw data of the G4-iM Grinder analysis on all the virus realm as a list. The list groups virus species by their families. Each species list includes a PQS and PiMS sublist. These store the composition, location, known-quadruplex sequences presence and score (amongst others) of PQS/PiMS found in each virus. The information used in this analysis was Method 2; size restricted overlapping search method (PQSM2A data.frames), although Method 3 results are also included. 
+2.	`3297.2019-nCoV.Results.RDS`, includes the raw data of the G4-iM Grinder analysis on all the 3297 different 2019-nCoV virus sequenced after of clinical symptoms analysed in the work. These were used to calculate the conservation of each sequence found in the reference 2019-nCoV, and are given as a list. The list groups virus by strains. Each includes a PQS and PiMS sublist. These store the composition, location, known-quadruplex sequences presence and score (amongst others) of PQS/PiMS found in each virus. The information used in this analysis was Method 2; size restricted overlapping search method (PQSM2A data.frames), although Method 3 results are also included.
+3.	`gisaid.3297._hcov-19.PDF`, includes the references of the 2019-nCoV 3297 genomes downloaded from the GISAID database.
+
+**ANALYTICAL DATA**:
+4.	`Analysis.RData` is the analysis results on the raw G4-iM Grinder data. It includes 5 lists:
+
+	i.	 `a.Ref.2019nCoV` – Analysis with G4iMGrinder function of the GiG-package of the 2019-nCoV reference genome. It includes the Method 2 results of the reference genome with the conservation rates and common sequences found in other viruses. The biological landmarks affected by the candidates retrieved using the function GiG.df.GenomicFeatures are also stored here. 
+
+	ii.	`Analysis.2019nCoV.3297genomes` – Analysis with GiGList.Analysis function of the GiG-package. 3297 genomes of the 2019-nCoV sequenced at different times and locations of the ongoing pandemic were examined. PQS and PiMS sublists are the analysis for PQS and PiMS respectively. df.index data frame stores the identification of each genome used.
+
+	iii.	`Analysis.Coronaviridae.fam` – Analysis with GiGList.Analysis function of the GiG-package of the Coronaviridae family. PQS and PiMS lists are the analysis for PQS and PiMS respectively. df.index data frame stores the identification of each genome used. 
+
+	iv.	`Analysis.Virus.realm` - Analysis with GiGList.Analysis function of the GiG-package of the entire virus realm. PQS and PiMS lists are the analysis for PQS and PiMS respectively. df.index data frame stores the identification of each genome used. Genome data frame is the analysis with the function GiG.Seq.Analysis.
+
+	v.	`Baltimore.C` – Baltimore Classification tables regarding each group characteristics and classification of each family into its group. 
+
+</details>
+.
 
 ###       **G4-iM Grinder's Installation and User Guide**
 
@@ -106,9 +154,13 @@ Being the CQS columns what changes between both Figure 4.
 
 <details>
 
-G4-iM Grinder can be download from github: EfresBR/G4iMGrinder. G4-iM Grinder requires the installation of other CRAN based and Bioconductor packages. Please, ensure all required packages are installed and R version is at least 3.6.1. G4-iM Grinder was successfully downloaded and tested in MacOS 10.12.6, Windows 10 (x64), Ubuntu 18.04.2 (x64), Mint 19.1 (x64) and Fedora-workstation 30 whilst running R 3.6.1 and R studio 1.2.5001. In Linux based systems, the installation of devtools may require further effort ([Check this link](https://stackoverflow.com/questions/20923209/problems-installing-the-devtools-package)). Other OS including x86 systems have not been tested.
+G4-iM Grinder can be downloaded from github: EfresBR/G4iMGrinder. G4-iM Grinder requires the installation of other CRAN based and Bioconductor packages. 
+Please, ensure all required packages are installed and R version is at least 4.0.0. 
+G4-iM Grinder was successfully downloaded and tested in MacOS 10.12.6, Windows 10 (x64), Ubuntu 18.04.2 (x64), Mint 19.1 (x64) and Fedora-workstation 30. 
+In Linux based systems, the installation of devtools may require further effort ([Check this link](https://stackoverflow.com/questions/20923209/problems-installing-the-devtools-package)). 
+Other OS including x86 systems have not been tested.
 
-G4-iM Grinder has been sucessfully used in R 3.6.3 and R-studio 1.2.5033.
+G4-iM Grinder has been sucessfully used in R 4.0.2 and R-studio 1.3.1056
 
 
 ```ruby
@@ -130,7 +182,7 @@ foo <- function(x){
   }
 }
 foo(pck)
-BiocManager::install(c("BiocGenerics", "S4Vectors") , ask = FALSE, update = TRUE)
+BiocManager::install(c("BiocGenerics", "S4Vectors", "Biostrings", "biomartr") , ask = FALSE, update = TRUE)
 
 
 ```
@@ -162,14 +214,14 @@ library(G4iMGrinder)
 The most common reasons for failing during the installation of G4-iM Grinder are ,
 
 1. 	Some of G4-iM Grinder's dependencies have not been installed,
-2. 	R version is not at least 3.6.0.
+2. 	R version is not at least 4.0.0
 
 If you are having problems during installation, please, execute the following code to verify that these prerequisites are met.
 
 ```ruby
 
 
-pck <- c("BiocGenerics", "S4Vectors", "stringr", "stringi", "plyr", "seqinr", "stats", "parallel", "doParallel", "beepr", "stats4", "devtools", "dplyr", "BiocManager")
+pck <- c("BiocGenerics", "S4Vectors", "stringr", "stringi", "plyr", "seqinr", "stats", "parallel", "doParallel", "beepr", "stats4", "devtools", "dplyr", "BiocManager", "biomartr", "Biostrings")
 
 FailFoo <- function(x){
   Info <- "Package dependendies FAILED. These packages are required and are NOT installed: "
@@ -183,11 +235,11 @@ FailFoo <- function(x){
   ifelse(count ==0, yes = print("Package dependencies PASSED. All required packages are installed. "),
          no = print(Info))
   AAA <- R.version
-  ifelse(as.numeric(AAA$major) == 3,
-         yes= ifelse(as.numeric(AAA$minor >= 6),
-                     yes = print("R version requirements PASSED. R version is at least 3.6 as required."),
-                     no = print("R version requirements FAILED. R needs to be updated to version >= 3.6")),
-         no = print("R version requirements FAILED. R needs to be updated to version >= 3.6"))
+  ifelse(as.numeric(AAA$major) == 4,
+         yes= ifelse(as.numeric(AAA$minor >= 0),
+                     yes = print("R version requirements PASSED. R version is at least 4.0 as required."),
+                     no = print("R version requirements FAILED. R needs to be updated to version >= 4.0")),
+         no = print("R version requirements FAILED. R needs to be updated to version >= 4.0"))
 }
 FailFoo(pck)
 
@@ -199,7 +251,7 @@ The result of this code should be:
 ```
 
 [1] "Package dependencies PASSED. All required packages are installed. "
-[1] "R version requirements PASSED. R version is at least 3.6 as required."
+[1] "R version requirements PASSED. R version is at least 4.0 as required."
 
 ```
 
@@ -209,7 +261,35 @@ If both the package dependencies and R version have passed the test, and still t
 
 
 
-####       **D.      Running a G4-iM Grinder analysis**
+####       **D.      (NEW) Running a G4-iM Grinder pre-analysis**
+
+
+<details>
+
+Executing a genomic pre-analysis with `GiG.Seq.Analysis`. 
+This function can be used before a GiG analysis to determine the best search parameters to obtain quadruplex-related results. 
+The function’s outcome is a data frame with the most relevant genomic features, including length (in nucleotides), type of genome (DNA or ARN), strands (single or double), and G, C, T/U, A and N composition (as % of total sequence). 
+The function also calculates the total number of runs with different conditions (predefined parameters, bulges per run: zero and one-quantities; run lengths: two to five and three to five-length) in the genome, and returns it to the user as total counts or genomic density. 
+The higher the run density, the higher the probability of finding associated PQS or PiMS in the results.
+```ruby
+
+# Using a genome available online
+loc <- url("http://tritrypdb.org/common/downloads/release-36/Lmajor/fasta/TriTrypDB-36_Lmajor_ESTs.fasta")
+Sequence <- paste0(seqinr::read.fasta(file = loc, as.string = TRUE, legacy.mode = TRUE, seqonly = TRUE, strip.desc = TRUE), collapse = "")
+
+# Running the pre-analysis.
+require(G4iMGrinder)
+Pre_Rs <- GiG.Seq.Analysis(Name = "LmajorESTs", Sequence = Sequence, DNA = TRUE, Complementary = TRUE)
+
+```
+
+
+
+</details>
+
+
+
+####       **E.      Running a G4-iM Grinder analysis**
 
 
 <details>
@@ -223,6 +303,7 @@ loc <- url("http://tritrypdb.org/common/downloads/release-36/Lmajor/fasta/TriTry
 Sequence <- paste0(seqinr::read.fasta(file = loc, as.string = TRUE, legacy.mode = TRUE, seqonly = TRUE, strip.desc = TRUE), collapse = "")
 
 # Executing a grind on the sequence in search of PQS
+require(G4iMGrinder)
 Rs  <- G4iMGrinder(Name = "LmajorESTs", Sequence = Sequence)
 
 # Forcing the folding rule to the limit (this will take longer)
@@ -236,7 +317,7 @@ G4-iM Grinder allows huge flexibility to adapt to any of the users requirements.
 
 
 
-####       **E.      G4-iM Grinder's variables and their predifined values**
+####       **F.      G4-iM Grinder's variables and their predifined values**
 
 <details>
 
@@ -248,7 +329,7 @@ N.B. Several other parameters regarding PQSFinder are available for modification
 
 
 
-####       **F.      Summarizing G4-iM Grinder results**
+####       **G.      Summarizing G4-iM Grinder results**
 
 
 <details>
@@ -257,6 +338,7 @@ Summarizing an analysis with GiGList.Analysis function to compare the results be
 ```ruby
 
 # summarizing first search
+require(G4iMGrinder)
 ResultTable <- GiGList.Analysis(GiGList = Rs, iden = "Predefined")
 
 # adding the second analysis in a new row
@@ -269,7 +351,35 @@ ResultTable[2,] <- GiGList.Analysis(GiGList = Rs2, iden= "ForceLimit")
 
 
 
-####       **G.      Potential Higher Order Analysis**  
+####       **H.      (NEW) Biological features (landmarks) affected by PQS and PiMS candidates**  
+
+<details>
+
+The `GiG.df.GenomicFeatures` function is suitable for determining the genomic features that share their location with (and hence may be affected by) GiG’s PQS and PiMS results. 
+It employs the online database connector package “biomartr” to retrieve the genomic annotations file for the sequence, with which to then match positions. 
+The function returns a data frame of all the matches found for the input sequences and includes different attributes (IDs, keys, relationships with other features and comments) of the matched genomic features. 
+Please, use the same genome associated with the annotation file.
+
+```ruby
+
+# Analyzing the HIV-1 virus. To do so, first lets download the genome and use it with G4-iM Grinder via the biomartr package. The virus is a ssRNA.
+require(G4iMGrinder) 
+require(biomartr)
+Sequence <- toString(read_genome(getGenome(db = "refseq", organism = "GCF_000864765.1",  reference = F)))
+RsHIV <- G4iMGrinder(Name = "HIV-1", Sequence = Sequence, DNA = F, Complementary = F)
+
+# Applying the `GiG.df.GenomicFeatures` function on the Method 2 results of the G4-iM Grinder grind.
+RsHiV.GF <- GiG.df.GenomicFeatures(df = RsHiV$PQSM2a, org = "GCF_000864765.1", db = "refseq")
+
+#Please make sure the genome analyzed with G4-iM Grinder and the annotation file are from the same organism.
+
+```
+
+</details>
+
+
+
+####       **I.      Potential Higher Order Analysis**  
 
 
 <details>
@@ -283,6 +393,7 @@ Executing an analysis of a higher order structure with GiG.M3Structure to analyz
 # N is the row number of the PHOQS to analyze in PQSM3a, as a numeral.
 N <- as.numeric(rownames(Rs$PQSM3a[Rs$PQSM3a$Length == max(Rs$PQSM3a$Length),][1]))
 
+require(G4iMGrinder)
 Longest_PHOQS <- GiG.M3Structure(
 			GiGList = Rs, 
 			M3ACandidate = N, 
@@ -296,7 +407,7 @@ Longest_PHOQS <- GiG.M3Structure(
 
 
 
-####       **H.      Locating the references of Known-To-Form and Known-NOT-To-Form sequences**
+####       **J.      Locating the references of Known-To-Form and Known-NOT-To-Form sequences**
 
 
 <details>
@@ -306,6 +417,7 @@ Finding the reference for the Known-To-Form Quadruplex structures of an interest
 ```ruby
 
 # Finding the references of the known-to-form sequence 93del.
+require(G4iMGrinder)
 Ref93del <- GiG.DB$GiG.DB.Refs[GiG.DB$GiG.DB.Refs$Name == "93del", ]
 
 
@@ -315,7 +427,7 @@ Ref93del <- GiG.DB$GiG.DB.Refs[GiG.DB$GiG.DB.Refs$Name == "93del", ]
 
 
 
-####       **I.      Updating results for a pre-existing analysis**
+####       **K.      Updating results for a pre-existing analysis**
 
 
 <details>
@@ -326,6 +438,7 @@ Updating a G4-iM Grinder analysis with different variables using the GiGList.Upd
 # As the PHOQS structure in row 126 looks promising, we will also examine
 # the Known-NOT-to-form Quadruplex of the results, quantify the % of GGG and TTA present in the sequence,
 # and modify the score and frequency weight of the final score.
+require(G4iMGrinder)
 Rs3 <- GiGList.Updater(GiGList = Rs, KnownNOTQuadruplex = TRUE, KnownQuadruplex = TRUE,
                        LoopSeq = c("GGG", "TTA"), FreqWeight = 100, WeightParameters = c(75, 25, 0))
 
@@ -336,22 +449,18 @@ Rs3 <- GiGList.Updater(GiGList = Rs, KnownNOTQuadruplex = TRUE, KnownQuadruplex 
 
 
 
-####       **J.      Grinding genomes in search of Potential i-Motif Sequences (PiMS)**
+####       **L.      Grinding genomes in search of Potential i-Motif Sequences (PiMS)**
 
 
 <details>
 
-To search for potential i-Motifs in the genome we can repeat the analysis with G4iMGrinder function changing RunComposition = “C”. However, if a previous analysis of the genome has already been done with the complementary base-pair, we can also use the function GiGList.Updater to search for the resulting opposite structures.
+To search for potential i-Motifs in the genome we can repeat the analysis with G4iMGrinder function changing RunComposition = “C”. 
 
 ```ruby
 
 # Doing a grind in search for i-Motifs in the sequence
+require(G4iMGrinder)
 Rs_iM1 <- G4iMGrinder(Name = "LmajorESTs", Sequence = Sequence, RunComposition = "C")
-
-# Using the previous PQS search to locate the base-pair PiMS. This is more efficient.
-# However as the sequences change, the previous analysis will be deleted.
-# If you desire to vary the analysis with non-predefined values, they should be stated here.
-Rs_iM2 <- GiGList.Updater(GiGList = Rs, ChangeRunComposition = TRUE)
 
 
 ```
@@ -360,7 +469,7 @@ Rs_iM2 <- GiGList.Updater(GiGList = Rs, ChangeRunComposition = TRUE)
 
 
 
-####       **H.      Comments on G4-iM Grinder's Search Engine**
+####       **M.      Comments on G4-iM Grinder's Search Engine**
 
 <details>
 

@@ -4,8 +4,8 @@
 #################            G4-iM Grinder         #######################
 ##########################################################################
 ####    Efres Belmonte Reche            efresbr@gmail.com             ####
-####    Revised                         2020-03-15                    ####
-####    Version                         1.5.9                         ####
+####    Latest                          2020-08-XX                    ####
+####    Version                         1.6.0                         ####
 ##########################################################################
 ##########################################################################
 ####
@@ -16,8 +16,19 @@
 ####
 ####
 ####  Log
+####
+######### Potential BUG when analysing with GiG.Analysis a sequence after update function. Err
+######### Potential BUG. NCores is limited to 1. Problems if NCores is more than 1. To be tested.
+#### V1.6.0
+####  -
+####  -
+####  -
+####  - Changed enitre DNA and ARN concept. Everything will be turned into DNA or RNA in the start Limitationssection. (Sequence, LoopSeq)
+####  - KNTFQ fun will convert all the library to DNA as well as the PQS or PiMS detected. to search for everything everywhere. it will differentiate between DNA or RNA sequence by ^Dna and *RNA.
+####  - Reorganized GiG.Analysis, it now can accept vectors instead of single variables in filters.
+####  - Added biomartr and biostrings to package loading sequence.
 ####  - G4-iM Grinder will save version of DDBB and GiG function in each Results within Configuration table.
-####  - Changed KTFQS function, to lower RAM usage by dividing large datasets in 5000 chunks
+####  - Changed KTFQS function, to lower RAM usage by dividing large datasets in 5000 size chunks
 ####  - G4-iM Grinder will convert DNA sequences to RNA if DNA is FALSE, automatically (changing T for U). Also Reverse. Line 127-129.
 #### V1.5.8
 ####  - Divided Known to Form Sequences DDBB into three DDBB. TmDF stores Tm values of each Sequence, REf stores the bibliographical aspects, and BioInformatic for G4-iM grinder use..
@@ -57,10 +68,11 @@
 G4iMGrinder <- function(Name, Sequence, DNA=TRUE, Complementary=TRUE, RunComposition="G", BulgeSize=1,
                         MaxRunSize=5, MinRunSize=3, MaxLoopSize=10, MinLoopSize=0,
                         MaxNRuns=0, MinNRuns=4, MaxPQSSize=33, MinPQSSize=15, MaxIL = 3,
-                         Method2=TRUE, Method3=TRUE, LoopSeq=c("G", "T", "A", "C"),
+                        Method2=TRUE, Method3=TRUE, LoopSeq=c("G", "T", "A", "C"),
                         WeightParameters=c(50,50,0), G4hunter=TRUE,  cGcC=FALSE, PQSfinder=TRUE,
                         Bt=14, Pb=17, Fm=3, Em=1, Ts=4, Et=1, Is=-19, Ei=1, Ls=-16, ET = 1,
-                        KnownQuadruplex= TRUE, KnownNOTQuadruplex= FALSE, FreqWeight=0, RunFormula = FALSE, NCores = 1, Verborrea = TRUE){
+                        KnownQuadruplex= TRUE, KnownNOTQuadruplex= FALSE, FreqWeight=0,
+                        RunFormula = FALSE, NCores = 1, Verborrea = TRUE){
   if(Method2 == TRUE|Method3 == TRUE){
 
     ### SUBFUNCTIONS OF G4iM GRINDER
@@ -93,6 +105,13 @@ G4iMGrinder <- function(Name, Sequence, DNA=TRUE, Complementary=TRUE, RunComposi
       if(MaxPQSSize < MinPQSSize) {MaxPQSSize <- MinPQSSize}
       RunComposition <- str_to_upper(RunComposition)
       LoopSeq <- str_to_upper(LoopSeq)
+      if(DNA == FALSE){
+        LoopSeq <- stringr::str_replace_all(string = LoopSeq, pattern = "T", replacement = "U")
+        Sequence <- stringr::str_replace_all(string = Sequence, pattern = "T", replacement = "U")
+      } else {
+        LoopSeq <- stringr::str_replace_all(string = LoopSeq, pattern = "U", replacement = "T")
+        Sequence <- stringr::str_replace_all(string = Sequence, pattern = "U", replacement = "T")
+      }
     if (!RunComposition %in% c("G","C")){
         KnownQuadruplex<- FALSE
         KnownNOTQuadruplex<- FALSE
@@ -108,9 +127,11 @@ G4iMGrinder <- function(Name, Sequence, DNA=TRUE, Complementary=TRUE, RunComposi
     }
     ######  Cores and parallel config
     {
-      if (NCores > detectCores()| NCores < 1 |!is.numeric(NCores)) {
-        NCores <- round(detectCores()*3/4,0)
-      }
+      #if (NCores > detectCores()| NCores < 1 |!is.numeric(NCores)) {
+      #  NCores <- round(detectCores()*3/4,0)
+      #}
+      ### BUG! FIX in future
+      NCores <- 1
     }
     ######  Time control
     if(Verborrea == TRUE){
@@ -123,12 +144,9 @@ G4iMGrinder <- function(Name, Sequence, DNA=TRUE, Complementary=TRUE, RunComposi
       Process[length(Process)+1] <- "Sequence Adaptations"
       Time[length(Time)+1] <- as.numeric(
         system.time({
-          Sequence <- str_to_upper(Sequence)
-          ifelse(test = DNA == TRUE,
-             yes = Sequence <- stringr::str_replace_all(string = Sequence, pattern = "U", replacement = "T"),
-             no = Sequence <- stringr::str_replace_all(string = Sequence, pattern = "T", replacement = "U"))
-          if (Complementary == TRUE){
-            Sequence2 <- .CompSeqFun(DNA = DNA, Sequence)}}
+           if (Complementary == TRUE){
+            Sequence2 <- G4iMGrinder:::.CompSeqFun(DNA = DNA, Sequence)}
+          }
         )[3]
       )}
     ######    1.   G run Search
@@ -136,27 +154,27 @@ G4iMGrinder <- function(Name, Sequence, DNA=TRUE, Complementary=TRUE, RunComposi
       if(Verborrea == TRUE){cat("\nMethod 1A Started")}
       Process[length(Process)+1] <- "M1A"
       Time[length(Time)+1] <- as.numeric(system.time({
-        PQSM1a <- .M1A(RunComposition = RunComposition, MaxRunSize= MaxRunSize, MinRunSize = MinRunSize, BulgeSize = BulgeSize, Sequence = Sequence)
+        PQSM1a <- G4iMGrinder:::.M1A(RunComposition = RunComposition, MaxRunSize= MaxRunSize, MinRunSize = MinRunSize, BulgeSize = BulgeSize, Sequence = Sequence)
         if(Complementary == TRUE){
-          PQSM1aCOMP <- .M1A(RunComposition = RunComposition, MaxRunSize= MaxRunSize, MinRunSize = MinRunSize, BulgeSize = BulgeSize, Sequence = Sequence2)}
+          PQSM1aCOMP <- G4iMGrinder:::.M1A(RunComposition = RunComposition, MaxRunSize= MaxRunSize, MinRunSize = MinRunSize, BulgeSize = BulgeSize, Sequence = Sequence2)}
       })[3])
       if(Verborrea == TRUE){cat(
         paste0(" & Ended. ", as.numeric(nrow(PQSM1a)) + ifelse(Complementary == TRUE, as.numeric(nrow(PQSM1aCOMP)), 0), " results found"))
       }
       if(as.numeric(nrow(PQSM1a)) + ifelse(test = Complementary == TRUE, yes =  as.numeric(nrow(PQSM1aCOMP)),no =  0) == 0){
-        stop("Error: M1A found no runs on sequence.")}
+        warning("Error: M1A found no runs on sequence.")}
 
       if(Verborrea == TRUE){cat("\nMethod 1B Started")}
       Process[length(Process)+1] <- "M1B"
       Time[length(Time)+1] <- as.numeric(system.time({
-        PQSM1b <- .M1B(MinLoopSize= MinLoopSize, MaxLoopSize = MaxLoopSize, df = PQSM1a, MinRunSize = MinRunSize, MinNRuns= MinNRuns)
+        PQSM1b <- G4iMGrinder:::.M1B(MinLoopSize= MinLoopSize, MaxLoopSize = MaxLoopSize, df = PQSM1a, MinRunSize = MinRunSize, MinNRuns= MinNRuns)
         if(Complementary == TRUE){
-          PQSM1bCOMP <- .M1B(MinLoopSize= MinLoopSize, MaxLoopSize = MaxLoopSize, df = PQSM1aCOMP, MinRunSize = MinRunSize, MinNRuns = MinNRuns)}
+          PQSM1bCOMP <- G4iMGrinder:::.M1B(MinLoopSize= MinLoopSize, MaxLoopSize = MaxLoopSize, df = PQSM1aCOMP, MinRunSize = MinRunSize, MinNRuns = MinNRuns)}
       })[3])
       if(Verborrea == TRUE){cat(
         paste0(" & Ended. ", as.numeric(nrow(PQSM1b)) + ifelse(Complementary == TRUE, as.numeric(nrow(PQSM1bCOMP)), 0), " results found"))}
       if(as.numeric(nrow(PQSM1b)) + ifelse(test = Complementary == TRUE, yes =  as.numeric(nrow(PQSM1bCOMP)), no = 0) == 0){
-        stop("Error: M1B found no related runs on sequence, or they are not enough to build a quadruplex (rRuns < MinNRuns).")}
+        warning("Error: M1B found no related runs on sequence, or they are not enough to build a quadruplex (rRuns < MinNRuns).")}
     }
 
     ######    2.   Method 2
@@ -165,9 +183,9 @@ G4iMGrinder <- function(Name, Sequence, DNA=TRUE, Complementary=TRUE, RunComposi
       if(Verborrea == TRUE){cat("\nMethod 2A Started")}
       Process[length(Process)+1] <- "M2A"
       Time[length(Time)+1] <- as.numeric(system.time({
-        PQSM2a <-.M2a(RunComposition = RunComposition, df= PQSM1b, NCores = NCores, MinPQSSize= MinPQSSize, MinNRuns = MinNRuns, MaxPQSSize= MaxPQSSize, MaxNRuns= MaxNRuns, PQSfinder = PQSfinder, RunFormula = RunFormula, Sequence = Sequence, MaxIL = MaxIL, Verborrea = Verborrea, BulgeSize = BulgeSize, G4hunter=G4hunter,  cGcC=cGcC)
+        PQSM2a <-G4iMGrinder:::.M2a(RunComposition = RunComposition, df= PQSM1b, NCores = NCores, MinPQSSize= MinPQSSize, MinNRuns = MinNRuns, MaxPQSSize= MaxPQSSize, MaxNRuns= MaxNRuns, PQSfinder = PQSfinder, RunFormula = RunFormula, Sequence = Sequence, MaxIL = MaxIL, Verborrea = Verborrea, BulgeSize = BulgeSize, G4hunter=G4hunter,  cGcC=cGcC)
         if(Complementary == TRUE){
-          PQSM2aCOMP <-.M2a(RunComposition = RunComposition, df= PQSM1bCOMP, NCores = NCores, MinPQSSize= MinPQSSize, MinNRuns = MinNRuns, MaxPQSSize= MaxPQSSize, MaxNRuns= MaxNRuns, PQSfinder = PQSfinder, RunFormula = RunFormula, Sequence = Sequence2, MaxIL = MaxIL, Verborrea = Verborrea, BulgeSize = BulgeSize,  G4hunter=G4hunter,  cGcC=cGcC)
+          PQSM2aCOMP <-G4iMGrinder:::.M2a(RunComposition = RunComposition, df= PQSM1bCOMP, NCores = NCores, MinPQSSize= MinPQSSize, MinNRuns = MinNRuns, MaxPQSSize= MaxPQSSize, MaxNRuns= MaxNRuns, PQSfinder = PQSfinder, RunFormula = RunFormula, Sequence = Sequence2, MaxIL = MaxIL, Verborrea = Verborrea, BulgeSize = BulgeSize,  G4hunter=G4hunter,  cGcC=cGcC)
           if(nrow(PQSM2a)>0){
             PQSM2a$Strand <- "+"}
           if(nrow(PQSM2aCOMP)>0){
@@ -198,7 +216,7 @@ G4iMGrinder <- function(Name, Sequence, DNA=TRUE, Complementary=TRUE, RunComposi
           if(Verborrea == TRUE){cat("G4Hunter (I")}
           Process[length(Process)+1] <- "M2-G4Hunter"
           Time[length(Time)+1] <- as.numeric(system.time(
-            PQSM2a <- .G4Hunter(df = PQSM2a, NCores = NCores)
+            PQSM2a <- G4iMGrinder:::.G4Hunter(df = PQSM2a, NCores = NCores)
           )[3])
           if(Verborrea == TRUE){cat("/O).")}}
         #PQSfinder calculus
@@ -206,7 +224,7 @@ G4iMGrinder <- function(Name, Sequence, DNA=TRUE, Complementary=TRUE, RunComposi
           if(Verborrea == TRUE){cat(" PQSfinder (I")}
           Process[length(Process)+1] <- "M2-PQSfinder"
           Time[length(Time)+1] <- as.numeric(system.time(
-            PQSM2a <- .PQSfinderfun(PQSM2a, RunComposition, Bt=Bt, Pb=Pb, Fm=Fm, Em=Em, Ts=Ts, Et=Et, Is=Is, Ei=Ei, Ls=Ls, ET = ET, MinNRuns= MinNRuns)
+            PQSM2a <- G4iMGrinder:::.PQSfinderfun(PQSM2a, RunComposition, Bt=Bt, Pb=Pb, Fm=Fm, Em=Em, Ts=Ts, Et=Et, Is=Is, Ei=Ei, Ls=Ls, ET = ET, MinNRuns= MinNRuns)
           )[3])
           if(Verborrea == TRUE){cat("/O).")}}
         #cGc
@@ -214,7 +232,7 @@ G4iMGrinder <- function(Name, Sequence, DNA=TRUE, Complementary=TRUE, RunComposi
           if(Verborrea == TRUE){cat(" cGcC (I")}
           Process[length(Process)+1] <- "M2-cGcC"
           Time[length(Time)+1] <- as.numeric(system.time(
-            PQSM2a <- .cGcCfun(df = PQSM2a, RunComposition = RunComposition)
+            PQSM2a <- G4iMGrinder:::.cGcCfun(df = PQSM2a, RunComposition = RunComposition)
           )[3])
           if(Verborrea == TRUE){cat("/O).")}}
         #mean Score
@@ -222,7 +240,7 @@ G4iMGrinder <- function(Name, Sequence, DNA=TRUE, Complementary=TRUE, RunComposi
           if(Verborrea == TRUE){cat(" MeanScore (I/")}
           Process[length(Process)+1] <- "M2-meanScore"
           Time[length(Time)+1] <- as.numeric(system.time(
-            PQSM2a <- .ScoreFun(df= PQSM2a, G4hunter = G4hunter, PQSfinder = PQSfinder, cGcC = cGcC, WeightParameters = WeightParameters)
+            PQSM2a <- G4iMGrinder:::.ScoreFun(df= PQSM2a, G4hunter = G4hunter, PQSfinder = PQSfinder, cGcC = cGcC, WeightParameters = WeightParameters)
           )[3])
           if(Verborrea == TRUE){cat("O).")}}
 
@@ -230,7 +248,7 @@ G4iMGrinder <- function(Name, Sequence, DNA=TRUE, Complementary=TRUE, RunComposi
         ##Quantification
         Process[length(Process)+1] <- "M2-Quantification"
         Time[length(Time)+1] <- as.numeric(system.time(
-          PQSM2a <- .LoopQuantification(df=PQSM2a, LoopSeq = LoopSeq)
+          PQSM2a <- G4iMGrinder:::.LoopQuantification(df=PQSM2a, LoopSeq = LoopSeq)
         )[3])
         if(Verborrea == TRUE){cat(" & Ended. ")}
 
@@ -240,7 +258,7 @@ G4iMGrinder <- function(Name, Sequence, DNA=TRUE, Complementary=TRUE, RunComposi
           if(Verborrea == TRUE){cat("\nM2 - KnownQuadruplex Started")}
           Process[length(Process)+1] <- "M2-KnownQuadruplex"
           Time[length(Time)+1] <- as.numeric(system.time(
-            PQSM2a <- .KnownQuadFun(df = PQSM2a, DNA = DNA, KnownNOTQuadruplex = KnownNOTQuadruplex, KnownQuadruplex = KnownQuadruplex, RunComposition = RunComposition)
+            PQSM2a <- G4iMGrinder:::.KnownQuadFun(df = PQSM2a, DNA = DNA, KnownNOTQuadruplex = KnownNOTQuadruplex, KnownQuadruplex = KnownQuadruplex, RunComposition = RunComposition)
           )[3])
           if(Verborrea == TRUE){cat(" & Ended.")}}
 
@@ -248,7 +266,7 @@ G4iMGrinder <- function(Name, Sequence, DNA=TRUE, Complementary=TRUE, RunComposi
         ## Method 2B by Frequency
         Process[length(Process)+1] <- "M2-M2B"
         Time[length(Time)+1] <- as.numeric(system.time(
-          PQSM2b <- .M2B(df = PQSM2a, FreqWeight = FreqWeight, RunComposition = RunComposition)
+          PQSM2b <- G4iMGrinder:::.M2B(df = PQSM2a, FreqWeight = FreqWeight, RunComposition = RunComposition)
         )[3])
         if(Verborrea == TRUE){cat(" & Ended.")}} else {cat("\nNo Results found with M2.")}
 
@@ -259,9 +277,9 @@ G4iMGrinder <- function(Name, Sequence, DNA=TRUE, Complementary=TRUE, RunComposi
       if(Verborrea == TRUE){cat("\nMethod 3  Started")}
       Process[length(Process)+1] <- "M3"
       Time[length(Time)+1] <- as.numeric(system.time({
-        PQSM3a <- .M3(df = PQSM1b, NCores = NCores, MinNRuns = MinNRuns, MinPQSSize = MinPQSSize, RunFormula = RunFormula, Sequence = Sequence, Verborrea = Verborrea, BulgeSize = BulgeSize, G4hunter=G4hunter,  cGcC=cGcC, PQSfinder = PQSfinder, RunComposition = RunComposition)
+        PQSM3a <- G4iMGrinder:::.M3(df = PQSM1b, NCores = NCores, MinNRuns = MinNRuns, MinPQSSize = MinPQSSize, RunFormula = RunFormula, Sequence = Sequence, Verborrea = Verborrea, BulgeSize = BulgeSize, G4hunter=G4hunter,  cGcC=cGcC, PQSfinder = PQSfinder, RunComposition = RunComposition)
         if(Complementary == TRUE){
-          PQSM3aCOMP <-.M3(df = PQSM1bCOMP, NCores = NCores, MinNRuns = MinNRuns, MinPQSSize = MinPQSSize, RunFormula = RunFormula, Sequence = Sequence2, Verborrea = Verborrea, BulgeSize = BulgeSize, G4hunter=G4hunter,  cGcC=cGcC, PQSfinder = PQSfinder, RunComposition = RunComposition)
+          PQSM3aCOMP <-G4iMGrinder:::.M3(df = PQSM1bCOMP, NCores = NCores, MinNRuns = MinNRuns, MinPQSSize = MinPQSSize, RunFormula = RunFormula, Sequence = Sequence2, Verborrea = Verborrea, BulgeSize = BulgeSize, G4hunter=G4hunter,  cGcC=cGcC, PQSfinder = PQSfinder, RunComposition = RunComposition)
           if(nrow(PQSM3a)>0){
             PQSM3a$Strand <- "+"}
           if(nrow(PQSM3aCOMP)>0){
@@ -292,7 +310,7 @@ G4iMGrinder <- function(Name, Sequence, DNA=TRUE, Complementary=TRUE, RunComposi
             if(Verborrea == TRUE){cat("G4Hunter (I")}
             Process[length(Process)+1] <- "M3-G4Hunter"
             Time[length(Time)+1] <- as.numeric(system.time(
-              PQSM3a <- .G4Hunter(df = PQSM3a, NCores = NCores)
+              PQSM3a <- G4iMGrinder:::.G4Hunter(df = PQSM3a, NCores = NCores)
             )[3])
             if(Verborrea == TRUE){cat("/O). ")}}
           #PQSfinder calculus
@@ -300,7 +318,7 @@ G4iMGrinder <- function(Name, Sequence, DNA=TRUE, Complementary=TRUE, RunComposi
             if(Verborrea == TRUE){cat("PQSfinder (I")}
             Process[length(Process)+1] <- "M3-PQSfinder"
             Time[length(Time)+1] <- as.numeric(system.time(
-              PQSM3a <- .PQSfinderfun(PQSM3a, RunComposition, Bt=Bt, Pb=Pb, Fm=Fm, Em=Em, Ts=Ts, Et=Et, Is=Is, Ei=Ei, Ls=Ls, ET = ET, MinNRuns= MinNRuns)
+              PQSM3a <- G4iMGrinder:::.PQSfinderfun(PQSM3a, RunComposition, Bt=Bt, Pb=Pb, Fm=Fm, Em=Em, Ts=Ts, Et=Et, Is=Is, Ei=Ei, Ls=Ls, ET = ET, MinNRuns= MinNRuns)
             )[3])
             if(Verborrea == TRUE){cat("/O). ")}
           }
@@ -309,7 +327,7 @@ G4iMGrinder <- function(Name, Sequence, DNA=TRUE, Complementary=TRUE, RunComposi
             if(Verborrea == TRUE){cat("cGcC (I")}
             Process[length(Process)+1] <- "M3-cGcC"
             Time[length(Time)+1] <- as.numeric(system.time(
-              PQSM3a <- .cGcCfun(df = PQSM3a, RunComposition = RunComposition)
+              PQSM3a <- G4iMGrinder:::.cGcCfun(df = PQSM3a, RunComposition = RunComposition)
             )[3])
             if(Verborrea == TRUE){cat("/O). ")}}
           #mean Score
@@ -317,7 +335,7 @@ G4iMGrinder <- function(Name, Sequence, DNA=TRUE, Complementary=TRUE, RunComposi
             if(Verborrea == TRUE){ cat("MeanScore (I")}
             Process[length(Process)+1] <- "M3-meanScore"
             Time[length(Time)+1] <- as.numeric(system.time(
-              PQSM3a <- .ScoreFun(df= PQSM3a, G4hunter = G4hunter, PQSfinder = PQSfinder, cGcC = cGcC, WeightParameters = WeightParameters)
+              PQSM3a <- G4iMGrinder:::.ScoreFun(df= PQSM3a, G4hunter = G4hunter, PQSfinder = PQSfinder, cGcC = cGcC, WeightParameters = WeightParameters)
             )[3])
             if(Verborrea == TRUE){cat("/O). ")}}
 
@@ -325,7 +343,7 @@ G4iMGrinder <- function(Name, Sequence, DNA=TRUE, Complementary=TRUE, RunComposi
           ##Quantification
           {    Process[length(Process)+1] <- "M3-Quantification"
             Time[length(Time)+1] <- as.numeric(system.time(
-              PQSM3a <- .LoopQuantification(df=PQSM3a, LoopSeq = LoopSeq))[3])
+              PQSM3a <- G4iMGrinder:::.LoopQuantification(df=PQSM3a, LoopSeq = LoopSeq))[3])
             if(Verborrea == TRUE){cat(" & Ended.")}}
           ##Qualification
           # Known G4 Sequences
@@ -334,14 +352,14 @@ G4iMGrinder <- function(Name, Sequence, DNA=TRUE, Complementary=TRUE, RunComposi
               if(Verborrea == TRUE){cat("\nM3 - KnownQuadruplexStarted")}
               Process[length(Process)+1] <- "M3-KnownQuadruplex"
               Time[length(Time)+1] <- as.numeric(system.time(
-                PQSM3a <- .KnownQuadFun(df = PQSM3a, DNA = DNA, KnownNOTQuadruplex = KnownNOTQuadruplex, KnownQuadruplex = KnownQuadruplex, RunComposition = RunComposition)
+                PQSM3a <- G4iMGrinder:::.KnownQuadFun(df = PQSM3a, DNA = DNA, KnownNOTQuadruplex = KnownNOTQuadruplex, KnownQuadruplex = KnownQuadruplex, RunComposition = RunComposition)
               )[3])
               if(Verborrea == TRUE){cat(" & Ended.")}}
             if(Verborrea == TRUE){cat("\nMethod 3B Started")}
             ## Method 3B by Frequency
             Process[length(Process)+1] <- "M3-M3B"
             Time[length(Time)+1] <- as.numeric(system.time(
-              PQSM3b <- .M2B(df = PQSM3a, FreqWeight = FreqWeight, RunComposition = RunComposition)
+              PQSM3b <- G4iMGrinder:::.M2B(df = PQSM3a, FreqWeight = FreqWeight, RunComposition = RunComposition)
             )[3])
             if(Verborrea == TRUE){cat(" & Ended.")}}
         }else{cat("\nNo results found with M3.")}
@@ -412,13 +430,19 @@ G4iMGrinder <- function(Name, Sequence, DNA=TRUE, Complementary=TRUE, RunComposi
 ################################################################################
 #########  G4-iM Grinder: End of function.
 ################################################################################
-####
-####
+########
+########
 ################################################################################
 #########  GiGList.Analysis: Analysis of G4-iM Grinder Results
 ################################################################################
 ########
-GiGList.Analysis <- function(GiGList, iden, Density = 100000, ScoreMin = 40, FreqMin = 10,  LengthMin = 50,  Verborrea = TRUE){
+GiGList.Analysis <- function(GiGList,
+                             iden,
+                             ScoreMin = c(20, 40),
+                             FreqMin = 10,
+                             LengthMin = 50,
+                             Density = 100000,
+                             byDensity = TRUE){
 
   # Data Table
   ResultTable <- data.frame(matrix(vector(), 0, 1,
@@ -426,7 +450,8 @@ GiGList.Analysis <- function(GiGList, iden, Density = 100000, ScoreMin = 40, Fre
                             stringsAsFactors=F)
 
   # Search Info
-  require(stringr)
+  G4iMGrinder:::.PackageLoading()
+
   Name <- as.character(GiGList$Configuration$Value[GiGList$Configuration$Variable =="Name"])
   SeqSize <- as.numeric(GiGList$Configuration$Value[GiGList$Configuration$Variable =="SeqSize"])
   DNA <- as.logical(GiGList$Configuration$Value[GiGList$Configuration$Variable =="DNA"])
@@ -437,126 +462,221 @@ GiGList.Analysis <- function(GiGList, iden, Density = 100000, ScoreMin = 40, Fre
   G <- as.numeric(GiGList$Configuration$Value[GiGList$Configuration$Variable =="SeqG%"])
   C <- as.numeric(GiGList$Configuration$Value[GiGList$Configuration$Variable =="SeqC%"])
   RunComposition <- as.character(GiGList$Configuration$Value[GiGList$Configuration$Variable =="RunComposition"])
+  KTFQ <- as.character(GiGList$Configuration$Value[GiGList$Configuration$Variable =="KnownQuadruplex"])
+  KNTFQ <- as.character(GiGList$Configuration$Value[GiGList$Configuration$Variable =="KnownNOTQuadruplex"])
 
+  if(RunComposition == "C"){
+    ScoreMin <- abs(ScoreMin)*-1
+  }
   # Sequence part
   {
     ResultTable[length(ResultTable$Name) +1,] <- NA
-    ResultTable$Name[length(ResultTable$Name)] <- Name
-    ResultTable$iden[length(ResultTable$Name)] <- iden
+    ResultTable$Name <- Name
+    ResultTable$iden <- iden
     LengthTotal <- SeqSize
-    ResultTable$Length[length(ResultTable$Name)] <- LengthTotal
+    ResultTable$Length <- LengthTotal
     ResultTable$SeqG <- G
     ResultTable$SeqC <- C
   }
 
   #  Results with densities
-  if(Method2 == TRUE){
-    ResultTable$nM2a[length(ResultTable$Name)] <- as.numeric(nrow(GiGList$PQSM2a))
-    ResultTable$nM2a.D[length(ResultTable$Name)] <- round((ResultTable$nM2a[length(ResultTable$Name)]/LengthTotal)*Density,2)
-    ResultTable$nM2b[length(ResultTable$Name)] <- as.numeric(nrow(GiGList$PQSM2b))
-    ResultTable$nM2b.D[length(ResultTable$Name)] <- round((ResultTable$nM2b[length(ResultTable$Name)]/LengthTotal)*Density,2)
-    if(nrow(GiGList$PQSM2a) == 0){
-      ResultTable$nM2b[length(ResultTable$Name)] <- 0
-      ResultTable$nM2b.D[length(ResultTable$Name)] <-  0
-      ResultTable$nM2a.S[length(ResultTable$Name)] <- 0
-      ResultTable$nM2a.D.S[length(ResultTable$Name)]  <- 0
-      ResultTable$nM2b.S[length(ResultTable$Name)] <- 0
-      ResultTable$nM2b.D.S[length(ResultTable$Name)]  <- 0
-      ResultTable$nM2b.F[length(ResultTable$Name)] <- 0
-    } else {
-      if(RunComposition == "C") {
-        Index <- GiGList$PQSM2a$Score <= ScoreMin
-        ResultTable$nM2a.S[length(ResultTable$Name)] <- as.numeric(length(Index[Index == TRUE]))
-        ResultTable$nM2a.D.S[length(ResultTable$Name)]  <- round((ResultTable$nM2a.S[length(ResultTable$Name)]/LengthTotal)*Density,2)
-        Index <- GiGList$PQSM2b$Score <= ScoreMin
-        ResultTable$nM2b.S[length(ResultTable$Name)] <- as.numeric(length(Index[Index == TRUE]))
-        ResultTable$nM2b.D.S[length(ResultTable$Name)]  <- round((ResultTable$nM2b.S[length(ResultTable$Name)]/LengthTotal)*Density,2)
 
-        Index <- GiGList$PQSM2b$freq >= FreqMin
-        ResultTable$nM2b.F[length(ResultTable$Name)] <- as.numeric(length(Index[Index == TRUE]))
-      } else {
-        Index <- GiGList$PQSM2a$Score >= ScoreMin
-        ResultTable$nM2a.S[length(ResultTable$Name)] <- as.numeric(length(Index[Index == TRUE]))
-        ResultTable$nM2a.D.S[length(ResultTable$Name)]  <- round((ResultTable$nM2a.S[length(ResultTable$Name)]/LengthTotal)*Density,2)
-        Index <- GiGList$PQSM2b$Score >= ScoreMin
-        ResultTable$nM2b.S[length(ResultTable$Name)] <- as.numeric(length(Index[Index == TRUE]))
-        ResultTable$nM2b.D.S[length(ResultTable$Name)]  <- round((ResultTable$nM2b.S[length(ResultTable$Name)]/LengthTotal)*Density,2)
-
-        Index <- GiGList$PQSM2b$freq >= FreqMin
-        ResultTable$nM2b.F[length(ResultTable$Name)] <- as.numeric(length(Index[Index == TRUE]))
+    if(Method2 == TRUE){
+      ## M2A
+      if(nrow(GiGList$PQSM2a) == 0){
+        ResultTable$nM2a <- 0
+        if(length(ScoreMin)>0){
+          for(i in 1:length(ScoreMin)){
+            ResultTable[,paste0("nM2a.S|", abs(ScoreMin[i]), "|")] <- 0
+          }}
+        if(KTFQ ==T){
+          ResultTable$nM2a.KTFQ <- 0
+        }
+        if(KNTFQ ==T){
+          ResultTable$nM2a.KNTFQ <- 0
+        }
       }
-    }
-  }
-  if(Method3 == TRUE){
-    ResultTable$nM3a[length(ResultTable$Name)] <- as.numeric(nrow(GiGList$PQSM3a))
-    ResultTable$nM3a.D[length(ResultTable$Name)] <- round((ResultTable$nM3a[length(ResultTable$Name)]/LengthTotal)*Density,2)
-    ResultTable$nM3b[length(ResultTable$Name)] <- as.numeric(nrow(GiGList$PQSM3b))
-    ResultTable$nM3b.D[length(ResultTable$Name)] <- round((ResultTable$nM3b[length(ResultTable$Name)]/LengthTotal)*Density,2)
-
-    if(nrow(GiGList$PQSM3a) == 0){
-      ResultTable$nM3b[length(ResultTable$Name)] <- 0
-      ResultTable$nM3b.D[length(ResultTable$Name)] <- 0
-      ResultTable$nM3a.S[length(ResultTable$Name)] <- 0
-      ResultTable$nM3a.D.S[length(ResultTable$Name)]  <- 0
-      ResultTable$nM3b.S[length(ResultTable$Name)] <- 0
-      ResultTable$nM3b.D.S[length(ResultTable$Name)]  <- 0
-      ResultTable$nM3b.F[length(ResultTable$Name)] <- 0
-      ResultTable$nM3b.L[length(ResultTable$Name)] <- 0
-    } else {
-
-      if(RunComposition == "C") {
-        Index <- GiGList$PQSM3a$Score <= ScoreMin
-        ResultTable$nM3a.S[length(ResultTable$Name)] <- as.numeric(length(Index[Index == TRUE]))
-        ResultTable$nM3a.D.S[length(ResultTable$Name)]  <- round((ResultTable$nM3a.S[length(ResultTable$Name)]/LengthTotal)*Density,2)
-        Index <- GiGList$PQSM3b$Score <= ScoreMin
-        ResultTable$nM3b.S[length(ResultTable$Name)] <- as.numeric(length(Index[Index == TRUE]))
-        ResultTable$nM3b.D.S[length(ResultTable$Name)]  <- round((ResultTable$nM3b.S[length(ResultTable$Name)]/LengthTotal)*Density,2)
-
-        Index <- GiGList$PQSM3b$freq >= FreqMin
-        ResultTable$nM3b.F[length(ResultTable$Name)] <- as.numeric(length(Index[Index == TRUE]))
-        Index <- GiGList$PQSM3a$Length >= LengthMin
-        ResultTable$nM3a.L[length(ResultTable$Name)] <- as.numeric(length(Index[Index == TRUE]))
-      } else {
-        Index <- GiGList$PQSM3a$Score >= ScoreMin
-        ResultTable$nM3a.S[length(ResultTable$Name)] <- as.numeric(length(Index[Index == TRUE]))
-        ResultTable$nM3a.D.S[length(ResultTable$Name)]  <- round((ResultTable$nM3a.S[length(ResultTable$Name)]/LengthTotal)*Density,2)
-        Index <- GiGList$PQSM3b$Score >= ScoreMin
-        ResultTable$nM3b.S[length(ResultTable$Name)] <- as.numeric(length(Index[Index == TRUE]))
-        ResultTable$nM3b.D.S[length(ResultTable$Name)]  <- round((ResultTable$nM3b.S[length(ResultTable$Name)]/LengthTotal)*Density,2)
-
-        Index <- GiGList$PQSM3b$freq >= FreqMin
-        ResultTable$nM3b.F[length(ResultTable$Name)] <- as.numeric(length(Index[Index == TRUE]))
-        Index <- GiGList$PQSM3a$Length >= LengthMin
-        ResultTable$nM3a.L[length(ResultTable$Name)] <- as.numeric(length(Index[Index == TRUE]))
+      if(nrow(GiGList$PQSM2a) > 0){
+        ResultTable$nM2a <- as.numeric(nrow(GiGList$PQSM2a))
+        if(length(ScoreMin)>0){
+          for(i in 1:length(ScoreMin)){
+            ifelse(test = RunComposition == "G",
+                   yes = ResultTable[,paste0("nM2a.S|", abs(ScoreMin[i]), "|")] <-  nrow(GiGList$PQSM2a[GiGList$PQSM2a$Score >= ScoreMin[i],]),
+                   no =  ResultTable[,paste0("nM2a.S|", abs(ScoreMin[i]), "|")] <-  nrow(GiGList$PQSM2a[GiGList$PQSM2a$Score <= ScoreMin[i],]))
+          }
+        }
+        if(KTFQ ==T){
+          ResultTable$nM2a.KTFQ <- nrow(GiGList$PQSM2a[GiGList$PQSM2a$Conf.Quad.Seqs != "",])
+        }
+        if(KNTFQ ==T){
+          ResultTable$nM2a.KNTFQ <- nrow(GiGList$PQSM2a[GiGList$PQSM2a$Conf.NOT.Quad.Seqs != "",])
+        }
       }
 
+      ## M2B
+      if(!"PQSM2b" %in% names(GiGList)){
+        ResultTable$nM2b <- 0
+        if(length(ScoreMin)>0){
+          for(i in 1:length(ScoreMin)){
+            ResultTable[,paste0("nM2b.S|", abs(ScoreMin[i]), "|")] <- 0
+          }}
+        if(length(FreqMin)>0){
+          for(i in 1:length(FreqMin)){
+            ResultTable[,paste0("nM2b.F|", abs(FreqMin[i]), "|")] <- 0
+          }}
+        if(KTFQ ==T){
+          ResultTable$nM2b.KTFQ <- 0
+        }
+        if(KNTFQ ==T){
+          ResultTable$nM2b.KNTFQ <- 0
+        }
+        ResultTable$nM2.UniqPercent <- NA
+      } else {
+
+        ResultTable$nM2b <- nrow(GiGList$PQSM2b)
+        if(length(ScoreMin)>0){
+          for(i in 1:length(ScoreMin)){
+            ResultTable[,paste0("nM2b.S|", abs(ScoreMin[i]), "|")] <- ifelse(test = RunComposition == "G",
+                                                                             yes = ResultTable[,paste0("nM2b.S|", abs(ScoreMin[i]), "|")] <- nrow(GiGList$PQSM2b[GiGList$PQSM2b$Score >= ScoreMin[i],]),
+                                                                             no = ResultTable[,paste0("nM2b.S|", abs(ScoreMin[i]), "|")] <-  nrow(GiGList$PQSM2b[GiGList$PQSM2b$Score <= ScoreMin[i],])
+                                                                              )
+          }}
+        if(length(FreqMin)>0){
+          for(i in 1:length(FreqMin)){
+            ResultTable[,paste0("nM2b.F|", abs(FreqMin[i]), "|")] <- nrow(GiGList$PQSM2b[GiGList$PQSM2b$freq >= FreqMin[i],])
+          }}
+        if(KTFQ ==T){
+          ResultTable$nM2b.KTFQ <- nrow(GiGList$PQSM2b[GiGList$PQSM2b$Conf.Quad.Seqs != "",])
+        }
+        if(KNTFQ ==T){
+          ResultTable$nM2b.KNTFQ <- nrow(GiGList$PQSM2b[GiGList$PQSM2b$Conf.NOT.Quad.Seqs != "",])
+        }
+        ResultTable$nM2.UniqPercent <- 100*nrow(GiGList$PQSM2b[GiGList$PQSM2b$freq == 1,])/nrow(GiGList$PQSM2a)
+
+      }
     }
+
+    if(Method3 == TRUE){
+
+      ## M3A
+      if( nrow(GiGList$PQSM3a) == 0){
+        ResultTable$nM3a <- 0
+        if(length(ScoreMin)>0){
+          for(i in 1:length(ScoreMin)){
+            ResultTable[,paste0("nM3a.S|", abs(ScoreMin[i]), "|")] <- 0
+          }}
+        if(length(LengthMin)>0){
+          for(i in 1:length(LengthMin)){
+            ResultTable[,paste0("nM3a.L|", abs(FreqMin[i]), "|")] <- 0
+          }}
+        if(KTFQ ==T){
+          ResultTable$nM3a.KTFQ <- 0
+        }
+        if(KNTFQ ==T){
+          ResultTable$nM3a.KNTFQ <- 0
+        }
+      }
+      if(nrow(GiGList$PQSM3a) > 0){
+        ResultTable$nM3a <- as.numeric(nrow(GiGList$PQSM3a))
+        if(length(ScoreMin)>0){
+          for(i in 1:length(ScoreMin)){
+            ifelse(test = RunComposition == "G",
+                   yes = ResultTable[,paste0("nM3a.S|", abs(ScoreMin[i]), "|")] <-  nrow(GiGList$PQSM3a[GiGList$PQSM3a$Score >= ScoreMin[i],]),
+                   no =  ResultTable[,paste0("nM3a.S|", abs(ScoreMin[i]), "|")] <-  nrow(GiGList$PQSM3a[GiGList$PQSM3a$Score <= ScoreMin[i],])
+                  )
+          }}
+        if(length(LengthMin)>0){
+          for(i in 1:length(LengthMin)){
+            ResultTable[,paste0("nM3a.L|", abs(FreqMin[i]), "|")] <- nrow(GiGList$PQSM3a[GiGList$PQSM3a$Length >= LengthMin[i],])
+          }}
+        if(KTFQ ==T){
+          ResultTable$nM3a.KTFQ <- nrow(GiGList$PQSM3a[GiGList$PQSM3a$Conf.Quad.Seqs != "",])
+        }
+        if(KNTFQ ==T){
+          ResultTable$nM3a.KTFQ <- nrow(GiGList$PQSM3a[GiGList$PQSM3a$Conf.NOT.Quad.Seqs != "",])
+        }
+      }
+
+      ## M3B
+      if(!"PQSM3b" %in% names(GiGList)){
+        ResultTable$nM3b <- 0
+        if(length(ScoreMin)>0){
+          for(i in 1:length(ScoreMin)){
+            ResultTable[,paste0("nM3b.S|", abs(ScoreMin[i]), "|")] <- 0
+          }}
+        if(length(FreqMin)>0){
+          for(i in 1:length(FreqMin)){
+            ResultTable[,paste0("nM3b.F|", abs(FreqMin[i]), "|")] <- 0
+          }}
+        if(length(LengthMin)>0){
+          for(i in 1:length(LengthMin)){
+            ResultTable[,paste0("nM3b.L|", abs(LengthMin[i]), "|")] <- 0
+          }}
+        if(KTFQ ==T){
+          ResultTable$nM3b.KTFQ <- 0
+        }
+        if(KNTFQ ==T){
+          ResultTable$nM3b.KNTFQ <- 0
+        }
+        ResultTable$nM3.UniqPercent <- NA
+      } else {
+
+        ResultTable$nM3b <- as.numeric(nrow(GiGList$PQSM3b))
+        if(length(ScoreMin)>0){
+          for(i in 1:length(ScoreMin)){
+            ResultTable[,paste0("nM3b.S|", abs(ScoreMin[i]), "|")] <- ifelse(test = RunComposition == "G",
+                                                                             yes = ResultTable[,paste0("nM3b.S|", abs(ScoreMin[i]), "|")] <-  nrow(GiGList$PQSM3b[GiGList$PQSM3b$Score >= ScoreMin[i],]),
+                                                                             no = ResultTable[,paste0("nM3b.S|", abs(ScoreMin[i]), "|")] <-  nrow(GiGList$PQSM3b[GiGList$PQSM3b$Score <= ScoreMin[i],])
+            )
+          }}
+        if(length(FreqMin)>0){
+          for(i in 1:length(FreqMin)){
+            ResultTable[,paste0("nM3b.F|", abs(FreqMin[i]), "|")] <- nrow(GiGList$PQSM3b[GiGList$PQSM3b$freq >= FreqMin[i],])
+          }}
+        if(length(LengthMin)>0){
+          for(i in 1:length(LengthMin)){
+            ResultTable[,paste0("nM3b.L|", abs(LengthMin[i]), "|")] <- nrow(GiGList$PQSM3b[GiGList$PQSM3b$Length >= LengthMin[i],])
+          }}
+        if(KTFQ ==T){
+          ResultTable$nM3b.KTFQ <- nrow(GiGList$PQSM3b[GiGList$PQSM3b$Conf.Quad.Seqs != "",])
+        }
+        if(KNTFQ ==T){
+          ResultTable$nM3b.KNTFQ <- nrow(GiGList$PQSM3b[GiGList$PQSM3b$Conf.NOT.Quad.Seqs != "",])
+        }
+        ResultTable$nM3.UniqPercent <- 100*nrow(GiGList$PQSM3b[GiGList$PQSM3b$freq == 1,])/nrow(GiGList$PQSM3a)
+
+      }
+
+    }
+
+    if(byDensity == T){
+    cols <- (stringr::str_detect(string = colnames(ResultTable), pattern = "nM2") |
+             stringr::str_detect(string = colnames(ResultTable), pattern = "nM3")) &
+             stringr::str_detect(string = colnames(ResultTable), pattern = "Uniq", negate = T)
+
+    ResultTable[,cols] <- Density*ResultTable[,cols]/LengthTotal
   }
 
-  ##Config protocols
-  {
-    ResultTable$Config[length(ResultTable$Name)] <- paste0(
-      paste0("|", "(D)Density(", Density, ")|"),
-      if(!is.na(ScoreMin)){ if (is.numeric(ScoreMin)){ if(ScoreMin != ""){
-        paste0("(S)Score=>", ScoreMin, "|")}else{"."} }else{"."} }else{"."},
-      if (!is.na(FreqMin)){ if (is.numeric(FreqMin)){if(FreqMin != ""){
-        paste0("(F)Freq.=>", FreqMin, "|")}else{"."} }else{"."} }else{"."},
-      if (!is.na(LengthMin)){ if (is.numeric(LengthMin)){if(LengthMin != ""){if(LengthMin > MinPQSSize){
-        paste0("(L)Length=>", LengthMin, "|\n")}else{"."}}}})
-  }
-  if(Verborrea == TRUE){
-    cat("\nG4-iM Grinder - Description of the results summary table:")
-    cat("\nThe first 7 columns show the sequence size and composition")
-    cat("\nColumns nM2 and nM3 are the n? of structures found with Methods 2 & 3")
-    cat(paste0("\nD is the total structure Density per ", Density, " nucleotides of the sequence"))
-    if(!is.na(ScoreMin)){if (is.numeric(ScoreMin)){if(ScoreMin != ""){
-      cat(paste0("\nS is the total structures found with Score > ", ScoreMin))}}}
-    if (!is.na(FreqMin)){ if (is.numeric(FreqMin)){if(FreqMin != ""){
-      cat(paste0("\nF is the total structures found with frequency >", FreqMin))}}}
-    if (!is.na(LengthMin)){ if (is.numeric(LengthMin)){if(LengthMin != ""){if(LengthMin > MinPQSSize){
-      cat(paste0("\nL is the total structures found with the Length >", LengthMin, " nucleotides\n"))
-    }}}}
-  }
+    ##Config protocols
+    {
+      ResultTable$Config[length(ResultTable$Name)] <- paste0(
+        if(byDensity == T){
+          paste0("|", "(D)Density(", Density, ")|")
+        },
+        if(sum(!is.na(ScoreMin)) >0){
+          paste0("(S)ScoreMin: ", paste0(ScoreMin, collapse = ","), "|")
+          },
+        if(sum(!is.na(FreqMin))>0){
+          paste0("(F)Freq:=>", paste0(FreqMin, collapse = ","), "|")
+          },
+
+        if (sum(!is.na(LengthMin))>0){
+          paste0("(L)Length:=> ", ifelse(RunComposition == "C",
+                                         yes =  paste0(LengthMin*-1, collapse = ","),
+                                         no =   paste0(LengthMin, collapse = ",")), "|")}
+        )
+    }
+
   return(ResultTable)
 }
 ########
@@ -564,7 +684,9 @@ GiGList.Analysis <- function(GiGList, iden, Density = 100000, ScoreMin = 40, Fre
 #########  GiG.M3Structure: Analysis of M3A candidates - Higher Order Structure potential subunits
 ################################################################################
 ########
-GiG.M3Structure <- function(GiGList, M3ACandidate, MAXite){
+GiG.M3Structure <- function(GiGList,
+                            M3ACandidate,
+                            MAXite){
   #Preparing DATA
   {
     #M3A result
@@ -702,9 +824,18 @@ GiG.M3Structure <- function(GiGList, M3ACandidate, MAXite){
 #########  GiGList.Updater: Updater function for an existant G4-iM Grinder Result
 ################################################################################
 ########
-GiGList.Updater <- function(GiGList,  ChangeRunComposition = F, LoopSeq= c("G", "T", "A", "C"),
-                           WeightParameters=c(50,50,0), G4hunter=T,  PQSfinder=T, Bt=14, Pb=17, Fm=3, Em=1, Ts=4, Et=1, Is=-19, Ei=1, Ls=-16, ET = 1, FreqWeight=0,
-                           KnownQuadruplex= T, KnownNOTQuadruplex= T,  RunFormula = F, NCores = 1){
+GiGList.Updater <- function(GiGList,
+                            ChangeRunComposition = F,
+                            LoopSeq= c("G", "T", "A", "C"),
+                            WeightParameters=c(50,50,0),
+                            G4hunter=T,
+                            PQSfinder=T,
+                            Bt=14, Pb=17, Fm=3, Em=1, Ts=4, Et=1, Is=-19, Ei=1, Ls=-16, ET = 1,
+                            FreqWeight=0,
+                            KnownQuadruplex= T,
+                            KnownNOTQuadruplex= T,
+                            RunFormula = F,
+                            NCores = 1){
   ##Loading packages
   .PackageLoading()
 
@@ -734,30 +865,30 @@ GiGList.Updater <- function(GiGList,  ChangeRunComposition = F, LoopSeq= c("G", 
 
       RunComposition <- ifelse(test = RunComposition == "G", yes =  "C", no =  "G")
 
-    SeqSize <- SeqSize/2
-    if(Method2 == TRUE){
-      GiGList$PQSM2a$Sequence <- G4iMGrinder:::.CompSeqFun(DNA = DNA, Sequence = GiGList$PQSM2a$Sequence)
-      StartNew <- SeqSize - GiGList$PQSM2a$Finish+1
-      FinishNew <- SeqSize - GiGList$PQSM2a$Start+1
-      GiGList$PQSM2a$Start <- StartNew
-      GiGList$PQSM2a$Finish <- FinishNew
-      GiGList$PQSM2a$Strand <- ifelse(test = GiGList$PQSM2a$Strand == "+", yes =  "-", no =  "+")
-      GiGList$PQSM2a <- select(GiGList$PQSM2a, Start, Finish, Length, Runs, IL, mRun, Sequence,  Strand )
-      GiGList$PQSM2a <- arrange(GiGList$PQSM2a, Start)
-      rownames(GiGList$PQSM2a) <- seq(1, nrow(GiGList$PQSM2a), 1)
-    }
-    if(Method3 == TRUE){
-      GiGList$PQSM3a$Sequence <- G4iMGrinder:::.CompSeqFun(DNA = DNA, Sequence = GiGList$PQSM3a$Sequence)
-      StartNew <- SeqSize - GiGList$PQSM3a$Finish+1
-      FinishNew <- SeqSize - GiGList$PQSM3a$Start+1
-      GiGList$PQSM3a$Start <- StartNew
-      GiGList$PQSM3a$Finish <- FinishNew
-      GiGList$PQSM3a$Strand <- ifelse(test = GiGList$PQSM3a$Strand == "+", yes =  "-", no =  "+")
-      GiGList$PQSM3a <- select(GiGList$PQSM3a, Start, Finish, Length, Runs, IL, mRun, Sequence, Strand )
-      GiGList$PQSM3a <- arrange(GiGList$PQSM3a, Start)
-      rownames(GiGList$PQSM3a) <- seq(1, nrow(GiGList$PQSM3a), 1)
-    }
-    GiGList$Configuration$Value[GiGList$Configuration$Variable =="RunComposition"] <- RunComposition
+      SeqSize <- SeqSize/2
+      if(Method2 == TRUE){
+        GiGList$PQSM2a$Sequence <- G4iMGrinder:::.CompSeqFun(DNA = DNA, Sequence = GiGList$PQSM2a$Sequence)
+        StartNew <- SeqSize - GiGList$PQSM2a$Finish+1
+        FinishNew <- SeqSize - GiGList$PQSM2a$Start+1
+        GiGList$PQSM2a$Start <- StartNew
+        GiGList$PQSM2a$Finish <- FinishNew
+        GiGList$PQSM2a$Strand <- ifelse(test = GiGList$PQSM2a$Strand == "+", yes =  "-", no =  "+")
+        GiGList$PQSM2a <- select(GiGList$PQSM2a, Start, Finish, Length, Runs, IL, mRun, Sequence,  Strand )
+        GiGList$PQSM2a <- arrange(GiGList$PQSM2a, Start)
+        rownames(GiGList$PQSM2a) <- seq(1, nrow(GiGList$PQSM2a), 1)
+      }
+      if(Method3 == TRUE){
+        GiGList$PQSM3a$Sequence <- G4iMGrinder:::.CompSeqFun(DNA = DNA, Sequence = GiGList$PQSM3a$Sequence)
+        StartNew <- SeqSize - GiGList$PQSM3a$Finish+1
+        FinishNew <- SeqSize - GiGList$PQSM3a$Start+1
+        GiGList$PQSM3a$Start <- StartNew
+        GiGList$PQSM3a$Finish <- FinishNew
+        GiGList$PQSM3a$Strand <- ifelse(test = GiGList$PQSM3a$Strand == "+", yes =  "-", no =  "+")
+        GiGList$PQSM3a <- select(GiGList$PQSM3a, Start, Finish, Length, Runs, IL, mRun, Sequence, Strand )
+        GiGList$PQSM3a <- arrange(GiGList$PQSM3a, Start)
+        rownames(GiGList$PQSM3a) <- seq(1, nrow(GiGList$PQSM3a), 1)
+      }
+      GiGList$Configuration$Value[GiGList$Configuration$Variable =="RunComposition"] <- RunComposition
     } else {
       cat("\n RunComposition inversion cannot be done on a single genomic strand. The genomic complementary analysis is required.")
     }
@@ -826,29 +957,186 @@ GiGList.Updater <- function(GiGList,  ChangeRunComposition = F, LoopSeq= c("G", 
     GiGList$Configuration$Value[GiGList$Configuration$Variable =="PQSfinder.Ei"] <- Ei
     GiGList$Configuration$Value[GiGList$Configuration$Variable =="PQSfinder.Ls"] <- Ls
     GiGList$Configuration$Value[GiGList$Configuration$Variable =="PQSfinder.ET"] <- ET
-    }
+  }
   if("Conf.Quad.Seqs" %in% colnames(GiGList$PQSM2a)){
     GiGList$Configuration$Value[GiGList$Configuration$Variable =="KnownQuadruplex"] <- TRUE
-    }
+  }
   if("Conf.NOT.Quad.Seqs" %in% colnames(GiGList$PQSM2a)){
     GiGList$Configuration$Value[GiGList$Configuration$Variable =="KnownNOTQuadruplex"] <- TRUE
   }
 
   return(GiGList)
+}
+########
+################################################################################
+#########  GiG.Seq.Analysis: Sequence analysis for C and G runs
+################################################################################
+########
+GiG.Seq.Analysis <- function(Name,
+                             Sequence,
+                             DNA = TRUE ,
+                             Complementary = TRUE,
+                             Nucleotides = c("G", "C"),
+                             BulgeSize = 1,
+                             Density = 100000,
+                             byDensity = TRUE){
+
+  ## T/U automatically change all U to T.
+
+  require(stringr)
+  require(G4iMGrinder)
+
+  G4iMGrinder:::.PackageLoading()
+
+  df <- data.frame(Name = Name,
+                   DNA = DNA,
+                   Length = nchar(Sequence),
+                   Sequence = Sequence, stringsAsFactors = F,
+                   Complementary = Complementary)
+
+
+  df$Sequence <- toupper(df$Sequence)
+  df$Sequence <- stringr::str_replace_all(string = df$Sequence, pattern = "T", replacement = "U")
+
+  if(Complementary == T){
+    df$Length <- df$Length*2
+    df$Sequence <- paste0(df$Sequence, ".",G4iMGrinder:::.CompSeqFun(DNA = F, Sequence = df$Sequence), collapse = "")
   }
+
+  df <- G4iMGrinder:::.LoopQuantification(df = df, LoopSeq = c("G", "C", "A", "U", "N"))
+  colnames(df)[colnames(df) %in% "U"] <- c("UT%seq")
+  colnames(df)[colnames(df) %in% "A"] <- c("A%seq")
+  colnames(df)[colnames(df) %in% "G"] <- c("G%seq")
+  colnames(df)[colnames(df) %in% "C"] <- c("C%seq")
+  colnames(df)[colnames(df) %in% "N"] <- c("N%seq")
+
+  df$Sequence <-ifelse(DNA == TRUE,
+                       yes = stringr::str_replace_all(string = df$Sequence, pattern = "U", replacement = "T"),
+                       no = df$Sequence)
+
+  FAC <- ifelse(byDensity == TRUE, yes = Density/df$Length, no = 1)
+
+  if("G" %in% Nucleotides){
+    df$G2 <- FAC*nrow(G4iMGrinder:::.M1A(RunComposition = "G", MaxRunSize = 5, MinRunSize = 2, BulgeSize = 0, Sequence = df$Sequence))
+    if(BulgeSize >0){
+        df$G2X <- FAC*nrow(G4iMGrinder:::.M1A(RunComposition = "G", MaxRunSize = 5, MinRunSize = 2, BulgeSize = BulgeSize, Sequence = df$Sequence))
+    }
+    df$G3 <- FAC*nrow(G4iMGrinder:::.M1A(RunComposition = "G", MaxRunSize = 5, MinRunSize = 3, BulgeSize = 0, Sequence = df$Sequence))
+    if(BulgeSize >0){
+    df$G3X <- FAC*nrow(G4iMGrinder:::.M1A(RunComposition = "G", MaxRunSize = 5, MinRunSize = 3, BulgeSize = BulgeSize, Sequence = df$Sequence))
+    }
+  }
+  if("C" %in% Nucleotides){
+    df$C2 <- FAC*nrow(G4iMGrinder:::.M1A(RunComposition = "C", MaxRunSize = 5, MinRunSize = 2, BulgeSize = 0, Sequence = df$Sequence))
+    if(BulgeSize >0){
+      df$C2X <- FAC*nrow(G4iMGrinder:::.M1A(RunComposition = "C", MaxRunSize = 5, MinRunSize = 2, BulgeSize = BulgeSize, Sequence = df$Sequence))
+    }
+    df$C3 <- FAC*nrow(G4iMGrinder:::.M1A(RunComposition = "C", MaxRunSize = 5, MinRunSize = 3, BulgeSize = 0, Sequence = df$Sequence))
+    if(BulgeSize >0){
+      df$C3X <- FAC*nrow(G4iMGrinder:::.M1A(RunComposition = "C", MaxRunSize = 5, MinRunSize = 3, BulgeSize = BulgeSize, Sequence = df$Sequence))
+    }
+  }
+  df$Sequence <- NULL
+  return(df)
+}
 ########
+################################################################################
+#########  GiG.df.GenomicFeatures: Analysis of genomic features of a genome given a gff
+################################################################################
 ########
-########
-########
-########
-########
-########
-########
-########
-########
-########
-########
-########
-########
+GiG.df.GenomicFeatures  <- function(df,
+                                    org,
+                                    db, reference = F, path = file.path("_ncbi_downloads","genomes"),
+                                    NumRow =NA,
+                                    Feature = NA,
+                                    sep = ";"){
+
+  require(biomartr)
+  require(stringr)
+
+  if(!db %in% c("refseq", "genbank")){
+    stop("db not supported")
+  }
+
+  gff2 <- biomartr::read_gff(biomartr::getGFF(db = db, organism = org, reference = reference, path = path))
+  if(sum(!is.na(Feature))>0){
+    cat("\nFeatures in GFF are:\n")
+    print(unique(gff2$type))
+    gff2 <- gff2[stringr::str_detect(string = gff2$type, pattern = Feature),]
+  }
+  test1 <- c("type", "start", "end", "strand", "attribute") %in% colnames(gff2)
+
+  if(sum(test1) == 5){
+    # Preparing gff2
+    gff3 <- gff2[,c("type", "start", "end", "strand", "attribute")]
+    list.attributes <- strsplit(gff3$attribute,split = sep )
+
+    AAA <- rep(1, length(list.attributes))
+    for(i in 1:length(list.attributes)){
+      AAA[i] <- length(list.attributes[[i]])
+    }
+    AAA <- max(AAA)
+
+    if(AAA > 1){
+      AAA <- as.data.frame(matrix(data = NA, nrow = length(list.attributes), ncol = AAA))
+      for(i in 1:length(list.attributes)){
+        for(k in 1:length(list.attributes[[i]])){
+          AAA[i, k] <- list.attributes[[i]][k]
+
+        }
+      }
+      colnames(AAA) <- paste0("attribute.",seq(1,ncol(AAA),1))
+    } else {
+      AAA <- gff3$attribute
+      print(head(AAA), 5)
+      warnings("Current separator ", sep," did not split attribute column. Select another separator.")
+    }
+
+    # preparing df
+    test2 <- c("Start", "Finish") %in% colnames(df)
+
+    if(sum(test2) == 2){
+      if(sum(!is.na(NumRow))>0){
+        df <- df[NumRow,]
+      }
+
+      ## Strand
+      if(!"Strand" %in% colnames(df)){
+        df$Strand <- "+"
+      }
+      df$row.id <- rownames(df)
+      index <- c("row.id", "Start", "Finish",  "Score", "Conf.Quad.Seqs", "Strand")%in%colnames(df)
+      df <- df[, c("row.id", "Start", "Finish",  "Score", "Conf.Quad.Seqs", "Strand")[index]]
+
+      gff3 <- gff3[,c("type", "start", "end", "strand")]
+      AAA <- cbind(gff3, AAA)
+
+      ##
+      index <- NULL
+      Res <- cbind(df[NULL,], AAA[NULL,])
+      for(i in 1:nrow(df)){
+        for(j in 1:nrow(AAA)){
+          index <- (between(df$Start[i], left = AAA$start[j], right = AAA$end[j]) | between(df$Finish[i], left = AAA$start[j], right = AAA$end[j])) & (df$Strand[i] == AAA$strand[j])
+          if(index == T){
+            Res[nrow(Res)+1,] <- cbind(df[i,], AAA[j,])
+          }
+        }
+      }
+      Res$start <- NULL
+      Res$end <- NULL
+      Res$strand <- NULL
+
+      return(Res)
+
+    } else {
+      stop(paste0("df does not have ", c("Start", "Finish")[test2], " column/s."))
+    }
+  } else {
+    stop(paste0("GFF doest not have the required", c("type", "start", "end", "strand", "attribute")[!test1], " column/s." ) )
+  }
+
+
+
+}
 ########
 ########

@@ -114,6 +114,9 @@
       PQSM1b$Finish[Index][AIndex]  <- PQSM1b$Finish[Index][AIndex]-A[AIndex]
       PQSM1b$Pos[Index][AIndex]  <- PQSM1b$Pos[Index][AIndex]+A[AIndex]
 
+      if(nrow(PQSM1b) > 0){
+
+
       # These do not fit MinLoop but can get reduced, so they will be in the hope of Pre modifictation to fit.
       BIndex <- (PQSM1b$RunSize[Index][!AIndex]  >  MinRunSize)
       PQSM1b$Pos[Index][!AIndex][BIndex]<- PQSM1b$Pos[Index][!AIndex][BIndex] + PQSM1b$RunSize[Index][!AIndex][BIndex]-MinRunSize
@@ -154,6 +157,7 @@
           if(count == 10) {break()}
         }
         PQSM1b$AAA <- NULL
+      }
       }
       return(PQSM1b)
     } else {
@@ -438,8 +442,11 @@
     if(nrow(df) >0){
       require(dplyr)
 
+      oldSeq <- df$Sequence
+      df$Sequence <- stringr::str_replace_all(string = df$Sequence, pattern = "U", replacement = "T")
+
       #Finding FUN
-      KG42 <- function(RefName, RefSequence, RefLength,  df){
+      KG42 <- function(RefDNA, RefName, RefSequence, RefLength,  df){
         Names <- rep("", nrow(df))
         Index <- NULL
         i <- which(RefLength <= df$Length)
@@ -447,19 +454,31 @@
           Index <- str_detect(RefSequence, string = df$Sequence[i])
           if(sum(Index) >= 1){
             Cosa <- paste0("(?=", RefSequence, ")")
-            Names[i][Index]<- paste(Names[i][Index], RefName, paste0( "(", str_count(pattern = Cosa,string =  df$Sequence[i][Index]), ")"), " ")
+            Names[i][Index]<- paste(paste0(Names[i][Index], ": ",RefName, " (",
+                                                        str_count(pattern = Cosa,
+                                                                  string =  df$Sequence[i][Index]),
+                                                                  ifelse(RefDNA == "DNA",yes ="*", no = "^"),
+                                            ")"),"")
+
           }
         }
         return(Names)
       }
 
+
+
       if(KnownQuadruplex == TRUE){
         Ref <- filter(G4iMGrinder::GiG.DB$GiG.DB.BioInformatic, Quadruplex == TRUE)
-        if(DNA == TRUE){
-          Ref <- filter(Ref, Genome == "DNA")} else {Ref <- filter(Ref, Genome == "RNA")}
+
+
+        #if(DNA == TRUE){
+        #  Ref <- filter(Ref, Genome == "DNA")} else {Ref <- filter(Ref, Genome == "RNA")}
+
         if(RunComposition == "G"){
           Ref <- filter(Ref, Nucleotide == "G")} else {Ref <- filter(Ref, Nucleotide == "C")}
 
+
+        Ref$Sequence <- stringr::str_replace_all(string = Ref$Sequence, pattern = "U", replacement = "T")
         G4Name <- NULL
         AAA <- NULL
 
@@ -467,7 +486,7 @@
 
         if(nrow(Ref)>0){
           if(nrow(df) == 1){
-            AAA <- mapply(FUN = KG42, RefName = Ref$Name, RefSequence= Ref$Sequence, RefLength = Ref$Length, MoreArgs = list(df[,]))
+            AAA <- mapply(FUN = KG42, RefDNA = Ref$Genome, RefName = Ref$Name, RefSequence= Ref$Sequence, RefLength = Ref$Length, MoreArgs = list(df[,]))
             df$Conf.Quad.Seqs  <- paste0(AAA, collapse = "")
           } else {
             if(nrow(df) > 10000){
@@ -475,39 +494,41 @@
               Num <- 5000
               cof <- floor(nrow(df)/Num)
 
-
               for(i in 1:cof){
-                AAA <- mapply(FUN = KG42, Ref$Name, Ref$Sequence, Ref$Length, MoreArgs = list(df[(1+((i-1)*Num)):(i*Num),]))
+                AAA <- mapply(FUN = KG42, RefDNA = Ref$Genome, RefName = Ref$Name, RefSequence= Ref$Sequence, RefLength = Ref$Length, MoreArgs = list(df[(1+((i-1)*Num)):(i*Num),]))
                 G4Name <- c(G4Name, apply(AAA[,1:ncol(AAA)],1, paste0, collapse = ""))
                 rm(AAA)
               }
-
-              AAA <- mapply(FUN = KG42, Ref$Name, Ref$Sequence, Ref$Length,  MoreArgs = list(df[(1+(cof*Num)):nrow(df),]))
+              AAA <- mapply(FUN = KG42, RefDNA = Ref$Genome, RefName = Ref$Name, RefSequence= Ref$Sequence, RefLength = Ref$Length,  MoreArgs = list(df[(1+(cof*Num)):nrow(df),]))
               G4Name <- c(G4Name, apply(AAA[,1:ncol(AAA)],1, paste0, collapse = ""))
+
               rm(AAA)
+
               df$Conf.Quad.Seqs <- G4Name
 
             } else {
-              AAA <- mapply(FUN = KG42, RefName = Ref$Name, RefSequence= Ref$Sequence, RefLength = Ref$Length, MoreArgs = list(df[,]))
+              AAA <- mapply(FUN = KG42, RefDNA = Ref$Genome, RefName = Ref$Name, RefSequence= Ref$Sequence, RefLength = Ref$Length, MoreArgs = list(df[,]))
               df$Conf.Quad.Seqs  <- apply(AAA[,1:ncol(AAA)],1, paste0, collapse = "")
             }
           }
-        } else {warning(call. = F, paste0("KnownQuadruplex:No data on Known-To-Form-Quadruplex fulfill those DNA/RNA and RunComposition conditions."))}
+          df$Sequence <- oldSeq
+          } else {warning(call. = F, paste0("KnownQuadruplex:No data on Known-To-Form-Quadruplex fulfill those DNA/RNA and RunComposition conditions."))}
       }
 
       if(KnownNOTQuadruplex == TRUE){
         Ref <- filter(G4iMGrinder::GiG.DB$GiG.DB.BioInformatic, Quadruplex == FALSE)
-        if(DNA == TRUE){
-          Ref <- filter(Ref, Genome == "DNA")} else {Ref <- filter(Ref, Genome == "RNA")}
+        # if(DNA == TRUE){
+        #   Ref <- filter(Ref, Genome == "DNA")} else {Ref <- filter(Ref, Genome == "RNA")}
         if(RunComposition == "G"){
           Ref <- filter(Ref, Nucleotide == "G")} else {Ref <- filter(Ref, Nucleotide == "C")}
+        Ref$Sequence <- stringr::str_replace_all(string = Ref$Sequence, pattern = "U", replacement = "T")
 
         G4Name <- NULL
         AAA <- NULL
 
         if(nrow(Ref)>0){
           if(nrow(df) == 1){
-            AAA <- mapply(FUN = KG42, RefName = Ref$Name, RefSequence= Ref$Sequence, RefLength = Ref$Length, MoreArgs = list(df[,]))
+            AAA <- mapply(FUN = KG42, RefDNA = Ref$Genome, RefName = Ref$Name, RefSequence= Ref$Sequence, RefLength = Ref$Length, MoreArgs = list(df[,]))
             df$Conf.NOT.Quad.Seqs  <- paste0(AAA, collapse = "")
           } else {
             if(nrow(df) > 50000){
@@ -518,19 +539,20 @@
 
               cof <- floor(nrow(df)/Num)
               for(i in 1:cof){
-                AAA <- mapply(FUN = KG42, Ref$Name, Ref$Sequence, Ref$Length, MoreArgs = list(df[(1+((i-1)*Num)):(i*Num),]))
+                AAA <- mapply(FUN = KG42, RefDNA = Ref$Genome, RefName = Ref$Name, RefSequence= Ref$Sequence, RefLength = Ref$Length, MoreArgs = list(df[(1+((i-1)*Num)):(i*Num),]))
                 G4Name <- c(G4Name, apply(AAA[,1:ncol(AAA)],1, paste0, collapse = ""))
                 rm(AAA)
               }
-              AAA <- mapply(FUN = KG42, Ref$Name, Ref$Sequence, Ref$Length,  MoreArgs = list(df[(1+(cof*Num)):nrow(df),]))
+              AAA <- mapply(FUN = KG42, RefDNA = Ref$Genome, RefName = Ref$Name, RefSequence= Ref$Sequence, RefLength = Ref$Length,  MoreArgs = list(df[(1+(cof*Num)):nrow(df),]))
               G4Name <- c(G4Name, apply(AAA[,1:ncol(AAA)],1, paste0, collapse = ""))
               rm(AAA)
               df$Conf.NOT.Quad.Seqs <- G4Name
             } else {
-              AAA <- mapply(FUN = KG42, RefName = Ref$Name, RefSequence= Ref$Sequence, RefLength = Ref$Length, MoreArgs = list(df[,]))
+              AAA <- mapply(FUN = KG42, RefDNA = Ref$Genome, RefName = Ref$Name, RefSequence= Ref$Sequence, RefLength = Ref$Length, MoreArgs = list(df[,]))
               df$Conf.NOT.Quad.Seqs  <- apply(AAA[,1:ncol(AAA)],1, paste0, collapse = "")
             }
           }
+          df$Sequence <- oldSeq
         } else {warning(call. = F, paste0("KnownNOTQuadruplex:No data on Known NOT to form quadruplex fulfill those DNA/RNA and RunComposition conditions."))}}
     }
     return(df)
@@ -603,14 +625,19 @@
   .PQSfinderfun <- function(df, RunComposition, Bt, Pb, Fm, Em, Ts, Et, Is, Ei, Ls, ET, MinNRuns){
     if(RunComposition == "G"|RunComposition == "C"){
       if(!is.null(df$Length) & !is.null(df$Runs) & !is.null(df$mRun) & nrow(df) >0){
+
+        IL <- if(is.null(df$IL)){
+          rep(0, nrow(df) )
+        } else {df$IL}
+
         df$pqsfinder <- round(
-          (
-            (((df$mRun-1)* Bt)+Ts)^Et -                                             # Tetrad Stacking effect
-              ((ifelse(is.null(df$IL), yes = 0, no = df$IL) *(Pb+1)*(MinNRuns/df$Runs))+Is)^Ei -                            # interloop in run penalizations
-              ((Fm*(df$Length-ifelse(is.null(df$IL), yes = 0, no = df$IL) -(df$mRun*df$Runs))/(df$Runs-1))+Ls)^Em            # Loop penalizations
-          )^Em
-          ,0)
-        if (RunComposition == "C") {df$pqsfinder <- df$pqsfinder*-1}
+              (
+              ((((df$mRun-1)*Bt)+Ts)^Et) -                                # Tetrad Stacking effect
+              (((IL*(Pb+1)*(MinNRuns/df$Runs))+Is)^Ei) -                  # interloop in run penalizations
+              ((Fm*((df$Length-IL-(df$mRun*df$Runs))/(df$Runs-1))+Ls)^Em) # Loop penalizations
+              )
+          ,0)*ifelse(RunComposition == "C", yes = -1, no = 1)
+
       }}
     return(df)
   }
@@ -672,7 +699,7 @@
   }
   # loading packages necessary
   .PackageLoading <- function(pck.CRAN = c("stringr", "stringi", "plyr", "seqinr", "stats", "parallel", "doParallel", "beepr", "stats4", "dplyr", "BiocManager"),
-                            pck.BioC = c("BiocGenerics", "S4Vectors")){
+                              pck.BioC = c("BiocGenerics", "S4Vectors", "biomartr", "Biostrings")){
 
     #foo was written by Simon O'Hanlon Nov 8 2013. Found in: https://stackoverflow.com/questions/4090169/elegant-way-to-check-for-missing-packages-and-install-them
     #Thanks Simon and Thanks StackOverflow and its amazing community.

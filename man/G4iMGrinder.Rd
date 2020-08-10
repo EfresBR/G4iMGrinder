@@ -7,18 +7,19 @@ Detect and analyze possible G-quadruplex, i-Motifs and their higher order struct
 A function to detect and analyse quadruplex sequences in a genome. G4iM Grinder can be applied as a tool for possible G-quadruplex, i-Motif and higher-order structure identification, characterization and punctuation as the probability of in vitro formation and biological relevance. The search algorithm is highly configurable in all of the process steps.
 }
 \references{
-Soon to be published...
+Belmonte-Reche,E. and Morales,J.C. (2019) G4-iM Grinder: when size and frequency matter. G-Quadruplex, i-Motif and higher order structure search and analysis tool. NAR Genomics and Bioinformatics, 2.
 }
 \author{
 Efres Belmonte-Reche
 }
 \note{
+M1 is Method 1. M2 is Method 2. M3 is method 3.
 }
 \usage{
 G4iMGrinder(Name, Sequence, DNA = TRUE, Complementary = TRUE, RunComposition = "G", BulgeSize = 1, MaxIL = 3, MaxRunSize = 5, MinRunSize = 3, MinNRuns = 4,
 MaxNRuns = 0, MaxPQSSize = 33, MinPQSSize = 15, MaxLoopSize = 10, MinLoopSize = 0, LoopSeq = c("G", "T", "A", "C"), Method2 = TRUE, Method3 = TRUE, G4hunter = TRUE,
 cGcC = FALSE, PQSfinder = TRUE, Bt = 14, Pb = 17, Fm = 3, Em = 1, Ts = 4, Et = 1, Is = -19, Ei = 1, Ls = -16, ET = 1, WeightParameters = c(50, 50, 0),
-FreqWeight = 10, KnownQuadruplex = TRUE, KnownNOTQuadruplex = FALSE,  RunFormula = FALSE, NCores = 1, Verborrea = TRUE)
+FreqWeight = 0, KnownQuadruplex = TRUE, KnownNOTQuadruplex = FALSE,  RunFormula = FALSE, NCores = 1, Verborrea = TRUE)
 }
 \arguments{
   \item{Name}{
@@ -34,10 +35,10 @@ logical, controls if the sequence is DNA or RNA. The factory-fresh default is \c
 logical, controls if the Complementary strand should be created and analyzed. The factory-fresh default is \code{TRUE}.
 }
   \item{RunComposition}{
-character, nucleotide that composes the runs. \code{RunComposition == "G"} for G-quadruplex and \code{RunComposition == "C"} for i-Motifs. Any other nucleotide (or letter) can be imputed. The factory-fresh default is \code{"G"}. Used by M1.
+character, nucleotide that composes the runs. \code{RunComposition == "G"} for G-quadruplex and \code{RunComposition == "C"} for i-Motifs. Any other nucleotide (or letter) can be imputed. The factory-fresh default is \code{"G"}.
 }
   \item{BulgeSize}{
-integer, number of nucleotides to allow to exist in between a given \code{RunComposition}-run. The factory-fresh default is \code{1}. Used by M1.
+integer, number of acceptable non-\code{RunComposition} nucleotides to exist within runs. The factory-fresh default is \code{1}. Used by M1.
 }
   \item{MaxRunSize}{
 integer, max. number of \code{RunComposition}-nucleotides that compose a run. The factory-fresh default is \code{5}. Used by M2.
@@ -150,8 +151,7 @@ The result of G4iM Grinder is a \code{List}
 \item{PQSM3b}{A \code{data.frame} with the results found using M3B considering frequency (method 3b).  Only if \code{Method3 == TRUE}.}
 }
 
-\seealso{
-\emph{Column Meanings:}
+\section{Column Meanings}{
 
 \emph{Start}{: integer, start position of the sequence in the genome. Only for M2A and M3A.}
 
@@ -179,9 +179,9 @@ The result of G4iM Grinder is a \code{List}
 
 \emph{Score}{: numeric, sequence score combining all selected scores and sequence frequency.}
 
-\emph{Conf.Quad.Seqs}{: character, name and times found (in parenthesis) of known-to-form quadruplexes in the sequence. Only if KnownQuadruplex = TRUE.}
+\emph{Conf.Quad.Seqs}{: character, name and times found (in parenthesis) of known-to-form quadruplexes in the sequence. DNA Known-to-form structures have asterisk (*) after the number of times detected. RNA known-to-form structures have a circumflex (^) after the times detected. Only if KnownQuadruplex = TRUE.}
 
-\emph{Conf.NOT.Quad.Seqs}{: character, name and times found (in parenthesis) of known-NOT-to-form quadruplexes in the sequence. Only if KnownNOTQuadruplex = TRUE.}
+\emph{Conf.NOT.Quad.Seqs}{: character, name and times found (in parenthesis) of known-NOT-to-form quadruplexes in the sequence. DNA Known-NOT-to-form structures have asterisk (*) after the number of times detected. RNA known-NOT-to-form structures have a circumflex (^) after the times detected.Only if KnownNOTQuadruplex = TRUE.}
 }
 
 \examples{
