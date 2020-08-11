@@ -119,7 +119,7 @@ Being the CQS columns what changes between both Figure 4s.
 
 .
 
-2. **Result set 2**: The genomic results of the 2019-nCoV (SARS2 virus) and the entire virus realm, analysed using a lax configuration of parameters, from the article "Exploring G and C-quadruplex structures as potential targets against the severe acute respiratory syndrome coronavirus 2" (currently in peer review) can be found through a [one drive link](https://1drv.ms/u/s!AvVGQg2rNIwDgSYHCRcOOWiusrB6?e=cVv8fS) as "2.Ag.2020.Virus.V.1.6.0;GiGDB.V.2.5.RAR".
+2. **Result set 2**: The genomic results of the 2019-nCoV (SARS2 virus) and the entire virus realm, analysed using a lax configuration of parameters, from the article "Exploring G and C-quadruplex structures as potential targets against the severe acute respiratory syndrome coronavirus 2" (currently in peer review) can be found through a [dropbox link](https://www.dropbox.com/s/qtbabo8vr5by60c/2.%20Ag.2020.Virus.V.1.6.0%3BGiGDB.V.2.5.rar?dl=0) as "2.Ag.2020.Virus.V.1.6.0;GiGDB.V.2.5.RAR".
 
 <details>
 
@@ -131,6 +131,8 @@ The 2.5 Gb .RAR compressed file hosts two group of files.
 3.	`gisaid.3297._hcov-19.PDF`, includes the references of the 2019-nCoV 3297 genomes downloaded from the GISAID database.
 
 **ANALYTICAL DATA**:
+
+
 4.	`Analysis.RData` is the analysis results on the raw G4-iM Grinder data. It includes 5 lists:
 
 	i.	 `a.Ref.2019nCoV` – Analysis with G4iMGrinder function of the GiG-package of the 2019-nCoV reference genome. It includes the Method 2 results of the reference genome with the conservation rates and common sequences found in other viruses. The biological landmarks affected by the candidates retrieved using the function GiG.df.GenomicFeatures are also stored here.
