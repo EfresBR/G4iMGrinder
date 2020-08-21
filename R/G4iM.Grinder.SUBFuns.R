@@ -698,28 +698,84 @@
     return(df)
   }
   # loading packages necessary
-  .PackageLoading <- function(pck.CRAN = c("stringr", "stringi", "plyr", "seqinr", "stats", "parallel", "doParallel", "beepr", "stats4", "dplyr", "BiocManager"),
+  .PackageLoading <- function(pck.CRAN = c("devtools", "stringr", "stringi", "plyr", "dplyr",  "seqinr", "stats", "parallel", "doParallel", "beepr", "stats4", "BiocManager"),
                               pck.BioC = c("BiocGenerics", "S4Vectors", "biomartr", "Biostrings")){
 
-    #foo was written by Simon O'Hanlon Nov 8 2013. Found in: https://stackoverflow.com/questions/4090169/elegant-way-to-check-for-missing-packages-and-install-them
-    #Thanks Simon and Thanks StackOverflow and its amazing community.
-    foo <- function(x){
-      for( i in x ){
-        #  require returns TRUE invisibly if it was able to load package
-        if( ! require( i , character.only = TRUE, quietly = TRUE, warn.conflicts = FALSE)){
-          #  If package was not able to be loaded then re-install
-          install.packages( i , dependencies = TRUE )
-          #  Load package after installing
-          require( i , character.only = TRUE, quietly = TRUE, warn.conflicts = FALSE)
-        }
-      }
-    }
-    foo(pck.CRAN)
-    for(i in pck.BioC){
-      if( ! require( i , character.only = TRUE, quietly = TRUE, warn.conflicts = FALSE ) ){
-        BiocManager::install(pck.BioC, ask = F, update = F)
-      }
+    AAA <- as.numeric(R.version$major)
+    if(AAA < 4){
+      stop("Please, before proceding upgrade R to at least version 4.0.")
     }
 
-  }
+    Errors <-0
+    installed <- 0
+
+    installed_packages <- pck.CRAN %in% rownames(installed.packages())
+    if (any(installed_packages == FALSE)) {
+      suppressWarnings(suppressMessages(install.packages(pck.CRAN[!installed_packages], dependencies = TRUE, quiet = T, verbose = F)))
+        installed <- installed+1
+    }
+
+    installed_packages <- pck.BioC %in% rownames(installed.packages())
+    if (any(installed_packages == FALSE)) {
+      suppressWarnings(suppressMessages(BiocManager::install(pck.BioC[!installed_packages], dependencies = TRUE, quiet = T, verbose = F)))
+      installed <- installed+1
+    }
+
+    joint <- c(pck.CRAN, pck.BioC)
+    installed_packages <- joint %in% rownames(installed.packages())
+    if (any(installed_packages == FALSE)) {
+      Errors <- sum(any(installed_packages == FALSE))
+    }
+    if(Errors >0){
+      stop(paste0("Depedent packages failed to load. Please, install manually the following packages before using G4-iM Grinder:\n",
+                  joint[installed_packages == FALSE]
+                  ))
+    } else {
+      for(i in 1:length(joint)){
+          invisible(
+                suppressPackageStartupMessages(suppressWarnings(suppressMessages(require(joint[i], character.only = T))))
+          )
+    }
+    }
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 }

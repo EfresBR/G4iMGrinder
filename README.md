@@ -1,20 +1,22 @@
 # **G4-iM Grinder**
 G4-iM Grinder is a fast, robust and highly adaptable algorithm. It is capable of locating, identifying, qualifying and quantifying DNA and RNA potential quadruplex structures, such as G-quadruplex, i-Motifs and their higher order versions.
 
-Read the open-access paper on the algorithm: [G4-iM Grinder: when size and frequency matter. G-Quadruplex, i-Motif and higher order structure search and analysis tool](https://academic.oup.com/nargab/article/2/1/lqz005/5576141)
+Read the open-access paper on the algorithm: [G4-iM Grinder: when size and frequency matter. G-Quadruplex, i-Motif and higher order structure search and analysis tool](https://bit.ly/3j2UUjC)
 
-Soon to be published: "Exploring G and C-quadruplex structures as potential targets against the severe acute respiratory syndrome coronavirus 2". Preprint version soon to be linked. Results can be found in the result section.  
+Soon to be published: [Exploring G and C-quadruplex structures as potential targets against the severe acute respiratory syndrome coronavirus 2](https://bit.ly/3j1jFMP) (Preprint version).
+
+The Results of both manuscripts can be found in the result section.  
 
 <img src="images/Abstract.png" align="middle" height="500" />
 
 Please report in the issue section if you find bugs, problems or wish to see some features added.
 
 ###       **G4-iM Grinder's Updates & News**
-G4-iM Grinder latest version: 1.6.0 (08-2020).
+G4-iM Grinder latest version: 1.6.01 (08-2020).
 <details>
 Changes:
 
-For Version 1.6.00:
+For Version 1.6.01:
 
 1. Changed `GiGList.Analysis` to accept vectors instead of just single numerals in its parameters. Changed also the results returned, with better summaries of the G4-iM Grinder function.
 2. Changed the concept of DNA and RNA sequences in the `G4-iM Grinder` main function and other related functions to be more efficient.
@@ -23,6 +25,7 @@ For Version 1.6.00:
 5. G4-iM Grinder version and the G4-iM Grinder database version are now saved in the configuration dataframe of each result.
 6. Added a function to analyze the characteristic and runs of a genome (`GiG.Seq.Analysis`).
 7. Added a function to analyze the biological landmarks affected by the potential quadruplex results (`GiG.df.GenomicFeatures`).
+8. Changed how packages are loaded so they are silent when doing so. The function will also check if all dependencies are installed and R version is at least 4.0. If any of these fail, and error will be returned asking the user to fix the problem/s before proceeding with the G4-iM Grinder analysis.
 
 For Version 1.5.95:
 
@@ -86,7 +89,7 @@ Comments: If you find an error within GiG.DB or want to include other sequences,
 
 Please report in the issue section if any links are broken.
 
-1. **Result set 1**: The genomic results of humans and 49 other humman pathogenic species, analysed using the predefined parameter configuration of the algorithm and published in the article [G4-iM Grinder: when size and frequency matter. G-Quadruplex, i-Motif and higher order structure search and analysis tool](https://academic.oup.com/nargab/article/2/1/lqz005/5576141), can be found through a [one drive link](https://1drv.ms/u/s!AvVGQg2rNIwDgSVRBSqXju1t1B05?e=uvVk7M) as "1. March2020.V.1.5.9;GiGDB.V.2.5.RAR".
+1. **Result set 1**: The genomic results of humans and 49 other humman pathogenic species, analysed using the predefined parameter configuration of the algorithm and published in the article [G4-iM Grinder: when size and frequency matter. G-Quadruplex, i-Motif and higher order structure search and analysis tool](https://bit.ly/3j2UUjC), can be found through [this link](https://bit.ly/31eTaO6) as "1. March2020.V.1.5.9;GiGDB.V.2.5.RAR".
 
 <details>
 
@@ -119,7 +122,7 @@ Being the CQS columns what changes between both Figure 4s.
 
 .
 
-2. **Result set 2**: The genomic results of the 2019-nCoV (SARS2 virus) and the entire virus realm, analysed using a lax configuration of parameters, from the article "Exploring G and C-quadruplex structures as potential targets against the severe acute respiratory syndrome coronavirus 2" (currently in peer review) can be found through a [dropbox link](https://www.dropbox.com/s/qtbabo8vr5by60c/2.%20Ag.2020.Virus.V.1.6.0%3BGiGDB.V.2.5.rar?dl=0) as "2.Ag.2020.Virus.V.1.6.0;GiGDB.V.2.5.RAR".
+2. **Result set 2**: The genomic results of the 2019-nCoV (SARS-CoV-2 virus) and the entire virus realm, analyzed using a lax configuration of parameters, from the article "Exploring G and C-quadruplex structures as potential targets against the severe acute respiratory syndrome coronavirus 2" (currently in peer review) can be found through [this link](https://bit.ly/2EdNzyL) as "2.Ag.2020.Virus.V.1.6.0;GiGDB.V.2.5.RAR".
 
 <details>
 
