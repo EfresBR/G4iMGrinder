@@ -7,7 +7,7 @@ Soon to be published: [Exploring G- and C-quadruplex structures as potential tar
 
 The Results of both manuscripts can be found in the result section.  
 
-<img src="https://www.biorxiv.org/content/biorxiv/early/2019/06/17/532382/F1.large.jpg?width=800&height=600&carousel=1" align="middle" height="500" />
+<div style="text-align:center"><img src="https://www.biorxiv.org/content/biorxiv/early/2019/06/17/532382/F1.large.jpg?width=800&height=600&carousel=1" height="500" /></div>
 
 Please report in the issue section if you find bugs, problems or wish to see some features added.
 
@@ -18,11 +18,11 @@ Please report in the issue section if you find bugs, problems or wish to see som
 
 [**G-quadruplexes (G4s)**](https://en.wikipedia.org/wiki/G-quadruplex): G4s are DNA or RNA sequences that are rich in guanine, where four guanine bases can associate through Hoogsteen hydrogen bonding to form a square planar structure called a guanine tetrad (G-tetrad or G-quartet), and two or more guanine tetrads (from G-tracts, continuous runs of guanine) can stack on top of each other to form a G4,stabilized by monovalent cation/s. The unimolecular versions occur naturally near the ends of the chromosomes, better known as the telomeric regions, and in transcriptional regulatory regions of multiple genes, both in microbes and across vertebrates including oncogenes in humans.
 
-<img src ="https://upload.wikimedia.org/wikipedia/commons/thumb/5/5c/G-quadruplex.svg/600px-G-quadruplex.svg.png" align="middle" height="150"/>
+<div style="text-align:center"><img src ="https://upload.wikimedia.org/wikipedia/commons/thumb/5/5c/G-quadruplex.svg/600px-G-quadruplex.svg.png" height="150"/></div>
 
 [**C-quadruplexes or i-Motifs (iM)**](https://en.wikipedia.org/wiki/I-motif_DNA): iMs are four-stranded quadruplex structures formed by cytosine-rich DNA or RNA, similar to the G-quadruplex structures that guanine-rich genomes forms. C-rich DNA regions are common in gene regulation portions of the genome. Recently, iM were discovered in human cells and were shown to play a role in cell reproduction. iM have potential applications in nanotechnology and nanomedicine, because size is more than 1 nm and less than 100 nm due to their unique pH sensitivity and have been used as biosensors, nanomachines, and molecular switches.
 
-<img align="middle" src ="https://external-content.duckduckgo.com/iu/?u=https%3A%2F%2Fupload.wikimedia.org%2Fwikipedia%2Fcommons%2Fthumb%2F5%2F5d%2FRNA_i-motif.gif%2F220px-RNA_i-motif.gif&f=1&nofb=1"  height="150"/>
+<div style="text-align:center"><img src ="https://external-content.duckduckgo.com/iu/?u=https%3A%2F%2Fupload.wikimedia.org%2Fwikipedia%2Fcommons%2Fthumb%2F5%2F5d%2FRNA_i-motif.gif%2F220px-RNA_i-motif.gif&f=1&nofb=1"  height="150"/></div>
 
 [...adapted from wikipedia...]</br>
 
@@ -39,8 +39,8 @@ G4-iM Grinder (GiG) is an algorithm that incorporates a quadruplex search engine
 2. **GiG's quadruplex qualification engine** was designed to filter the results of the search-engine. The filters are modular. They can include: scoring filters (which calculate the probability of the sequence forming an actual quadruplex or i-Motif), location in the genome filters, presence of a desired pattern filter, frequency of appearance in the genome filters, and presence of already known-to-form quadruplexes.
 
 </br>
-<img align="middle" src ="https://www.researchgate.net/profile/Efres_Belmonte-Reche/publication/336374922/figure/fig1/AS:812376744013825@1570697117586/A-G4-iM-Grinders-workflow-when-RunComposition-G-to-find-PQS-and-PHOQS-in-a-genome.ppm" height="600"/>
-
+<div style="text-align:center"><img src ="https://www.researchgate.net/profile/Efres_Belmonte-Reche/publication/336374922/figure/fig1/AS:812376744013825@1570697117586/A-G4-iM-Grinders-workflow-when-RunComposition-G-to-find-PQS-and-PHOQS-in-a-genome.ppm" height="600"/>
+</div>
 </details>
 </br>
 
