@@ -3,13 +3,53 @@ G4-iM Grinder is a fast, robust and highly adaptable algorithm. It is capable of
 
 Read the open-access paper on the algorithm: [G4-iM Grinder: when size and frequency matter. G-Quadruplex, i-Motif and higher order structure search and analysis tool](https://bit.ly/3j2UUjC)
 
-Soon to be published: [Exploring G and C-quadruplex structures as potential targets against the severe acute respiratory syndrome coronavirus 2](https://bit.ly/3j1jFMP) (Preprint version).
+Soon to be published: [Exploring G- and C-quadruplex structures as potential targets for the severe acute respiratory syndrome coronavirus 2](https://bit.ly/3j1jFMP) (Preprint version).
 
 The Results of both manuscripts can be found in the result section.  
 
-<img src="images/Abstract.png" align="middle" height="500" />
+<img src="https://www.biorxiv.org/content/biorxiv/early/2019/06/17/532382/F1.large.jpg?width=800&height=600&carousel=1" align="middle" height="500" />
 
 Please report in the issue section if you find bugs, problems or wish to see some features added.
+
+###				**Quadruplexes and G4-iM Grinder**
+
+*What are quadruplexes?*
+<details>
+
+[**G-quadruplexes (G4s)**](https://en.wikipedia.org/wiki/G-quadruplex): G4s are DNA or RNA sequences that are rich in guanine, where four guanine bases can associate through Hoogsteen hydrogen bonding to form a square planar structure called a guanine tetrad (G-tetrad or G-quartet), and two or more guanine tetrads (from G-tracts, continuous runs of guanine) can stack on top of each other to form a G4,stabilized by monovalent cation/s. The unimolecular versions occur naturally near the ends of the chromosomes, better known as the telomeric regions, and in transcriptional regulatory regions of multiple genes, both in microbes and across vertebrates including oncogenes in humans.
+
+<img src ="https://upload.wikimedia.org/wikipedia/commons/thumb/5/5c/G-quadruplex.svg/600px-G-quadruplex.svg.png" align="middle" height="150"/>
+
+[**C-quadruplexes or i-Motifs (iM)**](https://en.wikipedia.org/wiki/I-motif_DNA): iMs are four-stranded quadruplex structures formed by cytosine-rich DNA or RNA, similar to the G-quadruplex structures that guanine-rich genomes forms. C-rich DNA regions are common in gene regulation portions of the genome. Recently, iM were discovered in human cells and were shown to play a role in cell reproduction. iM have potential applications in nanotechnology and nanomedicine, because size is more than 1 nm and less than 100 nm due to their unique pH sensitivity and have been used as biosensors, nanomachines, and molecular switches.
+
+<img align="middle" src ="https://external-content.duckduckgo.com/iu/?u=https%3A%2F%2Fupload.wikimedia.org%2Fwikipedia%2Fcommons%2Fthumb%2F5%2F5d%2FRNA_i-motif.gif%2F220px-RNA_i-motif.gif&f=1&nofb=1"  height="150"/>
+
+[...adapted from wikipedia...]</br>
+
+</details>
+</br>
+
+*Searching for quadruplexes*?
+<details>
+</br>
+Quadruplexes have been studied abundantly in the last few years due to the increasing evidence of their functional role in many living organisms, yet the natural properties by which they form and work are very much unknown. To identify new structures, in silico predictions are based on in vitro verified paradigms. Loops, tetrad number, run imperfections and the flanking regions of the structures all seem to play important roles in the topology and dynamics of these secondary structures.
+
+G4-iM Grinder (GiG) is an algorithm that incorporates a quadruplex search engine and several quadruplex qualifiers functions to locate these genomic structures.
+1. **GiG's quadruplex search engine** was designed to be very tolerant as to allow the detection of all possible candidates that fulfil the user-established criteria.
+2. **GiG's quadruplex qualification engine** was designed to filter the results of the search-engine. The filters are modular. They can include: scoring filters (which calculate the probability of the sequence forming an actual quadruplex or i-Motif), location in the genome filters, presence of a desired pattern filter, frequency of appearance in the genome filters, and presence of already known-to-form quadruplexes.
+
+</br>
+<img align="middle" src ="https://www.researchgate.net/profile/Efres_Belmonte-Reche/publication/336374922/figure/fig1/AS:812376744013825@1570697117586/A-G4-iM-Grinders-workflow-when-RunComposition-G-to-find-PQS-and-PHOQS-in-a-genome.ppm" height="600"/>
+
+</details>
+</br>
+
+**Abbreviations and other important information**
+1. **Quadruplex**: 			A genomic sequence that forms an G-Quadruplex (G4) or an i-Motif (iM).
+2. **G4s**: 						A sequence which has been confirmed to form a G4 *in vitro*.
+3. **iM**:							A sequence which has been confirmed to form an iM *in vitro*.
+4. **PQS**: 						A Potential G4 Sequence detected with an *in silico* algorithm, which has **NOT** been confirmed *in vitro*, at least initially. It requires of biophysical or biochemical methods to confirm.
+5. **PiMS**: 						A Potential iM Sequence detected with an *in silico* algorithm, which has **NOT** been confirmed *in vitro*, at least initially. It requires of biophysical or biochemical methods to confirm.
 
 ###       **G4-iM Grinder's Updates & News**
 G4-iM Grinder latest version: 1.6.01 (08-2020).
@@ -35,10 +75,10 @@ a. If the confirmed sequence is DNA, the results will include an asterisk (&ast;
 b. If the result sequence is RNA, it will include a circumflex (^).
 c. Example: If the GUK1 DNA quadruplex was detected within the results one time, the Conf.Quad.Seqs column will state: GUK1 (1&ast;). If the 42.HIRA (WT) RNA quadruplex was detected within the results one time, the Conf.Quad.Seqs column will state: 42.HIRA (WT) (1^)
 </details>
-.
+</br>
 
 
-Version 2.5 of G4-iM Grinder's database (GiG.DB) is also here (03-2020). Now it includes **2851 sequences** confirmed in literature to form (or not to form) tetraplex structures.
+Version 2.51 of G4-iM Grinder's database (GiG.DB) is also here (09-2020). Now it includes the currently confirmed G4 and iM sequences known-to-form in the SARS-CoV-2, and over **2800 sequences** other confirmed to form (or not to form) tetraplex structures in literature.
 <details>
 
 The GiG.DB within the G4-iM Grinder package includes:
@@ -83,7 +123,7 @@ The GiG.DB within the G4-iM Grinder package includes:
 Comments: If you find an error within GiG.DB or want to include other sequences, please open an issue request in Github, **"EfresBR/G4iMGrinder"**.
 
 </details>
-.
+</br>
 
 ###       **G4-iM Grinder's Results**
 
@@ -120,9 +160,9 @@ Being the CQS columns what changes between both Figure 4s.
 
 </details>
 
-.
+</br>
 
-2. **Result set 2**: The genomic results of the 2019-nCoV (SARS-CoV-2 virus) and the entire virus realm, analyzed using a lax configuration of parameters, from the article "Exploring G and C-quadruplex structures as potential targets against the severe acute respiratory syndrome coronavirus 2" (currently in peer review) can be found through [this link](https://bit.ly/2EdNzyL) as "2.Ag.2020.Virus.V.1.6.0;GiGDB.V.2.5.RAR".
+2. **Result set 2**: The genomic results of the 2019-nCoV (SARS-CoV-2 virus) and the entire virus realm, analyzed using a lax configuration of parameters, from the article "Exploring G- and C-quadruplex structures as potential targets for the severe acute respiratory syndrome coronavirus 2" (currently in peer review) can be found through [this link](https://bit.ly/2EdNzyL) as "2.Ag.2020.Virus.V.1.6.0;GiGDB.V.2.5.RAR".
 
 <details>
 
@@ -149,7 +189,44 @@ The 2.5 Gb .RAR compressed file hosts two group of files.
 	v.	`Baltimore.C` – Baltimore Classification tables regarding each group characteristics and classification of each family into its group.
 
 </details>
-.
+</br>
+
+Additionally, an annotation file for the SARS-CoV-2 analysis in **[GFF3](https://bit.ly/30cCups)** format and in **[RDS](https://bit.ly/3kTAxq0)** format of GiG's PQS and PiMS results can be downloaded directly.
+</br>It includes the PQS and PiMS candidates found with G4-iM Grinder, their scores and the already known-to-form G4 and i-Motif sequences confirmed in vitro.
+More information regarding these confirmed sequences can be accessed through the G4-iM Grinder database (GiG.DB), please follow section J of the user guide to do so. These include....
+
+
+
+###### **SARS-CoV-2** confirmed quadruplex-related sequences
+
+|Quadruplex	|Genome	|Nucleotide	|Name				|Sequence									|References																																																		|
+|---		|---	|---		|---				|:---:										|:---:																																																		|
+|TRUE		|DNA	|G			|CoVID.DNA.G4.1		|**GG**CT**GG**CAAT**GG**C**GG**			|[10.1101/2020.08.19.257493](https://bit.ly/3j1jFMP)																																						|
+|TRUE		|DNA	|C			|CoVID.DNA.iM.1		|**CC**TT**CC**TTA**CCC**AGAT**CC**			|[10.1101/2020.08.19.257493](https://bit.ly/3j1jFMP)																																						|
+|TRUE		|RNA	|G			|CoVID.RNA.G4.1		|**GG**CU**GG**CAAU**GG**C**GG**			|[10.1101/2020.08.19.257493](https://bit.ly/3j1jFMP)	&	[10.1002/anie.202011419](https://onlinelibrary.wiley.com/doi/epdf/10.1002/anie.202011419)														|
+|FALSE		|RNA	|G			|CoVID.RNA.G4.1.MUT	|GACUGACAAUGACG								|[10.1002/anie.202011419](https://onlinelibrary.wiley.com/doi/epdf/10.1002/anie.202011419)																													|
+|TRUE		|RNA	|G			|CoVID.RNA.G4.2		|**GG**A**GG**A**GG**UGUUGCA**GG**			|[10.1101/2020.08.19.257493](https://bit.ly/3j1jFMP)																																						|
+|TRUE		|RNA	|G			|CoVID.RNA.G4.3		|**GG**UAUGU**GG**AAA**GG**UUAU**GG**		|[10.1093/bib/bbaa114](https://academic.oup.com/bib/advance-article/doi/10.1093/bib/bbaa114/5849532)	&		[10.1002/anie.202011419](https://onlinelibrary.wiley.com/doi/epdf/10.1002/anie.202011419)	|
+|TRUE		|RNA	|G			|CoVID.RNA.G4.4		|**GG**CUUAUA**GG**UUUAAU**GG**UAUU**GG**	|[10.1093/bib/bbaa114](https://academic.oup.com/bib/advance-article/doi/10.1093/bib/bbaa114/5849532)	&		[10.1002/anie.202011419](https://onlinelibrary.wiley.com/doi/epdf/10.1002/anie.202011419)	|
+|FALSE		|RNA	|G			|CoVID.RNA.G4.5		|**GG**CCAU**GG**UACAUUU**GG**CUA**GG**		|[10.1002/anie.202011419](https://onlinelibrary.wiley.com/doi/epdf/10.1002/anie.202011419)																													|
+|FALSE		|RNA	|C			|CoVID.RNA.iM.1		|**CC**UU**CC**UUA**CCC**AGAU**CC**			|[10.1101/2020.08.19.257493](https://bit.ly/3j1jFMP)																																						|
+|FALSE		|DNA	|C			|SARS-DNA.iM.1		|**CC**TG**CC**TTA**CCC**AGAT**CC**			|[10.1101/2020.08.19.257493](https://bit.ly/3j1jFMP)																																						|
+
+###### **SARS-CoV-2** quadruplex-related biophysical data
+
+|Name				|Tm(ºC)	|[K+]mM	|[Na+]mM	|Topology	|References																							|
+|:---:				|:---:	|:---:	|:-:		|:---:		|:---:																								|
+|CoVID.RNA.G4.1		|57.7	|100	|0			|parallel	|[10.1002/anie.202011419](https://onlinelibrary.wiley.com/doi/epdf/10.1002/anie.202011419)			|
+|CoVID.RNA.G4.3		|41.2	|100	|0			|			|[10.1002/anie.202011419](https://onlinelibrary.wiley.com/doi/epdf/10.1002/anie.202011419)			|
+|CoVID.RNA.G4.4		|-1		|100	|0			|unformed	|[10.1002/anie.202011419](https://onlinelibrary.wiley.com/doi/epdf/10.1002/anie.202011419)			|
+|CoVID.RNA.G4.5		|-1		|100	|0			|unformed	|[10.1002/anie.202011419](https://onlinelibrary.wiley.com/doi/epdf/10.1002/anie.202011419)			|
+|CoVID.RNA.G4.1.MUT	|-1		|100	|0			|unformed	|[10.1002/anie.202011419](https://onlinelibrary.wiley.com/doi/epdf/10.1002/anie.202011419)			|
+|CoVID.RNA.G4.1		|54.4	|50		|0			|parallel	|[10.1101/2020.08.19.257493](https://bit.ly/3j1jFMP)												|
+|CoVID.RNA.G4.2		|48.1	|50		|0			|parallel	|[10.1101/2020.08.19.257493](https://bit.ly/3j1jFMP)												|
+|CoVID.RNA.G4.3		|31.5	|150	|0			|parallel	|[10.1093/bib/bbaa114](https://academic.oup.com/bib/advance-article/doi/10.1093/bib/bbaa114/5849532)|
+|CoVID.RNA.G4.4		|30.5	|150	|0			|parallel	|[10.1093/bib/bbaa114](https://academic.oup.com/bib/advance-article/doi/10.1093/bib/bbaa114/5849532)|
+
+</br>
 
 ###       **G4-iM Grinder's Installation and User Guide**
 
