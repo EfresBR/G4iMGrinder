@@ -129,14 +129,14 @@ Comments: If you find an error within GiG.DB or want to include other sequences,
 
 Please report in the issue section if any links are broken.
 
-  * **SARS-CoV-2** reference genome (GCF_009858895.2) analysis using G4-iM Grinder and a lax quadruplex-configuration of parameters, can be found in different formats.
+**SARS-CoV-2** reference genome (GCF_009858895.2) analysis using G4-iM Grinder and a lax quadruplex-configuration of parameters, can be found in different formats.
 * **[.RDS](http://bit.ly/3drDhdM)** (R, recommended)
 * **[.gff3](http://bit.ly/3ue7Edi)**
 * **[.xlsx](http://bit.ly/3s4SDc3)**  (excel)</br>
 They includes all the positions of the PQS and PiMS found, the conservation, and the G4s and iMs already confirmed in the manuscript and elsewhere.
 
-* **VARIANTS** of **SARS-CoV-2** found in other lineages and clades and not in the reference genome, can be found in **[.RDS](http://bit.ly/37rutk0)** format. Each entry has the (GISAID) ID, name, Lineage and Clade of the SARS-COV-2 genome where it was located. </br> 
-* Full GiG Results of the **VIRUS REALM** and genome **REFERENCES**, analyzed using a lax quadruplex-configuration of parameters can be found next.
+**VARIANTS** of **SARS-CoV-2** found in other lineages and clades and not in the reference genome, can be found in **[.RDS](http://bit.ly/37rutk0)** format. Each entry has the (GISAID) ID, name, Lineage and Clade of the SARS-COV-2 genome where it was located. </br> 
+Full GiG Results of the **VIRUS REALM** and genome **REFERENCES**, analyzed using a lax quadruplex-configuration of parameters can be found next.
 
 <details>
 
@@ -149,7 +149,7 @@ They includes all the positions of the PQS and PiMS found, the conservation, and
 
 
 **RAW DATA**:
-* [Virus.Results.RDS](https://bit.ly/30cCups), (2.4 Gb) includes the raw data of the G4-iM Grinder analysis on all the virus realm as a list. The list groups virus species by their families. Each species list includes a PQS and PiMS sublist. These store the composition, location, known-quadruplex sequences presence and score (amongst others) of PQS/PiMS found in each virus. The information used in this analysis was Method 2; size restricted overlapping search method (PQSM2A data.frames), although Method 3 results are also included.
+* [Virus.Results.RDS](http://bit.ly/3sanTqc), (2.4 Gb) includes the raw data of the G4-iM Grinder analysis on all the virus realm as a list. The list groups virus species by their families. Each species list includes a PQS and PiMS sublist. These store the composition, location, known-quadruplex sequences presence and score (amongst others) of PQS/PiMS found in each virus. The information used in this analysis was Method 2; size restricted overlapping search method (PQSM2A data.frames), although Method 3 results are also included.
 * [GISAID.refs.rar](http://bit.ly/3s5X4n4), includes the references of the  17312 SARS-CoV-2 genomes downloaded from the GISAID database.
 
 
@@ -201,7 +201,7 @@ They includes all the positions of the PQS and PiMS found, the conservation, and
 
 </br>
 
-* G4-iM Grinder's results in **HUMANS** and **49 PATHOGENIC SPECIES** analysed using the predefined parameter configuration of the algorithm and published in the article [G4-iM Grinder: when size and frequency matter. G-Quadruplex, i-Motif and higher order structure search and analysis tool](https://bit.ly/3j2UUjC), can be found through [this link](https://1drv.ms/u/s!AvVGQg2rNIwDgTeth6qclA8Rz5UM?e=gmEI1a)
+G4-iM Grinder's results in **HUMANS** and **49 PATHOGENIC SPECIES** analysed using the predefined parameter configuration of the algorithm and published in the article [G4-iM Grinder: when size and frequency matter. G-Quadruplex, i-Motif and higher order structure search and analysis tool](https://bit.ly/3j2UUjC), can be found through [this link](https://1drv.ms/u/s!AvVGQg2rNIwDgTeth6qclA8Rz5UM?e=gmEI1a)
 
 <details>
 
