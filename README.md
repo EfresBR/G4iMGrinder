@@ -129,7 +129,79 @@ Comments: If you find an error within GiG.DB or want to include other sequences,
 
 Please report in the issue section if any links are broken.
 
-1. **Result set 1**: The genomic results of humans and 49 other humman pathogenic species, analysed using the predefined parameter configuration of the algorithm and published in the article [G4-iM Grinder: when size and frequency matter. G-Quadruplex, i-Motif and higher order structure search and analysis tool](https://bit.ly/3j2UUjC), can be found through [this link](https://bit.ly/31eTaO6) as "1. March2020.V.1.5.9;GiGDB.V.2.5.RAR".
+  * **SARS-CoV-2** reference genome (GCF_009858895.2) analysis using G4-iM Grinder and a lax quadruplex-configuration of parameters, can be found in different formats.
+* **[.RDS](http://bit.ly/3drDhdM)** (R, recommended)
+* **[.gff3](http://bit.ly/3ue7Edi)**
+* **[.xlsx](http://bit.ly/3s4SDc3)**  (excel)</br>
+They includes all the positions of the PQS and PiMS found, the conservation, and the G4s and iMs already confirmed in the manuscript and elsewhere.
+
+* **VARIANTS** of **SARS-CoV-2** found in other lineages and clades and not in the reference genome, can be found in **[.RDS](http://bit.ly/37rutk0)** format. Each entry has the (GISAID) ID, name, Lineage and Clade of the SARS-COV-2 genome where it was located. </br> 
+* Full GiG Results of the **VIRUS REALM** and genome **REFERENCES**, analyzed using a lax quadruplex-configuration of parameters can be found next.
+
+<details>
+
+**ANALYTICAL DATA**:
+
+* [Analysis.RData](http://bit.ly/3qxZH0v), is the analysis results on the raw G4-iM Grinder data. It includes 3 lists.
+1.	Analysis.Coronaviridae.fam – Analysis with GiGList.Analysis function of the GiG-package of the Coronaviridae family. PQS and PiMS lists are the analysis for PQS and PiMS respectively. df.index data frame stores the identification of each genome used.
+2.	Analysis.Virus.realm - Analysis with GiGList.Analysis function of the GiG-package of the entire virus realm. PQS and PiMS lists are the analysis for PQS and PiMS respectively. df.index data frame stores the identification of each genome used. Genome data frame is the analysis with the function GiG.Seq.Analysis.
+3.	Baltimore.C – Baltimore Classification tables regarding each group characteristics and classification of each family into its group.
+
+
+**RAW DATA**:
+* [Virus.Results.RDS](https://bit.ly/30cCups), (2.4 Gb) includes the raw data of the G4-iM Grinder analysis on all the virus realm as a list. The list groups virus species by their families. Each species list includes a PQS and PiMS sublist. These store the composition, location, known-quadruplex sequences presence and score (amongst others) of PQS/PiMS found in each virus. The information used in this analysis was Method 2; size restricted overlapping search method (PQSM2A data.frames), although Method 3 results are also included.
+* [GISAID.refs.rar](http://bit.ly/3s5X4n4), includes the references of the  17312 SARS-CoV-2 genomes downloaded from the GISAID database.
+
+
+
+</details>
+</br>
+
+
+
+###### **SARS-CoV-2** confirmed quadruplex-related sequences
+
+|Quadruplex	|Genome	|Nucleotide	|Name					|Sequence										|References																																																	|
+|---		|---	|---		|---					|:---:											|:---:																																																		|
+|TRUE		|DNA	|G			|CoVID.DNA.G4.1			|**GG**CT**GG**CAAT**GG**C**GG**				|[10.1101/2020.08.19.257493](https://bit.ly/3j1jFMP)																																						|
+|TRUE		|DNA	|C			|CoVID.DNA.iM.1			|**CC**TT**CC**TTA**CCC**AGAT**CC**				|[10.1101/2020.08.19.257493](https://bit.ly/3j1jFMP)																																						|
+|TRUE		|RNA	|G			|CoVID.RNA.G4.1			|**GG**CU**GG**CAAU**GG**C**GG**				|[10.1101/2020.08.19.257493](https://bit.ly/3j1jFMP)	&	[10.1002/anie.202011419](https://onlinelibrary.wiley.com/doi/epdf/10.1002/anie.202011419)	&	[10.3389/fgene.2020.587829](https://www.frontiersin.org/articles/10.3389/fmicb.2020.567317/full)													|
+|TRUE		|RNA	|G			|CoVID.RNA.G4.2			|**GG**A**GG**A**GG**UGUUGCA**GG**				|[10.1101/2020.08.19.257493](https://bit.ly/3j1jFMP)																																						|
+|TRUE		|RNA	|G			|CoVID.RNA.G4.3			|**GG**UAUGU**GG**AAA**GG**UUAU**GG**			|[10.1093/bib/bbaa114](https://academic.oup.com/bib/advance-article/doi/10.1093/bib/bbaa114/5849532)	&		[10.1002/anie.202011419](https://onlinelibrary.wiley.com/doi/epdf/10.1002/anie.202011419)	&	[10.3389/fgene.2020.587829](https://www.frontiersin.org/articles/10.3389/fmicb.2020.567317/full)|
+|TRUE		|RNA	|G			|CoVID.RNA.G4.4			|**GG**CUUAUA**GG**UUUAAU**GG**UAUU**GG**		|[10.1093/bib/bbaa114](https://academic.oup.com/bib/advance-article/doi/10.1093/bib/bbaa114/5849532)	&		[10.1002/anie.202011419](https://onlinelibrary.wiley.com/doi/epdf/10.1002/anie.202011419)	&	[10.3389/fgene.2020.587829](https://www.frontiersin.org/articles/10.3389/fmicb.2020.567317/full)|
+|TRUE		|RNA	|G			|CoVID.RNA.G4.8			|**GG**UU**GG**ACCUUU**GG**UGCA**GG**			|[10.3389/fgene.2020.587829](https://www.frontiersin.org/articles/10.3389/fmicb.2020.567317/full)																											|
+|FALSE		|RNA	|C			|CoVID.RNA.iM.1			|**CC**UU**CC**UUA**CCC**AGAU**CC**				|[10.1101/2020.08.19.257493](https://bit.ly/3j1jFMP)																																						|
+|FALSE		|DNA	|C			|SARS-DNA.iM.1			|**CC**TG**CC**TTA**CCC**AGAT**CC**				|[10.1101/2020.08.19.257493](https://bit.ly/3j1jFMP)																																						|
+|FALSE		|RNA	|G			|CoVID.RNA.G4.1.MUT		|GACUGACAAUGACG									|[10.1002/anie.202011419](https://onlinelibrary.wiley.com/doi/epdf/10.1002/anie.202011419)																													|
+|FALSE		|RNA	|G			|CoVID.RNA.G4.1.MUT1	|**GG**CUAGCAAU**GG**C**GG**					|[10.3389/fgene.2020.587829](https://www.frontiersin.org/articles/10.3389/fmicb.2020.567317/full)																											|
+|FALSE		|RNA	|G			|CoVID.RNA.G4.1.MUT2	|**GG**CUAACAAU**GG**C**GG**					|[10.3389/fgene.2020.587829](https://www.frontiersin.org/articles/10.3389/fmicb.2020.567317/full)																											|
+|FALSE		|RNA	|G			|CoVID.RNA.G4.3.MUT1	|**GG**UAUGUAGAAA**GG**UUAU**GG**				|[10.3389/fgene.2020.587829](https://www.frontiersin.org/articles/10.3389/fmicb.2020.567317/full)																											|
+|FALSE		|RNA	|G			|CoVID.RNA.G4.3.MUT2	|**GG**UAUGUAAAAA**GG**UUAU**GG**				|[10.3389/fgene.2020.587829](https://www.frontiersin.org/articles/10.3389/fmicb.2020.567317/full)																											|
+|FALSE		|RNA	|G			|CoVID.RNA.G4.5			|**GG**CCAU**GG**UACAUUU**GG**CUA**GG**			|[10.1002/anie.202011419](https://onlinelibrary.wiley.com/doi/epdf/10.1002/anie.202011419)																													|
+|FALSE		|RNA	|G			|CoVID.RNA.G4.6			|**GG**CUUU**GG**AGACUCCGU**GG**A**GG**A**GG**	|[10.3389/fgene.2020.587829](https://www.frontiersin.org/articles/10.3389/fmicb.2020.567317/full)																											|
+|FALSE		|RNA	|G			|CoVID.RNA.G4.7			|**GG**UAAUAAA**GG**AGCU**GG**U**GG**			|[10.3389/fgene.2020.587829](https://www.frontiersin.org/articles/10.3389/fmicb.2020.567317/full)																											|
+|FALSE		|RNA	|G			|CoVID.RNA.G4.8.MUT1	|**GG**UUAGACCUUU**GG**UGCA**GG**				|[10.3389/fgene.2020.587829](https://www.frontiersin.org/articles/10.3389/fmicb.2020.567317/full)																											|
+|FALSE		|RNA	|G			|CoVID.RNA.G4.8.MUT2	|**GG**UUAAACCUUU**GG**UGCA**GG**				|[10.3389/fgene.2020.587829](https://www.frontiersin.org/articles/10.3389/fmicb.2020.567317/full)																											|
+
+|
+###### **SARS-CoV-2** quadruplex-related biophysical data
+
+|Name				|Tm(ºC)	|[K+]mM	|[Na+]mM	|Topology	|References																							|
+|:---:				|:---:	|:---:	|:-:		|:---:		|:---:																								|
+|CoVID.RNA.G4.1		|57.7	|100	|0			|parallel	|[10.1002/anie.202011419](https://onlinelibrary.wiley.com/doi/epdf/10.1002/anie.202011419)			|
+|CoVID.RNA.G4.3		|41.2	|100	|0			|			|[10.1002/anie.202011419](https://onlinelibrary.wiley.com/doi/epdf/10.1002/anie.202011419)			|
+|CoVID.RNA.G4.4		|-1		|100	|0			|unformed	|[10.1002/anie.202011419](https://onlinelibrary.wiley.com/doi/epdf/10.1002/anie.202011419)			|
+|CoVID.RNA.G4.5		|-1		|100	|0			|unformed	|[10.1002/anie.202011419](https://onlinelibrary.wiley.com/doi/epdf/10.1002/anie.202011419)			|
+|CoVID.RNA.G4.1.MUT	|-1		|100	|0			|unformed	|[10.1002/anie.202011419](https://onlinelibrary.wiley.com/doi/epdf/10.1002/anie.202011419)			|
+|CoVID.RNA.G4.1		|54.4	|50		|0			|parallel	|[10.1101/2020.08.19.257493](https://bit.ly/3j1jFMP)												|
+|CoVID.RNA.G4.2		|48.1	|50		|0			|parallel	|[10.1101/2020.08.19.257493](https://bit.ly/3j1jFMP)												|
+|CoVID.RNA.G4.3		|31.5	|150	|0			|parallel	|[10.1093/bib/bbaa114](https://academic.oup.com/bib/advance-article/doi/10.1093/bib/bbaa114/5849532)|
+|CoVID.RNA.G4.4		|30.5	|150	|0			|parallel	|[10.1093/bib/bbaa114](https://academic.oup.com/bib/advance-article/doi/10.1093/bib/bbaa114/5849532)|
+
+
+</br>
+
+* G4-iM Grinder's results in **HUMANS** and **49 PATHOGENIC SPECIES** analysed using the predefined parameter configuration of the algorithm and published in the article [G4-iM Grinder: when size and frequency matter. G-Quadruplex, i-Motif and higher order structure search and analysis tool](https://bit.ly/3j2UUjC), can be found through [this link](https://1drv.ms/u/s!AvVGQg2rNIwDgTeth6qclA8Rz5UM?e=gmEI1a)
 
 <details>
 
@@ -160,73 +232,6 @@ Being the CQS columns what changes between both Figure 4s.
 
 </details>
 
-</br>
-
-2. **Result set 2**: The genomic results of the 2019-nCoV (SARS-CoV-2 virus) and the entire virus realm, analyzed using a lax configuration of parameters, from the article "Exploring G- and C-quadruplex structures as potential targets for the severe acute respiratory syndrome coronavirus 2" (currently in peer review) can be found through [this link](https://bit.ly/2EdNzyL) as "2.Ag.2020.Virus.V.1.6.0;GiGDB.V.2.5.RAR".
-
-<details>
-
-The 2.5 Gb .RAR compressed file hosts two group of files.
-
-**RAW DATA**:
-1.	`Virus.Results.RDS`, includes the raw data of the G4-iM Grinder analysis on all the virus realm as a list. The list groups virus species by their families. Each species list includes a PQS and PiMS sublist. These store the composition, location, known-quadruplex sequences presence and score (amongst others) of PQS/PiMS found in each virus. The information used in this analysis was Method 2; size restricted overlapping search method (PQSM2A data.frames), although Method 3 results are also included.
-2.	`3297.2019-nCoV.Results.RDS`, includes the raw data of the G4-iM Grinder analysis on all the 3297 different 2019-nCoV virus sequenced after of clinical symptoms analysed in the work. These were used to calculate the conservation of each sequence found in the reference 2019-nCoV, and are given as a list. The list groups virus by strains. Each includes a PQS and PiMS sublist. These store the composition, location, known-quadruplex sequences presence and score (amongst others) of PQS/PiMS found in each virus. The information used in this analysis was Method 2; size restricted overlapping search method (PQSM2A data.frames), although Method 3 results are also included.
-3.	`gisaid.3297._hcov-19.PDF`, includes the references of the 2019-nCoV 3297 genomes downloaded from the GISAID database.
-
-**ANALYTICAL DATA**:
-
-
-4.	`Analysis.RData` is the analysis results on the raw G4-iM Grinder data. It includes 5 lists:
-
-	i.	 `a.Ref.2019nCoV` – Analysis with G4iMGrinder function of the GiG-package of the 2019-nCoV reference genome. It includes the Method 2 results of the reference genome with the conservation rates and common sequences found in other viruses. The biological landmarks affected by the candidates retrieved using the function GiG.df.GenomicFeatures are also stored here.
-
-	ii.	`Analysis.2019nCoV.3297genomes` – Analysis with GiGList.Analysis function of the GiG-package. 3297 genomes of the 2019-nCoV sequenced at different times and locations of the ongoing pandemic were examined. PQS and PiMS sublists are the analysis for PQS and PiMS respectively. df.index data frame stores the identification of each genome used.
-
-	iii.	`Analysis.Coronaviridae.fam` – Analysis with GiGList.Analysis function of the GiG-package of the Coronaviridae family. PQS and PiMS lists are the analysis for PQS and PiMS respectively. df.index data frame stores the identification of each genome used.
-
-	iv.	`Analysis.Virus.realm` - Analysis with GiGList.Analysis function of the GiG-package of the entire virus realm. PQS and PiMS lists are the analysis for PQS and PiMS respectively. df.index data frame stores the identification of each genome used. Genome data frame is the analysis with the function GiG.Seq.Analysis.
-
-	v.	`Baltimore.C` – Baltimore Classification tables regarding each group characteristics and classification of each family into its group.
-
-</details>
-</br>
-
-Additionally, an annotation file for the SARS-CoV-2 analysis in **[GFF3](https://bit.ly/30cCups)** format and in **[RDS](https://bit.ly/3kTAxq0)** format of GiG's PQS and PiMS results can be downloaded directly.
-</br>It includes the PQS and PiMS candidates found with G4-iM Grinder, their scores and the already known-to-form G4 and i-Motif sequences confirmed in vitro.
-More information regarding these confirmed sequences can be accessed through the G4-iM Grinder database (GiG.DB), please follow section J of the user guide to do so. These include....
-
-
-
-###### **SARS-CoV-2** confirmed quadruplex-related sequences
-
-|Quadruplex	|Genome	|Nucleotide	|Name				|Sequence									|References																																																		|
-|---		|---	|---		|---				|:---:										|:---:																																																		|
-|TRUE		|DNA	|G			|CoVID.DNA.G4.1		|**GG**CT**GG**CAAT**GG**C**GG**			|[10.1101/2020.08.19.257493](https://bit.ly/3j1jFMP)																																						|
-|TRUE		|DNA	|C			|CoVID.DNA.iM.1		|**CC**TT**CC**TTA**CCC**AGAT**CC**			|[10.1101/2020.08.19.257493](https://bit.ly/3j1jFMP)																																						|
-|TRUE		|RNA	|G			|CoVID.RNA.G4.1		|**GG**CU**GG**CAAU**GG**C**GG**			|[10.1101/2020.08.19.257493](https://bit.ly/3j1jFMP)	&	[10.1002/anie.202011419](https://onlinelibrary.wiley.com/doi/epdf/10.1002/anie.202011419)														|
-|FALSE		|RNA	|G			|CoVID.RNA.G4.1.MUT	|GACUGACAAUGACG								|[10.1002/anie.202011419](https://onlinelibrary.wiley.com/doi/epdf/10.1002/anie.202011419)																													|
-|TRUE		|RNA	|G			|CoVID.RNA.G4.2		|**GG**A**GG**A**GG**UGUUGCA**GG**			|[10.1101/2020.08.19.257493](https://bit.ly/3j1jFMP)																																						|
-|TRUE		|RNA	|G			|CoVID.RNA.G4.3		|**GG**UAUGU**GG**AAA**GG**UUAU**GG**		|[10.1093/bib/bbaa114](https://academic.oup.com/bib/advance-article/doi/10.1093/bib/bbaa114/5849532)	&		[10.1002/anie.202011419](https://onlinelibrary.wiley.com/doi/epdf/10.1002/anie.202011419)	|
-|TRUE		|RNA	|G			|CoVID.RNA.G4.4		|**GG**CUUAUA**GG**UUUAAU**GG**UAUU**GG**	|[10.1093/bib/bbaa114](https://academic.oup.com/bib/advance-article/doi/10.1093/bib/bbaa114/5849532)	&		[10.1002/anie.202011419](https://onlinelibrary.wiley.com/doi/epdf/10.1002/anie.202011419)	|
-|FALSE		|RNA	|G			|CoVID.RNA.G4.5		|**GG**CCAU**GG**UACAUUU**GG**CUA**GG**		|[10.1002/anie.202011419](https://onlinelibrary.wiley.com/doi/epdf/10.1002/anie.202011419)																													|
-|FALSE		|RNA	|C			|CoVID.RNA.iM.1		|**CC**UU**CC**UUA**CCC**AGAU**CC**			|[10.1101/2020.08.19.257493](https://bit.ly/3j1jFMP)																																						|
-|FALSE		|DNA	|C			|SARS-DNA.iM.1		|**CC**TG**CC**TTA**CCC**AGAT**CC**			|[10.1101/2020.08.19.257493](https://bit.ly/3j1jFMP)																																						|
-
-###### **SARS-CoV-2** quadruplex-related biophysical data
-
-|Name				|Tm(ºC)	|[K+]mM	|[Na+]mM	|Topology	|References																							|
-|:---:				|:---:	|:---:	|:-:		|:---:		|:---:																								|
-|CoVID.RNA.G4.1		|57.7	|100	|0			|parallel	|[10.1002/anie.202011419](https://onlinelibrary.wiley.com/doi/epdf/10.1002/anie.202011419)			|
-|CoVID.RNA.G4.3		|41.2	|100	|0			|			|[10.1002/anie.202011419](https://onlinelibrary.wiley.com/doi/epdf/10.1002/anie.202011419)			|
-|CoVID.RNA.G4.4		|-1		|100	|0			|unformed	|[10.1002/anie.202011419](https://onlinelibrary.wiley.com/doi/epdf/10.1002/anie.202011419)			|
-|CoVID.RNA.G4.5		|-1		|100	|0			|unformed	|[10.1002/anie.202011419](https://onlinelibrary.wiley.com/doi/epdf/10.1002/anie.202011419)			|
-|CoVID.RNA.G4.1.MUT	|-1		|100	|0			|unformed	|[10.1002/anie.202011419](https://onlinelibrary.wiley.com/doi/epdf/10.1002/anie.202011419)			|
-|CoVID.RNA.G4.1		|54.4	|50		|0			|parallel	|[10.1101/2020.08.19.257493](https://bit.ly/3j1jFMP)												|
-|CoVID.RNA.G4.2		|48.1	|50		|0			|parallel	|[10.1101/2020.08.19.257493](https://bit.ly/3j1jFMP)												|
-|CoVID.RNA.G4.3		|31.5	|150	|0			|parallel	|[10.1093/bib/bbaa114](https://academic.oup.com/bib/advance-article/doi/10.1093/bib/bbaa114/5849532)|
-|CoVID.RNA.G4.4		|30.5	|150	|0			|parallel	|[10.1093/bib/bbaa114](https://academic.oup.com/bib/advance-article/doi/10.1093/bib/bbaa114/5849532)|
-
-</br>
 
 ###       **G4-iM Grinder's Installation and User Guide**
 
@@ -242,12 +247,12 @@ G4-iM Grinder was successfully downloaded and tested in MacOS 10.12.6, Windows 1
 In Linux based systems, the installation of devtools may require further effort ([Check this link](https://stackoverflow.com/questions/20923209/problems-installing-the-devtools-package)).
 Other OS including x86 systems have not been tested.
 
-G4-iM Grinder has been sucessfully used in R 4.0.2 and R-studio 1.3.1056
+G4-iM Grinder has been successfully used in R 4.0.3 and R-studio 1.3.1093
 
 
 ```ruby
 
-pck <- c("stringr", "stringi", "plyr", "seqinr", "stats", "parallel", "doParallel", "beepr", "stats4", "devtools", "dplyr", "BiocManager")
+pck <- c("stringr", "stringi", "plyr", "seqinr", "stats", "parallel", "doParallel", "beepr", "stats4", "devtools", "dplyr", "BiocManager", "tibble")
 
 #foo was written by Simon O'Hanlon Nov 8 2013.
 #Thanks Simon, thanks StackOverflow and all its amazing community.
@@ -264,7 +269,7 @@ foo <- function(x){
   }
 }
 foo(pck)
-BiocManager::install(c("BiocGenerics", "S4Vectors", "Biostrings", "biomartr") , ask = FALSE, update = TRUE)
+BiocManager::install(c("BiocGenerics", "S4Vectors", "Biostrings", "biomartr", "IRanges") , ask = FALSE, update = TRUE)
 
 
 ```

@@ -698,8 +698,8 @@
     return(df)
   }
   # loading packages necessary
-  .PackageLoading <- function(pck.CRAN = c("devtools", "stringr", "stringi", "plyr", "dplyr",  "seqinr", "stats", "parallel", "doParallel", "beepr", "stats4", "BiocManager"),
-                              pck.BioC = c("BiocGenerics", "S4Vectors", "biomartr", "Biostrings")){
+  .PackageLoading <- function(pck.CRAN = c("devtools", "stringr", "stringi", "plyr", "dplyr",  "seqinr", "stats", "parallel", "doParallel", "beepr", "stats4", "BiocManager", "tibble"),
+                              pck.BioC = c("BiocGenerics", "S4Vectors", "biomartr", "Biostrings", "IRanges")){
 
     AAA <- as.numeric(R.version$major)
     if(AAA < 4){

@@ -4,8 +4,8 @@
 #################            G4-iM Grinder         #######################
 ##########################################################################
 ####    Efres Belmonte Reche            efresbr@gmail.com             ####
-####    Latest                          2020-08-XX                    ####
-####    Version                         1.6.0                         ####
+####    Latest                          2020-02-XX                    ####
+####    Version                         1.6.1                         ####
 ##########################################################################
 ##########################################################################
 ####
@@ -17,12 +17,11 @@
 ####
 ####  Log
 ####
-######### Potential BUG when analysing with GiG.Analysis a sequence after update function. Err
-######### Potential BUG. NCores is limited to 1. Problems if NCores is more than 1. To be tested.
-#### V1.6.0
-####  -
-####  -
-####  -
+######### Potential BUG when analysing with GiG.Analysis a sequence after update function. (??)
+#########
+#### V1.6.1
+####  - Changed how Genomic Features works. Removed dependency on downloading the GFF file from NCBI. You can insert GFF file directly. Smoother and better performance.
+####  V1.6.0
 ####  - Changed enitre DNA and ARN concept. Everything will be turned into DNA or RNA in the start Limitationssection. (Sequence, LoopSeq)
 ####  - KNTFQ fun will convert all the library to DNA as well as the PQS or PiMS detected. to search for everything everywhere. it will differentiate between DNA or RNA sequence by ^Dna and *RNA.
 ####  - Reorganized GiG.Analysis, it now can accept vectors instead of single variables in filters.
@@ -47,7 +46,7 @@
 #### V1.5.0
 #### - Maintained mRun in M2 and M3 for posterior recalculations of PQSfinder.
 #### - Changed names of complementary functions, and changed input to GiGLists.
-#### - GiG.Updater: A function to update Scorering systems and known to form not Quadruplex structures for already existent results.
+#### - GiG.Updater: A function to update Scoring systems and known to form not Quadruplex structures for already existent results.
 #### - Install instructions update. Package update. R 3.6 update
 #### - Update DDBB of list of quadruplex structures to be able to form. Included 100 i-Motifs. G4Hunter and G4RNA DDBB have been read again & analyzed again - Including Known not to form Sequences.
 #### - Changed var names of KnownG4 to KnownQuadruplex. Updated Var names of internal functions related.
@@ -131,6 +130,7 @@ G4iMGrinder <- function(Name, Sequence, DNA=TRUE, Complementary=TRUE, RunComposi
       #  NCores <- round(detectCores()*3/4,0)
       #}
       ### BUG! FIX in future
+      if(NCores != 1){warning("NCores set to 1")}
       NCores <- 1
     }
     ######  Time control
@@ -1044,39 +1044,63 @@ GiG.Seq.Analysis <- function(Name,
 #########  GiG.df.GenomicFeatures: Analysis of genomic features of a genome given a gff
 ################################################################################
 ########
-GiG.df.GenomicFeatures  <- function(df,
-                                    org,
-                                    db, reference = F, path = file.path("_ncbi_downloads","genomes"),
+GiG.df.GenomicFeatures  <- function(GiG.df,
+                                    GFF,
                                     NumRow =NA,
                                     Feature = NA,
                                     sep = ";"){
 
   require(biomartr)
   require(stringr)
+  require(dplyr)
+  require(IRanges)
+  require(tibble)
 
-  if(!db %in% c("refseq", "genbank")){
-    stop("db not supported")
+
+  #if(!db %in% c("refseq", "genbank")){
+   # stop("db not supported")
+  #}
+
+  ### Preparing GFF file
+  {
+  gff2 <- as_tibble(GFF)
+  if("type" %in% colnames(gff2) == T &
+     sum(c("Start", "start") %in% colnames(gff2))>0 &
+     sum(c("end", "End", "Finish", "finish") %in% colnames(gff2))>0 &
+     ncol(gff2) >0 & sum(!is.na(gff2))>0 & !is.null(gff2) & exists("gff2")){
+    if(!is.na(Feature) & !is.null(Feature)){
+      gff2 <- gff2[stringr::str_detect(string = gff2$type, pattern = Feature),]   ## Keeping features we want; or all if NA
+    }
+    } else {
+    stop("Error in GFF file. Check that the annotation file has type, Start, Finish and attribute columns, and that the file has rows.")
+    }
+
+  gff3 <- cbind(gff2[,"type"],
+                 gff2[, c("start", "Start")[c("start", "Start") %in% colnames(gff2)][1]],
+                 gff2[, c("end", "End", "Finish", "finish")[c("end", "End", "Finish", "finish") %in% colnames(gff2)][1]],
+                 gff2[,"attribute"])
+  if(sum(c("strand", "Strand") %in% colnames(gff2))>0){
+    gff3$Strand <- factor(gff2[,c("strand", "Strand")[c("strand", "Strand") %in% colnames(gff2)]][[1]], levels = c("+", "-"))
+  }
+  if(ncol(gff3) >=4 & ncol(gff3) <= 5){
+    if(ncol(gff3) ==4) { colnames(gff3) <- paste0("Feature.", c("type", "Start", "Finish", "attribute"))}
+    if(ncol(gff3) ==5) { colnames(gff3) <- paste0("Feature.", c("type", "Start", "Finish", "attribute", "Strand"))}
+  } else {
+    stop("Error in GFF file. Check that the annotation file has type, Start, Finish and attribute columns, and that the file has rows.")
+  }
+  gff3$Feature.ID <- seq(1, nrow(gff3),1)
+  gff3[rowSums(is.na(gff3[,1:5])) > 0, ]
   }
 
-  gff2 <- biomartr::read_gff(biomartr::getGFF(db = db, organism = org, reference = reference, path = path))
-  if(sum(!is.na(Feature))>0){
-    cat("\nFeatures in GFF are:\n")
-    print(unique(gff2$type))
-    gff2 <- gff2[stringr::str_detect(string = gff2$type, pattern = Feature),]
-  }
-  test1 <- c("type", "start", "end", "strand", "attribute") %in% colnames(gff2)
-
-  if(sum(test1) == 5){
-    # Preparing gff2
-    gff3 <- gff2[,c("type", "start", "end", "strand", "attribute")]
-    list.attributes <- strsplit(gff3$attribute,split = sep )
-
+  ##Separating attribute
+  # Not applied for now
+  if(FALSE){
+  list.attributes <- strsplit(gff3$attribute,split = sep )
     AAA <- rep(1, length(list.attributes))
     for(i in 1:length(list.attributes)){
       AAA[i] <- length(list.attributes[[i]])
     }
     AAA <- max(AAA)
-
     if(AAA > 1){
       AAA <- as.data.frame(matrix(data = NA, nrow = length(list.attributes), ncol = AAA))
       for(i in 1:length(list.attributes)){
@@ -1091,52 +1115,79 @@ GiG.df.GenomicFeatures  <- function(df,
       print(head(AAA), 5)
       warnings("Current separator ", sep," did not split attribute column. Select another separator.")
     }
+  rm(list.attributes)
+  }
 
     # preparing df
-    test2 <- c("Start", "Finish") %in% colnames(df)
-
-    if(sum(test2) == 2){
-      if(sum(!is.na(NumRow))>0){
-        df <- df[NumRow,]
+  {
+    df <- GiG.df
+    if(sum(c("Start", "Finish") %in% colnames(df))==2 & nrow(df)>0){
+      df <- as_tibble(df)
+      if(!(c("ID") %in% colnames(df))) { df$ID <- seq(1,nrow(df),1)      } ## Creating ID if not created in df.
+      df$nFeatures <- 0
+      df$Features <- list(gff3[NULL,])
+      if(c("Strand") %in% colnames(df)) {
+        df$Strand <- factor(df$Strand, levels = c("+", "-"))
       }
-
-      ## Strand
-      if(!"Strand" %in% colnames(df)){
-        df$Strand <- "+"
-      }
-      df$row.id <- rownames(df)
-      index <- c("row.id", "Start", "Finish",  "Score", "Conf.Quad.Seqs", "Strand")%in%colnames(df)
-      df <- df[, c("row.id", "Start", "Finish",  "Score", "Conf.Quad.Seqs", "Strand")[index]]
-
-      gff3 <- gff3[,c("type", "start", "end", "strand")]
-      AAA <- cbind(gff3, AAA)
-
-      ##
-      index <- NULL
-      Res <- cbind(df[NULL,], AAA[NULL,])
-      for(i in 1:nrow(df)){
-        for(j in 1:nrow(AAA)){
-          index <- (between(df$Start[i], left = AAA$start[j], right = AAA$end[j]) | between(df$Finish[i], left = AAA$start[j], right = AAA$end[j])) & (df$Strand[i] == AAA$strand[j])
-          if(index == T){
-            Res[nrow(Res)+1,] <- cbind(df[i,], AAA[j,])
-          }
-        }
-      }
-      Res$start <- NULL
-      Res$end <- NULL
-      Res$strand <- NULL
-
-      return(Res)
-
-    } else {
-      stop(paste0("df does not have ", c("Start", "Finish")[test2], " column/s."))
-    }
-  } else {
-    stop(paste0("GFF doest not have the required", c("type", "start", "end", "strand", "attribute")[!test1], " column/s." ) )
+    } else { stop("GiG.df does not have the appropiate Start and Finish columns.")}
+    if(sum(is.na(NumRow) | is.null(NumRow))>0){
+    df.rows.index <- T
+    } else {  df.rows.index <- rownames(df)%in%NumRow  }
   }
 
 
+  ##Finding overlaps
+  if(sum(c("Strand") %in% colnames(df)) >0 &
+     sum(c("Feature.Strand") %in% colnames(gff3)) > 0) {
+  Overlaps <- NULL
+  for(i in 1:length(levels(df$Strand))){
+    df.IR <- df[df.rows.index,][df$Strand == levels(df$Strand)[i],]
+    df.IR2 <- IRanges::IRanges(start = df.IR$Start, end = df.IR$Finish, names = df.IR$ID)
 
+    Gff.SA.IR <- gff3[gff3$Feature.Strand == levels(df$Strand)[i],]
+    Gff.SA.IR <- Gff.SA.IR[complete.cases(Gff.SA.IR[,c("Feature.type",
+                                                       "Feature.Start",
+                                                       "Feature.Finish")])    ,]
+
+    Gff.SA.IR2 <- IRanges::IRanges(start = Gff.SA.IR$Feature.Start,
+                                   end = Gff.SA.IR$Feature.Finish,
+                                   names = Gff.SA.IR$Feature.ID )
+
+    AAA <- IRanges::findOverlapPairs(query = df.IR2, subject = Gff.SA.IR2, type = "any")
+    AAA <- tibble(ID.df = as.numeric(AAA@first@NAMES), ID.gff3 = as.numeric(AAA@second@NAMES))
+
+    Overlaps <- rbind(Overlaps, AAA)
+    rm(df.IR, Gff.SA.IR, AAA)}
+  } else {
+    Overlaps <- NULL
+    df.IR2 <- IRanges(start = df$Start, end = df$Finish, names = df$ID)
+    Gff.SA.IR2 <- IRanges(start = gff3$Feature.Start, end = gff3$Feature.Finish, names = gff3$Feature.ID)
+
+    AAA <- findOverlapPairs(query = df.IR2, subject = Gff.SA.IR2, type = "any")
+    AAA <- tibble(ID.df = as.numeric(AAA@first@NAMES), ID.gff3 = as.numeric(AAA@second@NAMES))
+
+    Overlaps <- rbind(Overlaps, AAA)
+    rm(nM2A.F.IR2, Gff.SA.IR, AAA)
+
+    warning("Finding overlaps independently of strand, as strand column is missing from df or gff file.")
+  }
+
+
+  ##Resolving overlaps
+  df$nFeatures <- 0
+  df$Features <- c()
+  for(i in 1:nrow(Overlaps)){
+    indexdf <- df$ID == Overlaps$ID.df[i]
+    indexgff3 <- gff3$row == Overlaps$ID.gff3[i]
+
+    df$nFeatures[indexdf] <- df$nFeatures[indexdf] + 1
+    df$Features[indexdf] <- list(Features = rbind(as.data.frame(df$Features[indexdf]),
+                                   as.data.frame(gff3 %>% filter(Feature.ID == Overlaps$ID.gff3[i]))
+                                       ))
+  }
+
+
+return(df)
 }
 ########
 ########
