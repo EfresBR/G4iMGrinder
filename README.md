@@ -52,20 +52,20 @@ G4-iM Grinder (GiG) is an algorithm that incorporates a quadruplex search engine
 5. **PiMS**: 						A Potential iM Sequence detected with an *in silico* algorithm, which has **NOT** been confirmed *in vitro*, at least initially. It requires of biophysical or biochemical methods to confirm.
 
 ###       **G4-iM Grinder's Updates & News**
-G4-iM Grinder latest version: 1.6.01 (08-2020).
+G4-iM Grinder latest version: 1.6.1 (02-2021).
 <details>
 Changes:
 
-For Version 1.6.01:
-
-1. Changed `GiGList.Analysis` to accept vectors instead of just single numerals in its parameters. Changed also the results returned, with better summaries of the G4-iM Grinder function.
-2. Changed the concept of DNA and RNA sequences in the `G4-iM Grinder` main function and other related functions to be more efficient.
-3. The function to find confirmed quadruplex sequences was modified to be more efficient with RAM. This is to prevent problems with an growing database of confirmed quadruplex sequences.
-4. Added Biostrings and biomartr dependencies. Added the packages to the package loading function.
-5. G4-iM Grinder version and the G4-iM Grinder database version are now saved in the configuration dataframe of each result.
-6. Added a function to analyze the characteristic and runs of a genome (`GiG.Seq.Analysis`).
-7. Added a function to analyze the biological landmarks affected by the potential quadruplex results (`GiG.df.GenomicFeatures`).
-8. Changed how packages are loaded so they are silent when doing so. The function will also check if all dependencies are installed and R version is at least 4.0. If any of these fail, and error will be returned asking the user to fix the problem/s before proceeding with the G4-iM Grinder analysis.
+For Version 1.6.1:
+* Adapted and further optimized `GiG.df.GenomicFeatures`.
+* Changed `GiGList.Analysis` to accept vectors instead of just single numerals in its parameters. Changed also the results returned, with better summaries of the G4-iM Grinder function.
+* Changed the concept of DNA and RNA sequences in the `G4-iM Grinder` main function and other related functions to be more efficient.
+* The function to find confirmed quadruplex sequences was modified to be more efficient with RAM. This is to prevent problems with an growing database of confirmed quadruplex sequences.
+* Added Biostrings and biomartr dependencies. Added the packages to the package loading function.
+* G4-iM Grinder version and the G4-iM Grinder database version are now saved in the configuration dataframe of each result.
+* Added a function to analyze the characteristic and runs of a genome (`GiG.Seq.Analysis`).
+* Added a function to analyze the biological landmarks affected by the potential quadruplex results (`GiG.df.GenomicFeatures`).
+* Changed how packages are loaded so they are silent when doing so. The function will also check if all dependencies are installed and R version is at least 4.0. If any of these fail, and error will be returned asking the user to fix the problem/s before proceeding with the G4-iM Grinder analysis.
 
 For Version 1.5.95:
 
@@ -135,7 +135,7 @@ Please report in the issue section if any links are broken.
 * **[.xlsx](http://bit.ly/3s4SDc3)**  (excel)</br>
 They includes all the positions of the PQS and PiMS found, the conservation, and the G4s and iMs already confirmed in the manuscript and elsewhere.
 
-**VARIANTS** of **SARS-CoV-2** found in other lineages and clades and not in the reference genome, can be found in **[.RDS](http://bit.ly/37rutk0)** format. Each entry has the (GISAID) ID, name, Lineage and Clade of the SARS-COV-2 genome where it was located. </br> 
+**VARIANTS** of **SARS-CoV-2** found in other lineages and clades and not in the reference genome, can be found in **[.RDS](http://bit.ly/37rutk0)** format. Each entry has the (GISAID) ID, name, Lineage and Clade of the SARS-COV-2 genome where it was located. </br>
 Full GiG Results of the **VIRUS REALM** and genome **REFERENCES**, analyzed using a lax quadruplex-configuration of parameters can be found next.
 
 <details>
