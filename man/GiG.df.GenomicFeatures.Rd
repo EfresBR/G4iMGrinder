@@ -31,9 +31,10 @@ character, separator character used to split information from the GFF attribute 
 
 }
 \details{
-If both GiG.df and GFF files have a strand column ("Strand" or "strand" can be used), the results will be matched also by strand.
-Else, strands will not be used to match the results and a warning will be displayed regarding the circumstance.
-Please consider that the analysis cannot be done for the PQSM2b and PQSM3b dataframes as they do not have starting nor finishing positions.
+If both GiG.df and GFF files have a strand column ("Strand" or "strand" can be used), the results will be matched also by strand. Else, strands will not be used to match the results and a warning will be displayed regarding the circumstance.
+Please make sure the annotation file supplied matches the sequence used in the analysis.
+G4-iM Grinder reverse complements the sequence to generate the supplementary strand. If the annotation files is only the complement, the positions of one of the files has first to be adapated (see below).
+
 
 %%  ~~ If necessary, more details than the description above ~~
 }
@@ -88,7 +89,22 @@ Efres Belmonte-Reche
   Rs.Features <- GiG.df.GenomicFeatures(df = Rs$PQSM3a, org = org, db = "refseq")
 
 
-}
+
+  # To change the direction (regarding the PQS positions) of the supplementary strand in G4-iM Grinder's results.
+  # Get results dataframe (Here for example, Method 2 (M2)- overlapping and size-restricted search). 
+  M2 <- Rs$PQSM2a 
+  #Length of Sequence
+  LSeq <- nchar(Sequence)
+  #Dataframe of old positions.
+  Supdf <- data.frame(Start = M2$Start[M2$Strand =="-"], Finish = M2$Finish[M2$Strand =="-"])
+  # invert the positions (from reverse complement, to complement).
+  M2$Start[M2$Strand =="-"] <- LSeq - Supdf$Finish 
+  M2$Finish[M2$Strand =="-"] <- LSeq - Supdf$Start 
+  # Position are inverted. Complementary is now in anti-sense direction (complement). 
+  # Then apply GiG.df.GenomicFeatures function.
+
+  }
+	
 % Add one or more standard keywords, see file 'KEYWORDS' in the
 % R documentation directory.
 \keyword{ ~kwd1 }% use one of  RShowDoc("KEYWORDS")

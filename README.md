@@ -3,7 +3,7 @@ G4-iM Grinder is a fast, robust and highly adaptable algorithm. It is capable of
 
 Read the open-access paper on the algorithm: [G4-iM Grinder: when size and frequency matter. G-Quadruplex, i-Motif and higher order structure search and analysis tool](https://bit.ly/3j2UUjC)
 
-Soon to be published: [Exploring G- and C-quadruplex structures as potential targets for the severe acute respiratory syndrome coronavirus 2](https://bit.ly/3j1jFMP) (Preprint version).
+Read about the application of the algorithm on the SARS-CoV-2 and the entire Virus Realm on the open-access paper: [Potential G-quadruplexes and i-Motifs in the SARS-CoV-2](https://bit.ly/3pFFNkH).
 
 The Results of both manuscripts can be found in the result section.  
 
@@ -445,7 +445,10 @@ ResultTable[2,] <- GiGList.Analysis(GiGList = Rs2, iden= "ForceLimit")
 The `GiG.df.GenomicFeatures` function is suitable for determining the genomic features that share their location with (and hence may be affected by) GiG’s PQS and PiMS results.
 It employs the online database connector package “biomartr” to retrieve the genomic annotations file for the sequence, with which to then match positions.
 The function returns a data frame of all the matches found for the input sequences and includes different attributes (IDs, keys, relationships with other features and comments) of the matched genomic features.
+
 Please, use the same genome associated with the annotation file.
+
+Please consider that G4-iM Grinder determines the supplementary strand by reverse complementing the inputted sequence. Hence, if the annotation positions are only the complement, a quick fix is needed. Please check the documentation of the function within the package to find a potential quick fix.
 
 ```ruby
 
