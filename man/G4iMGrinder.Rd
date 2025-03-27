@@ -1,217 +1,252 @@
 \name{G4iMGrinder}
 \alias{G4iMGrinder}
 \title{
-Detect and analyze possible G-quadruplex, i-Motifs and their higher order structures in DNA and RNA sequences.
+Detect and analyze potential G-quadruplexes, i-Motifs, and higher-order structures in DNA or RNA sequences
 }
 \description{
-A function to detect and analyse quadruplex sequences in a genome. G4iM Grinder can be applied as a tool for possible G-quadruplex, i-Motif and higher-order structure identification, characterization and punctuation as the probability of in vitro formation and biological relevance. The search algorithm is highly configurable in all of the process steps.
+G4iM Grinder is a flexible search engine and characterization tool designed to detect and analyze sequences capable of forming G-quadruplexes (Potential Quadruplex Sequences, PQSs), i-Motifs (Potential i-Motif Sequences, PiMS), or other higher-order quadruplex-like structures in DNA or RNA. It provides multiple “methods” to search for these motifs, allowing extensive configurability. Users can tailor the search to match specific criteria and search within their results for known quadruplex-forming or non-quadruplex-forming sequences. The results include both raw findings and frequency-weighted summaries.
 }
 \references{
-Belmonte-Reche,E. and Morales,J.C. (2019) G4-iM Grinder: when size and frequency matter. G-Quadruplex, i-Motif and higher order structure search and analysis tool. NAR Genomics and Bioinformatics, 2.
+Belmonte-Reche, E. and Morales, J. C. (2019). G4-iM Grinder: when size and frequency matter. G-Quadruplex, i-Motif and higher order structure search and analysis tool. \emph{NAR Genomics and Bioinformatics}, 2. DOI: 10.1093/nargab/lqz005
+
+\url{https://academic.oup.com/nargab/article/2/1/lqz005/5576141}
 }
 \author{
 Efres Belmonte-Reche
 }
 \note{
-M1 is Method 1. M2 is Method 2. M3 is method 3.
+M1 stands for Method 1; M2 stands for Method 2; M3 stands for Method 3.
 }
 \usage{
-G4iMGrinder(Name, Sequence, DNA = TRUE, Complementary = TRUE, RunComposition = "G", BulgeSize = 1, MaxIL = 3, MaxRunSize = 5, MinRunSize = 3, MinNRuns = 4,
-MaxNRuns = 0, MaxPQSSize = 33, MinPQSSize = 15, MaxLoopSize = 10, MinLoopSize = 0, LoopSeq = c("G", "T", "A", "C"), Method2 = TRUE, Method3 = TRUE, G4hunter = TRUE,
-cGcC = FALSE, PQSfinder = TRUE, Bt = 14, Pb = 17, Fm = 3, Em = 1, Ts = 4, Et = 1, Is = -19, Ei = 1, Ls = -16, ET = 1, WeightParameters = c(50, 50, 0),
-FreqWeight = 0, KnownQuadruplex = TRUE, KnownNOTQuadruplex = FALSE,  RunFormula = FALSE, NCores = 1, Verborrea = TRUE)
+G4iMGrinder(
+  Name,
+  Sequence,
+  DNA = TRUE,
+  Complementary = TRUE,
+  RunComposition = "G",
+  BulgeSize = 1,
+  MaxIL = 3,
+  MaxRunSize = 5,
+  MinRunSize = 3,
+  MinNRuns = 4,
+  MaxNRuns = 0,
+  MaxPQSSize = 33,
+  MinPQSSize = 15,
+  MaxLoopSize = 10,
+  MinLoopSize = 0,
+  LoopSeq = c("G", "T", "A", "C"),
+  Method2 = TRUE,
+  Method3 = TRUE,
+  G4hunter = TRUE,
+  cGcC = FALSE,
+  PQSfinder = TRUE,
+  Bt = 14,
+  Pb = 17,
+  Fm = 3,
+  Em = 1,
+  Ts = 4,
+  Et = -19,
+  Is = -16,
+  Ei = 1,
+  Ls = 1,
+  ET = 1,
+  WeightParameters = c(0.5, 0.5, 0),
+  FreqWeight = 0,
+  KnownQuadruplex = TRUE,
+  KnownNOTQuadruplex = FALSE,
+  RunFormula = FALSE,
+  NCores = 1,
+  Verborrea = TRUE
+)
 }
 \arguments{
   \item{Name}{
-character, name of the DNA or RNA sequence to grind.
-}
+    \code{character}. Name of the DNA or RNA sequence under analysis.
+  }
   \item{Sequence}{
-character, DNA or RNA sequence to grind composed of the nucleotide arrangement.
-}
+    \code{character}. The nucleotide sequence to be examined. Must be composed of valid DNA or RNA bases.
+  }
   \item{DNA}{
-logical, controls if the sequence is DNA or RNA. The factory-fresh default is \code{TRUE} assuming the sequence is DNA.
-}
+    \code{logical}. Indicates whether \code{Sequence} is DNA (\code{TRUE}) or RNA (\code{FALSE}). Defaults to \code{TRUE}.
+  }
   \item{Complementary}{
-logical, controls if the Complementary strand should be created and analyzed. The factory-fresh default is \code{TRUE}.
-}
+    \code{logical}. If \code{TRUE}, the complementary strand is generated and analyzed in parallel. Defaults to \code{TRUE}.
+  }
   \item{RunComposition}{
-character, nucleotide that composes the runs. \code{RunComposition == "G"} for G-quadruplex and \code{RunComposition == "C"} for i-Motifs. Any other nucleotide (or letter) can be imputed. The factory-fresh default is \code{"G"}.
-}
+    \code{character}. Nucleotide(s) used to define the “runs.” Typically \code{"G"} for G-quadruplex search or \code{"C"} for i-Motif search. Defaults to \code{"G"}.
+  }
   \item{BulgeSize}{
-integer, number of acceptable non-\code{RunComposition} nucleotides to exist within runs. The factory-fresh default is \code{1}. Used by M1.
-}
-  \item{MaxRunSize}{
-integer, max. number of \code{RunComposition}-nucleotides that compose a run. The factory-fresh default is \code{5}. Used by M2.
-}
-  \item{MinRunSize}{
-integer, min. number of \code{RunComposition}-nucleotides that compose a run. The factory-fresh default is \code{5}. Used by M1.
-}
-  \item{MaxLoopSize}{
-integer, max. number of nucleotides that may exist between runs to assume relationship. The factory-fresh default is \code{10}. Used by M2 and M3.
-}
-  \item{MinLoopSize}{
-integer, min. number of nucleotides that may exist between runs to assume relationship. The factory-fresh default is \code{0}. Used by M2 and M3.
-}
-  \item{MaxNRuns}{
-integer, max. number of runs that compose a structure. The factory-fresh default is \code{0}. When \code{MaxNRuns < MinNRuns}, G4iM Grinder will evade using this \code{MaxNRuns} variable in the search algorithm, allowing looking for structures with more than the traditional 4 run. Used by M2.
-}
-  \item{MinNRuns}{
-integer, min. number of runs that compose a structure. The factory-fresh default is \code{4}. Used by M2 and M3.
-}
-  \item{MaxPQSSize}{
-integer, max. number of nucleotides that compose a structure. The factory-fresh default is \code{33}. Used by M2.
-}
-  \item{MinPQSSize}{
-integer, min. number of nucleotides that compose a structure. The factory-fresh default is \code{15}. Used by Method2 and M3.
-}
+    \code{integer}. Number of allowed non-\code{RunComposition} nucleotides within a run (used by M1). Defaults to \code{1}.
+  }
   \item{MaxIL}{
-integer, total number of nucleotides to allow to exist in between all the \code{RunComposition}-run of a structure. The factory-fresh default is \code{3}. Used by M2.
-}
-  \item{Method2}{
-logical, to apply method 2 (M2A) of analysis to the sequence search results. This will search for structures with defined size and runs.  Depends on variables: \code{MinNRuns}, \code{MinPQSSize}, \code{MaxNRuns} and \code{MaxPQSSize}. Will also give frequency counts of each structure detected (M2B). The factory-fresh default is \code{TRUE}
-}
-  \item{Method3}{
-logical, to apply method 3 (M3A) to the sequence search results. Search for structures with unrestricted size and numbers of runs. Useful for searching higher forming structures. Depends on variables: \code{MinNRuns} and \code{MinPQSSize}. Will also give frequency counts of each structure detected (M3B). The factory-fresh default is \code{TRUE}
-}
+    \code{integer}. Total number of additional nucleotides allowed between runs (used by M2). Defaults to \code{3}.
+  }
+  \item{MaxRunSize}{
+    \code{integer}. Maximum length of a run. Defaults to \code{5} (used by M2).
+  }
+  \item{MinRunSize}{
+    \code{integer}. Minimum length of a run. Defaults to \code{3} (used by M1).
+  }
+  \item{MinNRuns}{
+    \code{integer}. Minimum number of runs required to form a structure. Defaults to \code{4} (used by M2 and M3).
+  }
+  \item{MaxNRuns}{
+    \code{integer}. Maximum number of runs that compose a structure. Defaults to \code{0}, which disables an upper limit for run count (used by M2).
+  }
+  \item{MaxPQSSize}{
+    \code{integer}. Maximum total length of a putative quadruplex structure. Defaults to \code{33} (used by M2).
+  }
+  \item{MinPQSSize}{
+    \code{integer}. Minimum total length of a putative quadruplex structure. Defaults to \code{15} (used by M2 and M3).
+  }
+  \item{MaxLoopSize}{
+    \code{integer}. Maximum number of nucleotides allowed in each loop (used by M2 and M3). Defaults to \code{10}.
+  }
+  \item{MinLoopSize}{
+    \code{integer}. Minimum number of nucleotides allowed in each loop (used by M2 and M3). Defaults to \code{0}.
+  }
   \item{LoopSeq}{
-character, vector that defines what nucleotide and/or nucleotide pattern to quantify in each structure detected. The factory-fresh default is \code{c("G", "C", "A", "T")} but multi-character patterns are accepted, like \code{GGG}.
-}
-  \item{WeightParameters}{
-vector of three integers, where each of the integers are the weighted value of each possible scoring system: G4hunter, PQSfinder and cGcC (in that order). Depends on the scoring system to be \code{TRUE}, or else it will force here its value to 0. The ‘factory-fresh’ default is \code{c(0.5, 0.5, 0)}, were the final score of a structure will hence be the average between G4hunter and PQSfinder. cGcC scoring value should always be 0 as its algorithm score system is not in the 0-100 range.
-}
+    \code{character} vector. Defines the nucleotide(s) or pattern(s) to measure or highlight within detected structures. Defaults to \code{c("G", "T", "A", "C")}.
+  }
+  \item{Method2}{
+    \code{logical}. If \code{TRUE}, enables Method 2 (M2), which searches for size-defined structures and computes frequency (M2A and M2B). Defaults to \code{TRUE}.
+  }
+  \item{Method3}{
+    \code{logical}. If \code{TRUE}, enables Method 3 (M3), which searches for size-unrestricted structures and computes frequency (M3A and M3B). Defaults to \code{TRUE}.
+  }
   \item{G4hunter}{
-logical, to apply G4hunter algorithm as a scoring mechanism of in vitro probability of formation. The factory-fresh default is \code{TRUE}.
-}
+    \code{logical}. If \code{TRUE}, applies the G4Hunter scoring system. Defaults to \code{TRUE}.
+  }
   \item{cGcC}{
-logical, to apply cGcC algorithm as a scoring mechanism of in vitro probability of formation. Only for RNA sequences. The factory-fresh default is \code{FALSE}.
-}
+    \code{logical}. If \code{TRUE}, applies the cGcC scoring system (valid for RNA). Defaults to \code{FALSE}.
+  }
   \item{PQSfinder}{
-logical, to apply an adaptation of PQSfinder algorithm as a scoring mechanism of in vitro probability of formation. The factory-fresh default is \code{TRUE}.
-}
+    \code{logical}. If \code{TRUE}, applies an adaptation of the PQSfinder scoring system. Defaults to \code{TRUE}.
+  }
   \item{Bt}{
-integer, tetrad stacking bonus constant used for the PQSfinder adaptation calculations. The factory-fresh default is \code{14}.
-}
+    \code{integer}. Tetrad stacking bonus for PQSfinder calculations. Defaults to \code{14}.
+  }
   \item{Pb}{
-integer, inter-Loop penalization constant used for the PQSfinder adaptation calculations. The factory-fresh default is \code{17}.
-}
+    \code{integer}. Inter-Loop penalization constant for PQSfinder calculations. Defaults to \code{17}.
+  }
   \item{Fm}{
-integer, loop length penalization constant used for the PQSfinder adaptation calculations. The factory-fresh default is \code{3}.
-}
+    \code{integer}. Loop length penalization constant for PQSfinder calculations. Defaults to \code{3}.
+  }
   \item{Em}{
-integer, loop length exponential constant used for the PQSfinder adaptation calculations. The factory-fresh default is \code{1}.
-}
+    \code{integer}. Loop length exponential constant for PQSfinder calculations. Defaults to \code{1}.
+  }
   \item{Ts}{
-integer, tetrad supplement constant used for the PQSfinder adaptation calculations. The factory-fresh default is \code{4}.
-}
+    \code{integer}. Tetrad supplement constant for PQSfinder calculations. Defaults to \code{4}.
+  }
   \item{Et}{
-integer, inter-Loop supplement constant used for the PQSfinder adaptation calculations. The factory-fresh default is \code{-19}.
-}
+    \code{integer}. Inter-Loop supplement constant for PQSfinder calculations. Defaults to \code{-19}.
+  }
   \item{Is}{
-integer, loop supplement constant used for the PQSfinder adaptation calculations. The factory-fresh default is \code{-16}.
-}
+    \code{integer}. Loop supplement constant for PQSfinder calculations. Defaults to \code{-16}.
+  }
   \item{Ei}{
-integer, tetrad exponential constant used for the PQSfinder adaptation calculations. The factory-fresh default is \code{1}.
-}
+    \code{integer}. Tetrad exponential constant for PQSfinder calculations. Defaults to \code{1}.
+  }
   \item{Ls}{
-integer, inter-Loop exponential constant used for the PQSfinder adaptation calculations. The factory-fresh default is \code{1}.
-}
+    \code{integer}. Inter-Loop exponential constant for PQSfinder calculations. Defaults to \code{1}.
+  }
   \item{ET}{
-integer, total formula exponential constant used for the PQSfinder adaptation calculations. The factory-fresh default is \code{1}.
-}
-  \item{KnownQuadruplex}{
-logical, controls if G4iM Grinder should compare the results with a list of known sequences that have already been demonstrated to form in vitro. Only for \code{RunComposition = "G"} or \code{RunComposition = "C"}. The factory-fresh default is \code{TRUE}.
-}
-  \item{KnownNOTQuadruplex}{
-logical, controls if G4iM Grinder should compare the results with a list of known sequences that have already been demonstrated to NOT form in vitro. Only for \code{RunComposition = "G"} or \code{RunComposition = "C"}. The factory-fresh default is \code{FALSE}.
-}
+    \code{integer}. Total formula exponential constant for PQSfinder calculations. Defaults to \code{1}.
+  }
+  \item{WeightParameters}{
+    \code{numeric} vector of length 3. Weights for combining \code{G4hunter}, \code{PQSfinder}, and \code{cGcC} scores (in that order). Defaults to \code{c(0.5, 0.5, 0)}, producing an average of the first two.
+  }
   \item{FreqWeight}{
-integer, an arbitrary constant to which calculate the importance of the structure frequency. Useful only for M2B and M3B, were frequency of the structures are calculated and a new score is computed considering structure frequency.The factory-fresh default is \code{0}.
-}
+    \code{numeric}. Weight factor for incorporating structure frequency in the final score (relevant to M2B and M3B). Defaults to \code{0}.
+  }
+  \item{KnownQuadruplex}{
+    \code{logical}. If \code{TRUE}, matches results against known sequences that have been shown to form G-quadruplex or i-Motif in vitro. Defaults to \code{TRUE}.
+  }
+  \item{KnownNOTQuadruplex}{
+    \code{logical}. If \code{TRUE}, matches results against known sequences shown \emph{not} to form quadruplexes. Defaults to \code{FALSE}.
+  }
   \item{RunFormula}{
-logical, should the formula of the PQS be calculated. The factory-fresh default is \code{FALSE}.
-}
+    \code{logical}. If \code{TRUE}, calculates and reports a symbolic formula for each detected PQS. Defaults to \code{FALSE}.
+  }
   \item{NCores}{
-integer, number of Cores to cede to the function for parallel computation. The factory-fresh default is \code{1}
-}
+    \code{integer}. Number of cores to use for parallel processing. Defaults to \code{1}.
+  }
   \item{Verborrea}{
-logical, allow the function to update the user with its progress. The factory-fresh default is \code{TRUE}
+    \code{logical}. If \code{TRUE}, prints verbose messages about progress. Defaults to \code{TRUE}.
+  }
 }
-}
-
 \details{
-%%  ~~ If necessary, more details than the description above ~~
 }
 \value{
-The result of G4iM Grinder is a \code{List}
-\item{Configuration}{A \code{data.frame} with the variables and configuration used by G4iM Grinder.}
-\item{FunTime}{A \code{data.frame} with the time taken by each part of G4iM Grinder.}
-\item{PQSM2a}{A \code{data.frame} with the results found using M2A (method 2a). Only if \code{Method2 == TRUE}.}
-\item{PQSM2b}{A \code{data.frame} with the results found using M2B considering frequency (method 2b). Only if \code{Method2 == TRUE}.}
-\item{PQSM3a}{A \code{data.frame} with the results found using M3A (method 3a).  Only if \code{Method3 == TRUE}.}
-\item{PQSM3b}{A \code{data.frame} with the results found using M3B considering frequency (method 3b).  Only if \code{Method3 == TRUE}.}
+A \code{list} containing:
+\item{Configuration}{A \code{data.frame} of the parameters used in the run.}
+\item{FunTime}{A \code{data.frame} with timing information for each step.}
+\item{PQSM2a}{A \code{data.frame} of the M2A (size-defined) results, if \code{Method2 = TRUE}.}
+\item{PQSM2b}{A \code{data.frame} of the M2B (frequency-weighted) results, if \code{Method2 = TRUE}.}
+\item{PQSM3a}{A \code{data.frame} of the M3A (unrestricted-size) results, if \code{Method3 = TRUE}.}
+\item{PQSM3b}{A \code{data.frame} of the M3B (frequency-weighted) results, if \code{Method3 = TRUE}.}
 }
-
 \section{Column Meanings}{
-
-\emph{Start}{: integer, start position of the sequence in the genome. Only for M2A and M3A.}
-
-\emph{Finish}{: integer, end position of the sequence in the genome. Only for M2A and M3A.}
-
-\emph{Freq}{: integer, sequence frequency of appearance in the genome. Only for M2B and M3B.}
-
-\emph{Runs}{: integer, number of runs (G-runs for PQS, C-runs for PiQS) in the sequence.}
-
-\emph{IL}{: integer, number of bulges in the sequence.}
-
-\emph{mRun}{: numeric, average run size.}
-
-\emph{Sequence}{: character, sequence nucleotide arrangement.}
-
-\emph{Length}{: integer, size in nucleotides of the sequence.}
-
-\emph{Strand}{: character, strand position of the sequence. "+" is the original and "-" is the complementary strand. Only if Complementary = TRUE.}
-
-\emph{G4Hunter}{: numeric, sequence score by G4Hunter. Only if G4Hunter = TRUE.}
-
-\emph{pqsfinder}{: numeric, sequence score by GiG's PQSfinder. Only if pqsfinder = TRUE.}
-
-\emph{cGcC}{: numeric, sequence score by GiG's cGcC. Only if cGcC = TRUE.}
-
-\emph{Score}{: numeric, sequence score combining all selected scores and sequence frequency.}
-
-\emph{Conf.Quad.Seqs}{: character, name and times found (in parenthesis) of known-to-form quadruplexes in the sequence. DNA Known-to-form structures have asterisk (*) after the number of times detected. RNA known-to-form structures have a circumflex (^) after the times detected. Only if KnownQuadruplex = TRUE.}
-
-\emph{Conf.NOT.Quad.Seqs}{: character, name and times found (in parenthesis) of known-NOT-to-form quadruplexes in the sequence. DNA Known-NOT-to-form structures have asterisk (*) after the number of times detected. RNA known-NOT-to-form structures have a circumflex (^) after the times detected.Only if KnownNOTQuadruplex = TRUE.}
+  \describe{
+    \item{\emph{Start}}{Integer. Start position in \code{Sequence} (for M2A/M3A).}
+    \item{\emph{Finish}}{Integer. End position in \code{Sequence} (for M2A/M3A).}
+    \item{\emph{Freq}}{Integer. Frequency of occurrence (for M2B/M3B).}
+    \item{\emph{Runs}}{Integer. Number of runs (e.g., G-runs in G-quadruplex).}
+    \item{\emph{IL}}{Integer. Number of bulges or irregularities.}
+    \item{\emph{mRun}}{Numeric. Average run size.}
+    \item{\emph{Sequence}}{Character. The identified motif sequence.}
+    \item{\emph{Length}}{Integer. Total length of the identified structure.}
+    \item{\emph{Strand}}{Character. Indicates “+” (original) or “–” (complementary) strand, if \code{Complementary = TRUE}.}
+    \item{\emph{G4Hunter}}{Numeric. Score assigned by the G4Hunter algorithm (if \code{G4hunter = TRUE}).}
+    \item{\emph{pqsfinder}}{Numeric. Score from the PQSfinder adaptation (if \code{PQSfinder = TRUE}).}
+    \item{\emph{cGcC}}{Numeric. Score from the cGcC algorithm (if \code{cGcC = TRUE}).}
+    \item{\emph{Score}}{Numeric. Combined overall score, integrating all selected scoring methods plus frequency weighting.}
+    \item{\emph{Conf.Quad.Seqs}}{Character. Known quadruplex-forming sequences detected, with counts. DNA hits have “*” after the count; RNA hits have “^”.}
+    \item{\emph{Conf.NOT.Quad.Seqs}}{Character. Known non-quadruplex sequences detected, with counts. DNA hits have “*” after the count; RNA hits have “^”.}
+  }
 }
-
 \examples{
   library(G4iMGrinder)
 
-  #Retrieving a Sequence
-  {if(!require("seqinr")){install.packages("seqinr")}}
+  # Example: retrieve a DNA sequence and run basic G4 search
+  if (!require("seqinr")) {
+    install.packages("seqinr")
+    library(seqinr)
+  }
+
   Name <- "LmajorESTs"
-  Sequence <-
-    paste0(read.fasta(file = url("http://tritrypdb.org/common/downloads/release-36/Lmajor/fasta/TriTrypDB-36_Lmajor_ESTs.fasta"),
-                      as.string = TRUE, legacy.mode = TRUE, seqonly = TRUE, strip.desc = TRUE, seqtype = "DNA" ), collapse = "")
+  Sequence <- paste0(
+    read.fasta(
+      file = url("http://tritrypdb.org/common/downloads/release-36/Lmajor/fasta/TriTrypDB-36_Lmajor_ESTs.fasta"),
+      as.string = TRUE, legacy.mode = TRUE, seqonly = TRUE,
+      strip.desc = TRUE, seqtype = "DNA"
+    ),
+    collapse = ""
+  )
 
-  #For G-quadruplex search in DNA.
-  Rs <- G4iMGrinder(Name = Name, Sequence = Sequence)
+  # G-quadruplex search on DNA
+  resultDNA <- G4iMGrinder(Name = Name, Sequence = Sequence)
 
-  #For G-quadruplex search in RNA.
-  Rs <- G4iMGrinder(Name = Name, Sequence = Sequence, DNA = FALSE, cGcC = TRUE)
+  # G-quadruplex search on RNA (with cGcC scoring)
+  resultRNA <- G4iMGrinder(Name = Name, Sequence = Sequence, DNA = FALSE, cGcC = TRUE)
 
-  #For i-Motifs search in DNA.
-  Rs <- G4iMGrinder(Name = Name, Sequence = Sequence, RunComposition == "C")
+  # i-Motif search in DNA
+  resultIMotif <- G4iMGrinder(Name = Name, Sequence = Sequence, RunComposition = "C")
 
-  #For flexible G-quadruplex search in DNA.
-  Rs <- G4iMGrinder(Name = Name, Sequence = Sequence, BulgeSize = 2, MaxLoopSize = 20, MaxIL = 10)
+  # Customized search with bulge allowance and larger loop sizes ## More bulges and smaller G-runs (GG) increases significantly computation time
+  resultCustom <- G4iMGrinder(
+    Name = Name,
+    Sequence = Sequence,
+    BulgeSize = 2,
+    MaxLoopSize = 20,
+    MaxIL = 10
+  )
 
-  #Visualization of Results
-  View(Rs$PQSM2a)  # To view M2A (Method2a) results. Size dependent structures with overlapping.
-  View(Rs$PQSM2b)  # To view M2B (Method2b) results. Method2 with frequency considerations.
-  View(Rs$PQSM3a)  # To view M3A (Method3a) results. Size independent structures without overlapping.
-  View(Rs$PQSM3b)  # To view M3B (Method3b) results. Method3 with frequency considerations.
+  # Viewing results
+  View(resultDNA$PQSM2a)  # M2A results
+  View(resultDNA$PQSM2b)  # M2B results (with frequency weighting)
+  View(resultDNA$PQSM3a)  # M3A results (unrestricted-size search)
+  View(resultDNA$PQSM3b)  # M3B results (unrestricted-size with frequency weighting)
 }
-
-\keyword{ datagen }
-\keyword{ utilities }
+\keyword{datagen}
+\keyword{utilities}

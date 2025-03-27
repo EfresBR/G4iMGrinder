@@ -1,99 +1,106 @@
 \name{GiGList.Analysis}
 \alias{GiGList.Analysis}
 \title{
-Summary generator for a G4-iM Grinder resulting list (GiGList)
+Summary generator for a G4-iM Grinder result list (GiGList)
 }
 \description{
-To summarize the results of a GiGList into a single row. Allows easier comparison between genomes.
+\code{GiGList.Analysis} produces a one-row summary of the results from a \code{G4iMGrinder} output list (referred to as a “GiGList”). It aggregates counts/densities of putative quadruplex or i-Motif structures, applying optional filters on minimum score, frequency, and structure length. The resulting summary facilitates high-level comparisons across different genomes or experimental conditions.
 }
 \usage{
-GiGList.Analysis(GiGList, iden, ScoreMin = c(20, 40), FreqMin = 10, LengthMin = 50, Density = 100000, byDensity = TRUE)
+GiGList.Analysis(
+  GiGList,
+  iden,
+  ScoreMin = c(20, 40),
+  FreqMin = 10,
+  LengthMin = 50,
+  Density = 100000,
+  byDensity = TRUE
+)
 }
-%- maybe also 'usage' for other objects documented here.
 \arguments{
   \item{GiGList}{
-List, G4iMGrinder results in the form of a GiGList to analyse.
-}
+    \code{list}. A \code{G4iMGrinder} result list, typically named \emph{GiGList}, to be analyzed or summarized.
+  }
   \item{iden}{
-character, identification tag of the DNA or RNA origin.
-}
+    \code{character}. Identification tag or label for the DNA/RNA source of the \code{GiGList}.
+  }
   \item{ScoreMin}{
-integer or vector of integers, score filter to apply to the results. The function will create a new column for each integer in the vector with the filtrate results that score at least the value. Values are interpreted as absolute; if the search involves i-Motif detection, it will multiply by -1 to adapt to its scoring scale.
-The factory-fresh default is \code{c(20, 40)}, returning the values of sequences that have at least high probability of formation (\code{Scoremin >= 40} for PQS; \code{Scoremin <= -40} for PiMS), and at least medium probability of formation (\code{Scoremin >= 20} for PQS; \code{Scoremin <= -20} for PiMS).
-}
+    \code{integer} or vector of \code{integer} values. One or more minimum score thresholds to filter structures.
+    - For G-quadruplex searches, any structure with a score \code{>= ScoreMin[i]} passes the filter.
+    - For i-Motif searches, the score sign is reversed (multiplied by -1) to be comparable with G-quadruplex thresholds.
+    A separate column is created for each value in \code{ScoreMin}.
+    Defaults to \code{c(20, 40)}, representing “medium” (≥ 20) and “high” (≥ 40) formation probability for G-quadruplexes (or ≤ -20 and ≤ -40 for i-Motifs).
+  }
   \item{FreqMin}{
-  integer or vector of integers, frequency filter to apply to the results. The function will create a new column for each integer in the vector with the filtrate results that have a frequency of appearence in the genome of at least the value/s. The factory-fresh default is \code{10}, returning the results detected with \code{Freqmin >= 10}.
-}
+    \code{integer} or vector of \code{integer} values. One or more minimum frequency thresholds to filter structures based on how often they appear in the genome.
+    A separate column is created for each threshold in \code{FreqMin}.
+    Defaults to \code{10}, i.e., returning results with \code{frequency >= 10}.
+  }
   \item{LengthMin}{
-integer or vector of integers, length filter to apply to the results. The function will create a new column for each integer in the vector with the filtrate results that have a frequency of appearence in the genome of at least the value/s. Only for Method 3 results (M3a and M3b). The factory-fresh default is \code{50}, returning the results detected with \code{Lengthmin >= 50}.
-}
-\item{Density}{
-integer, constant to calculate density results. The factory-fresh default is \code{100000}, returning results found per 100000 nucleotides. Only pertinent if \code{byDensity = TRUE}.
-}
+    \code{integer} or vector of \code{integer} values. One or more minimum length thresholds, applied only to results from Method 3 (M3a/M3b).
+    A separate column is created for each threshold in \code{LengthMin}.
+    Defaults to \code{50}, i.e., returning \code{length >= 50}.
+  }
+  \item{Density}{
+    \code{integer}. Scaling factor for returning densities rather than raw counts. Defaults to \code{100000} (results per 100,000 nucleotides if \code{byDensity = TRUE}).
+  }
   \item{byDensity}{
-logical, should the results be returned as a density. Calculated as Result.Density = (Density*Results)/(total genomic length). If set to \code{FALSE}, it will return counts. Density allows genomic size-indepedent comparisons. The factory-fresh default is \code{TRUE}.
-}}
+    \code{logical}. If \code{TRUE}, the function reports densities, computed as \code{(Density * count) / genomeLength}. If \code{FALSE}, raw counts are returned instead. Defaults to \code{TRUE}.
+  }
+}
 \details{
-%%  ~~ If necessary, more details than the description above ~~
+Filters on score, frequency, and length can be applied simultaneously, producing separate result columns for each filter. Known quadruplex-forming or known NOT-to-form-quadruplex sequences (if included in the \code{GiGList}) are also reported. Additionally, columns indicating the percentage of “unique” structures (frequency = 1) are computed as a measure of overall structural redundancy.
 }
 \references{
-%% ~put references to the literature/web site here ~
+Belmonte-Reche, E. and Morales, J. C. (2019). G4-iM Grinder: when size and frequency matter. G-Quadruplex, i-Motif and higher order structure search and analysis tool. \emph{NAR Genomics and Bioinformatics}, 2. DOI: 10.1093/nargab/lqz005
+
+\url{https://academic.oup.com/nargab/article/2/1/lqz005/5576141}
 }
 \value{
-The result of GiGList.Analysis is a one row data.frame with the summary of the G4-iM Grinder List.
+A one-row \code{data.frame} summarizing the \code{GiGList}, with potential columns such as:
+\item{Name}{Character, derived from the name assigned to \code{GiGList}.}
+\item{iden}{Character, the \code{iden} input labeling the sequence source.}
+\item{Length}{Integer, total genomic length from the \code{GiGList}.}
+\item{SeqG, SeqC}{Numeric, percentage of G or C in the analyzed sequence(s).}
+\item{nM2a, nM2b, nM3a, nM3b}{Count or density of structures found by Methods 2a, 2b, 3a, or 3b respectively (if those methods were used).}
+\item{...S\{|x|\}, ...F\{|y|\}, ...L\{|z|\}}{Suffixes denoting columns filtered by score (\code{x}), frequency (\code{y}), or length (\code{z}).}
+\item{...KTFQ, ...KNTFQ}{Suffixes denoting structures that match known-to-form or known-NOT-to-form quadruplex sequences.}
+\item{...UniqPercent}{Columns indicating the percentage of unique structures within each method.}
+\item{Config}{A character column summarizing the configuration of analysis or filter settings.}
 }
-
 \section{Column Meanings}{
-
-\emph{Name}{: name of summary, given by the name of the GiGList input.}
-
-\emph{iden}{: identification of the genome, given by iden input.}
-
-\emph{Length}{: Length of the genomic sequence. }
-
-\emph{SeqG}{: percentage of the genomic sequence which is G.}
-
-\emph{SeqC}{: percentage of the genomic sequence which is C.}
-
-\emph{nM2a}{ (column name prefix): results for Method 2a results if method is active. Returned as counts or density.}
-
-\emph{nM2b}{ (column name prefix): results for Method 2b results if method is active. Returned as counts or density.}
-
-\emph{nM3a}{ (column name prefix): results for Method 3a results if method is active. Returned as counts or density.}
-
-\emph{nM3b}{ (column name prefix): results for Method 3b results if method is active. Returned as counts or density.}
-
-\emph{.S|X|}{ (column name suffix): results for method filtered by score criteria. Within bars, the criteria. Returned as counts or density.}
-
-\emph{.F|X|}{ (column name suffix): results for method filtered by frequency criteria. Within bars, the criteria. Returned as counts or density.}
-
-\emph{.L|X|}{ (column name suffix): results for method filtered by length criteria. Within bars, the criteria. Returned as counts or density.}
-
-\emph{.KTFQ}{ (column name suffix): results for method which have known-to-form-quadruplex within. Returned as counts or density.}
-
-\emph{.KNTFQ}{ (column name suffix): results for method which have known-NOT-to-form-quadruplex within. Returned as counts or density.}
-
-\emph{.UniqPercent}{ (column name suffix): percentage of result uniqueness per method. Calculated as: 100*[Number results with frequency of 1]/[total number of results]}
-
-\emph{Config}{: column with analysis information of summary.}
+  \describe{
+    \item{\emph{Name}}{Name of the G4iMGrinder result list, inherited from \code{GiGList}.}
+    \item{\emph{iden}}{Identification tag, matching \code{iden} argument.}
+    \item{\emph{Length}}{Total length of the sequence(s) as computed by \code{G4iMGrinder}.}
+    \item{\emph{SeqG}, \emph{SeqC}}{Percentages of G and C nucleotides in the genome.}
+    \item{\emph{nM2a}, \emph{nM2b}, \emph{nM3a}, \emph{nM3b}}{Counts or densities of structures detected by each method (2a, 2b, 3a, 3b).}
+    \item{\emph{.S|X|}, \emph{.F|X|}, \emph{.L|X|}}{Suffixes appended for each filter: “S” for score, “F” for frequency, “L” for length. \emph{X} indicates the numeric threshold (e.g., 20, 10, or 50).}
+    \item{\emph{.KTFQ}, \emph{.KNTFQ}}{Columns indicating, for each method, how many structures are known-to-form quadruplexes or known-NOT-to-form quadruplexes (counts or densities).}
+    \item{\emph{.UniqPercent}}{Percentage of unique results (\code{frequency=1}) within each method.}
+    \item{\emph{Config}}{A text string describing the filters and configurations used in the summary.}
+  }
 }
-
 \author{
 Efres Belmonte-Reche
 }
-%% ~Make other sections like Warning with \section{Warning }{....} ~
-\section{Warning }{
-Column names depend on summary conditions and hence the same analysis conditions must be used in order to bind GiG.List analysis together. The analysis with different G4-iM Grinder conditions may also give rise to problems when binding results.
+\section{Warning}{
+Column names depend on the analysis conditions (methods used, filter thresholds, etc.). Combining or binding multiple \code{GiGList.Analysis} summaries requires consistent parameters. Results may not align if different G4iMGrinder settings are used.
 }
 \seealso{
-%% ~~objects to See Also as \code{\link{help}}, ~~~
+\code{\link{G4iMGrinder}} for generating the \code{GiGList}, and other related utilities.
 }
 \examples{
-  # Creating the G4iMGrinder Results for the DNA search of G-quadruplex.
-  Rs <- G4iMGrinder(Name = Name, Sequence = Sequence)
+# Example usage:
 
-  # Creating the summary data.table
-  Summary <- GiGList.Analysis(GiGList = Rs, iden = "Parasite")
+# Suppose 'Rs' is a G4iMGrinder result list (GiGList) for a DNA G-quadruplex search
+Rs <- G4iMGrinder(Name = "TestGenome", Sequence = "ACGT...")
 
+# Summarize with default filters
+Summary <- GiGList.Analysis(
+  GiGList = Rs,
+  iden = "Parasite"
+)
 
+print(Summary)
 }

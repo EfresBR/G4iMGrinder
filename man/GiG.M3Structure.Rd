@@ -1,79 +1,79 @@
 \name{GiG.M3Structure}
 \alias{GiG.M3Structure}
 \title{
-Potential Higher Order Quadruplex Sequence (PHOQS) Arrangement Analyzer for Method 3A (M3A) candidates.
+Potential Higher-Order Quadruplex Sequence (PHOQS) arrangement analyzer for Method 3A (M3A) candidates
 }
 \description{
-  The purpose of this function is to locate the most probable conformation of candidates to form the PHOQS. It uses three different methods.
+\code{GiG.M3Structure} examines a specified PHOQS (Potential Higher-Order Quadruplex Sequence) candidate identified by G4-iM Grinder's Method 3A (M3A). It searches for possible sub-unit conformations (using M2A results) that fit within the PHOQS region, attempting to identify the most probable arrangement of quadruplex sub-units. Three analytical approaches are available:
 
-  HRA Conformation will select the candidate by assigning seats sequentially to the highest scoring sub units with known-to-form sequences within.
-
-  RAH conformation will select the best conformation of candidates by locating within all possible conformations the highest mean scoring structure.
-
-  RAnH conformation will select the best conformation of candidates by locating within all possible conformations the highest normalized mean scoring structure. The mean score of each conformation is multiplied by the percentage of the PHOQS occupied by PQS sub units.
+\itemize{
+  \item \strong{HRA} (Highest Ranking Assembly): sequentially seats the sub-units with the strongest scores, preferring known-to-form sequences.
+  \item \strong{RAH} (Ranking Assembly by Highest Score): explores all possible sub-unit seatings, returning the conformation with the highest overall mean score.
+  \item \strong{RAnH} (Ranking Assembly by Normalized Highest Score): explores all possible sub-unit seatings, returning the conformation with the highest “normalized” mean score (the mean score multiplied by the fraction of the PHOQS region actually occupied by PQS sub-units).
+}
 }
 \usage{
-GiG.M3Structure(GiGList, M3ACandidate, MAXite)
+GiG.M3Structure(
+  GiGList,
+  M3ACandidate,
+  MAXite
+)
 }
-%- maybe also 'usage' for other objects documented here.
 \arguments{
   \item{GiGList}{
-List, G4iMGrinder results in the form of a GiGList.
-}
+    \code{list}. A \code{G4iMGrinder} result list (GiGList) containing M2A and M3A data frames. Typically produced by \code{G4iMGrinder}.
+  }
   \item{M3ACandidate}{
-integer, PHOQS candidate to analyze, given as the row number it occupies in the GiGList$PQSM3a data frame.
-}
+    \code{integer}. The row number in \code{GiGList\$PQSM3a} corresponding to the PHOQS candidate of interest.
+  }
   \item{MAXite}{
-integer, number of iterations to repeat random seat allocation to explore all possible PHOQS arrangements. Longer and with more sub units PHOQS will require more iterations. For HoEBR1, (length: 118, number of potential PQS: 32, max.Seats: 4), 10000 iterations were enough to find all 307 arrangements.
-Random allocation of seats does not contemplate vacant seats.
-}
+    \code{integer}. Number of iterations for the random seat-allocation algorithm. A higher number ensures more exhaustive exploration of potential sub-unit conformations, especially for large PHOQS or those with many candidate sub-units. For instance, 10,000 iterations may be sufficient for a ~100-nt region with ~30 potential sub-units.
+  }
 }
 \details{
-%%  ~~ If necessary, more details than the description above ~~
+By combining the M2A (Method 2A) sub-units with a candidate from M3A (Method 3A), \code{GiG.M3Structure} locates all conformations that could explain how multiple quadruplex sub-units (PQS) might form a single higher-order structure. The iterative random approach attempts various ways of “seating” sub-units within the PHOQS, then records the best conformations under each scoring approach (HRA, RAH, and RAnH).
+
+Ensure \code{MAXite} is large enough to sample all or most conformations in the PHOQS region; otherwise, some arrangements may be missed.
 }
 \references{
-%% ~put references to the literature/web site here ~
+Belmonte-Reche, E. and Morales, J.C. (2019). G4-iM Grinder: when size and frequency matter. G-Quadruplex, i-Motif and higher order structure search and analysis tool. \emph{NAR Genomics and Bioinformatics}, 2. \doi{10.1093/nargab/lqz005}.
+
+\url{https://academic.oup.com/nargab/article/2/1/lqz005/5576141}
 }
 \author{
 Efres Belmonte-Reche
 }
-
 \value{
-  The result of GiG.M3Structure is a list with the analysis of the selected PHOQS.
-
-  \item{M2}{data.frame, stores the found potential sub units (located with M2A) in the location of the desired PHOQS (M3A). An error will be given if no sub units were found.}
-
-  \item{M3}{data.frame, stores the desired PHOQS to analyze. Only 1 row is accepted.}
-
-  \item{Potential.Arrangements}{data.frame, stores all the sub unit potential conformations that can give rise to the PHOQS. These depend on number of iterations of random seat allocation given by \code{MAXite}. Please make sure all conformations are found - See \code{MAXite}.
-  }
-
-  \item{Best.Arrangements}{list, stores the best PHOQS conformations for the three analysis, HSA conformation, RAH conformation and RAnH conformation.
+A \code{list} describing the analysis of the selected PHOQS candidate:
+\item{M2}{A \code{data.frame} of the potential sub-units (\code{M2A} results) located within the PHOQS region. An error is returned if no sub-units match the target region.}
+\item{M3}{A \code{data.frame} containing one row from \code{GiGList\$PQSM3a}, representing the selected PHOQS candidate.}
+\item{Potential.Arrangements}{A \code{data.frame} enumerating all discovered sub-unit conformations (arrangements) compatible with the PHOQS, found via random seat allocation repeated \code{MAXite} times.}
+\item{Best.Arrangements}{A \code{list} containing up to three entries—\code{HRA}, \code{RAH}, and \code{RAnH}—each storing the best conformation(s) discovered for the given PHOQS, depending on the selected scoring method.}
 }
-}
-
-
 \section{Column Meanings}{
-
-\emph{RES}{: reference, of sub units (by row name) in the original GiGList$PQSM2A data frame.}
-
-\emph{nPQS}{: integer, number of sub units that forms that configuration.}
-
-\emph{MeanScore}{: numeric, mean score of the sub units that forms that configuration.}
-
-\emph{PQSLenghPercent}{: numeric, percentage of the PHOQS that is involved as the sub units of that configuration.}
-
-\emph{idenPQS}{: reference, of sub units (by row name) that form that configuration in the M2 data frame.}
-
-\emph{nMS}{: numeric, normalized mean score of the sub units that forms that configuration taking into account the length of the PHOQS that is involved as the sub units.}
+  \describe{
+    \item{\emph{RES}}{Reference for sub-units (by row name) from \code{GiGList\$PQSM2A} used in the arrangement.}
+    \item{\emph{nPQS}}{Integer. Number of sub-units forming a particular conformation.}
+    \item{\emph{MeanScore}}{Numeric. Mean of the sub-unit scores for that conformation.}
+    \item{\emph{PQSLenghPercent}}{Numeric. Percentage of the PHOQS region occupied by the sub-units.}
+    \item{\emph{idenPQS}}{Reference for sub-units in the \code{M2} data frame that form the conformation.}
+    \item{\emph{nMS}}{Numeric. The “normalized mean score” = \code{MeanScore} * (\code{PQSLenghPercent}/100). Higher values indicate a high average sub-unit score and a larger fraction of the PHOQS occupied by them.}
+  }
 }
-
 \examples{
+# Example usage:
 
-# Creating the G4iMGrinder Results for the DNA search of G-quadruplex.
-  Rs <- G4iMGrinder(Name = Name, Sequence = Sequence)
+# 1. Running G4iMGrinder on a DNA sequence
+Rs <- G4iMGrinder(Name = "ExampleSeq", Sequence = "ACGT...")
 
-# Analyzing the first PHOQS found with with G4-iM Grinder
-  firstPHOQS2analyze <- GiG.M3Structure(Namedf = "Rs", M3Candidate = 1, MAXite = 10000)
+# 2. Analyzing the first PHOQS in the M3A results (row 1 of Rs$PQSM3a),
+#    performing 10,000 seat-allocation iterations
+firstPHOQS <- GiG.M3Structure(
+  GiGList = Rs,
+  M3ACandidate = 1,
+  MAXite = 10000
+)
 
+# Check the best arrangements found under HRA, RAH, and RAnH
+print(firstPHOQS$Best.Arrangements)
 }

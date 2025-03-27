@@ -3,9 +3,9 @@
 ##########################################################################
 #################            G4-iM Grinder         #######################
 ##########################################################################
-####    Efres Belmonte Reche            efresbr@gmail.com             ####
-####    Latest                          2020-02-XX                    ####
-####    Version                         1.6.1                         ####
+####    Efres Belmonte Reche            G4iMGrinder@outlook.com       ####
+####    Latest                          2025-03-XX                    ####
+####    Version                         1.6.5                         ####
 ##########################################################################
 ##########################################################################
 ####
@@ -17,8 +17,14 @@
 ####
 ####  Log
 ####
-######### Potential BUG when analysing with GiG.Analysis a sequence after update function. (??)
 #########
+#########
+####
+#### V1.6.5
+####  - Fixed bug in  GiG.Analysis. Modified how it looks for runs so the search is non-overlapping. (recheck!)
+####  - Removed Updater and genomic features. Need update.
+####  - Updated documentation with chat-gtp so its clearer.
+####  - Upgraded DDBB with around 400 new seqs.
 #### V1.6.1
 ####  - Changed how Genomic Features works. Removed dependency on downloading the GFF file from NCBI. You can insert GFF file directly. Smoother and better performance.
 ####  V1.6.0
@@ -819,7 +825,8 @@ GiG.M3Structure <- function(GiGList,
   names(Ending) <- c("M2", "M3", "Potential.Arrangements", "Best.Arrangements")
   return(Ending)
 }
-########
+if(F){
+######## Need update
 ################################################################################
 #########  GiGList.Updater: Updater function for an existant G4-iM Grinder Result
 ################################################################################
@@ -968,16 +975,18 @@ GiGList.Updater <- function(GiGList,
   return(GiGList)
 }
 ########
+}
 ################################################################################
 #########  GiG.Seq.Analysis: Sequence analysis for C and G runs
+#########  Modified 19032025 !! Had bug in G2X and G3X calculus
 ################################################################################
 ########
 GiG.Seq.Analysis <- function(Name,
                              Sequence,
                              DNA = TRUE ,
                              Complementary = TRUE,
-                             Nucleotides = c("G", "C"),
-                             BulgeSize = 1,
+                             # Nucleotides = c("G", "C"),
+                             # BulgeSize = 1,
                              Density = 100000,
                              byDensity = TRUE){
 
@@ -985,6 +994,7 @@ GiG.Seq.Analysis <- function(Name,
 
   require(stringr)
   require(G4iMGrinder)
+  require(dplyr)
 
   G4iMGrinder:::.PackageLoading()
 
@@ -1010,36 +1020,40 @@ GiG.Seq.Analysis <- function(Name,
   colnames(df)[colnames(df) %in% "C"] <- c("C%seq")
   colnames(df)[colnames(df) %in% "N"] <- c("N%seq")
 
-  df$Sequence <-ifelse(DNA == TRUE,
-                       yes = stringr::str_replace_all(string = df$Sequence, pattern = "U", replacement = "T"),
-                       no = df$Sequence)
-
   FAC <- ifelse(byDensity == TRUE, yes = Density/df$Length, no = 1)
 
-  if("G" %in% Nucleotides){
-    df$G2 <- FAC*nrow(G4iMGrinder:::.M1A(RunComposition = "G", MaxRunSize = 5, MinRunSize = 2, BulgeSize = 0, Sequence = df$Sequence))
-    if(BulgeSize >0){
-        df$G2X <- FAC*nrow(G4iMGrinder:::.M1A(RunComposition = "G", MaxRunSize = 5, MinRunSize = 2, BulgeSize = BulgeSize, Sequence = df$Sequence))
+    orderme <- data.frame(feature = c("GGGG",
+                                     "GGG",
+                                     "GAGG", "GCGG", "GUGG",
+                                     "GGAG", "GGCG", "GGUG",
+                                     "GG",
+                                     "GAG", "GCG", "GUG",
+                                     "CCCC",
+                                     "CCC",
+                                     "CACC", "CGCC", "CUCC",
+                                     "CCAC", "CCGC", "CCUC",
+                                     "CC",
+                                     "CAC", "CGC", "CUC"
+                                     )) %>%
+      dplyr::mutate(nchara = nchar(feature), name = c("G4", "G3", rep("G3H", 6), "G2", rep("G2H", 3),
+                                                      "C4", "C3", rep("C3D", 6), "C2", rep("C2D", 3)),
+                                                      n = 0)
+
+    for(i in 1:nrow(orderme)){
+      if(orderme$name[i] %in% c("G4", "C4")){df$Seq2 <- df$Sequence}
+      orderme$n[i] <- FAC*str_count(df$Seq2, orderme$feature[i] )
+      df$Seq2 <- str_replace_all(df$Seq2, orderme$feature[i], paste0(collapse = "",  rep("*", orderme$nchara[i])))
     }
-    df$G3 <- FAC*nrow(G4iMGrinder:::.M1A(RunComposition = "G", MaxRunSize = 5, MinRunSize = 3, BulgeSize = 0, Sequence = df$Sequence))
-    if(BulgeSize >0){
-    df$G3X <- FAC*nrow(G4iMGrinder:::.M1A(RunComposition = "G", MaxRunSize = 5, MinRunSize = 3, BulgeSize = BulgeSize, Sequence = df$Sequence))
-    }
-  }
-  if("C" %in% Nucleotides){
-    df$C2 <- FAC*nrow(G4iMGrinder:::.M1A(RunComposition = "C", MaxRunSize = 5, MinRunSize = 2, BulgeSize = 0, Sequence = df$Sequence))
-    if(BulgeSize >0){
-      df$C2X <- FAC*nrow(G4iMGrinder:::.M1A(RunComposition = "C", MaxRunSize = 5, MinRunSize = 2, BulgeSize = BulgeSize, Sequence = df$Sequence))
-    }
-    df$C3 <- FAC*nrow(G4iMGrinder:::.M1A(RunComposition = "C", MaxRunSize = 5, MinRunSize = 3, BulgeSize = 0, Sequence = df$Sequence))
-    if(BulgeSize >0){
-      df$C3X <- FAC*nrow(G4iMGrinder:::.M1A(RunComposition = "C", MaxRunSize = 5, MinRunSize = 3, BulgeSize = BulgeSize, Sequence = df$Sequence))
-    }
-  }
-  df$Sequence <- NULL
+    df$Seq2 <- NULL
+    orderme <- orderme %>% dplyr::group_by(name) %>% dplyr::summarise(n = sum(n))
+    orderme2 <- t(as.matrix(orderme$n)) %>% as.data.frame()
+    colnames(orderme2) <- orderme$name
+    orderme2 <- orderme2[,c("G2H", "G2", "G3H", "G3",  "G4", "C2D", "C2", "C3D", "C3", "C4")]
+    df <- cbind(df %>% dplyr::select(-Sequence), orderme2)
   return(df)
 }
-########
+if(F){
+######## Needs updating       03/2025
 ################################################################################
 #########  GiG.df.GenomicFeatures: Analysis of genomic features of a genome given a gff
 ################################################################################
@@ -1191,3 +1205,4 @@ return(df)
 }
 ########
 ########
+}

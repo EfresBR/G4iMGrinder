@@ -1,110 +1,112 @@
 \name{GiG.Seq.Analysis}
 \alias{GiG.Seq.Analysis}
-%- Also NEED an '\alias' for EACH other topic documented here.
 \title{
-Genomic sequence nucleotidic run analyser.
+Genomic sequence nucleotide run analyzer
 }
 \description{
-A function to analyse a genomic sequence in relationship with its nucleotidic composition and organisation, concretely regarding the G and C-runs within.
+\code{GiG.Seq.Analysis} examines a DNA or RNA sequence (and optionally its complementary strand) to identify and count runs of Guanines and Cytosines (G and C). It detects both perfect runs (e.g., GGGG) and imperfect runs (with bulges) of sizes ranging from 2 (e.g., GG; G-run of size 2) to 4 (e.g.,GGGG), in an non-overlapping way. The function can return raw counts or densities (per a specified length, e.g., per 100,000 nucleotides) for direct comparisons across sequences of different lengths. G and C runs are searched independently.
 }
 \usage{
-GiG.Seq.Analysis(Name, Sequence, DNA = TRUE, Complementary = TRUE, Nucleotides = c("G", "C"), BulgeSize = 1, Density = 1e+05, byDensity = TRUE)
+GiG.Seq.Analysis(
+  Name,
+  Sequence,
+  DNA = TRUE,
+  Complementary = TRUE,
+  Density = 1e+05,
+  byDensity = TRUE
+)
 }
-%- maybe also 'usage' for other objects documented here.
 \arguments{
   \item{Name}{
-character, name of the DNA or RNA sequence to analyse.
-}
+    \code{character}. Name or identifier of the DNA/RNA sequence to analyze.
+  }
   \item{Sequence}{
-character, DNA or RNA sequence to analyse composed of the nucleotide arrangement.
-}
+    \code{character}. The nucleotide sequence to analyze (A, C, G, T, U, or N).
+  }
   \item{DNA}{
-logical, controls if the sequence is DNA or RNA. The factory-fresh default is \code{TRUE} assuming the sequence is DNA.
-}
+    \code{logical}. Indicates whether \code{Sequence} is DNA (\code{TRUE}) or RNA (\code{FALSE}). Defaults to \code{TRUE}.
+  }
   \item{Complementary}{
-logical, controls if the Complementary strand should be created and analyzed. The factory-fresh default is \code{TRUE}.
-}
-  \item{Nucleotides}{
-character or vector of characters, nucleotide that composes the runs to analyse. The factory-fresh default is \code{c("G", "C")} to analyse both G and C-runs. Any other nucleotide (or letter) can be imputed but will be ignored.
-}
-  \item{BulgeSize}{
-integer, number of acceptable non-run nucleotides to exist within runs. The factory-fresh default is \code{1}.
-}
+    \code{logical}. If \code{TRUE}, the complementary strand is created and analyzed alongside the original strand. Defaults to \code{TRUE}.
+  }
   \item{Density}{
-integer, constant to calculate density results. The factory-fresh default is \code{100000}, returning results found per 100000 nucleotides. Only pertinent if \code{byDensity = TRUE}.
-}
+    \code{integer}. The scaling factor for returning densities rather than raw counts. Defaults to \code{100000}, so results are reported per 100,000 nucleotides if \code{byDensity = TRUE}.
+  }
   \item{byDensity}{
-logical, should the results be returned as a density. Calculated as Result.Density = (Density*Results)/(total genomic length). If set to \code{FALSE}, it will return counts. Density allows genomic size-indepedent comparisons. The factory-fresh default is \code{TRUE}.
-}
+    \code{logical}. If \code{TRUE}, results are returned as densities, i.e., \code{(Density * runCounts) / sequenceLength}. If \code{FALSE}, raw run counts are returned. Defaults to \code{TRUE}.
+  }
 }
 \details{
-%%  ~~ If necessary, more details than the description above ~~
+By default, this function specifically looks for runs of “G” and “C,” counting perfect runs (e.g., G2, G3, G4) and imperfect runs. Runs are analyzed in a sequential, non-overlapping manner. For example, a run of “GGGG” is counted only as G4, not as G4 plus any subset runs like G2 or G3.
 }
 \value{
-The result of GiG.Seq.Analysis is a one row data.frame with the summary of the genomic sequence.
+A one-row \code{data.frame} summarizing the run analysis:
 }
 \section{Column Meanings}{
-\emph{Name}{: name of summary, given by the Name input.}
-
-\emph{DNA}{: genome type, given by DNA input. If \code{DNA == TRUE}, the genome is DNA, else it is assumed to be RNA.}
-
-\emph{Length}{: Length of the genomic sequence.}
-
-\emph{Complementary}{: genome type, given by Complementary input. If \code{Complementary == TRUE}, the genome is double stranded, and both strands have been analysed.}
-
-\emph{G\%seq}{: percentage of the genomic sequence which is G.}
-
-\emph{C\%seq}{: percentage of the genomic sequence which is C.}
-
-\emph{A\%seq}{: percentage of the genomic sequence which is A.}
-
-\emph{UT\%seq}{: percentage of the genomic sequence which is U or T.}
-
-\emph{N\%seq}{: percentage of the genomic sequence which is N.}
-
-\emph{G2}{: Number of **perfect** G-runs identified with lengths betwen 2 and 5 using method 1 of G4-iM Grinder's algorithm, (GG, GGG, GGGG and GGGGG). Returned as counts or density. }
-
-\emph{G3}{: Number of **perfect** G-runs identified with lengths betwen 3 and 5 using method 1 of G4-iM Grinder's algorithm, (GGG, GGGG and GGGGG). Returned as counts or density. }
-
-\emph{G2X}{: Number of **perfect and imperfect** G-runs identified with lengths betwen 2 and 5 (excluding the bulges) using method 1 of G4-iM Grinder's algorithm. Returned as counts or density.}
-
-\emph{G3X}{: Number of **perfect and imperfect** G-runs identified with lengths betwen 3 and 5 (excluding the bulges) using method 1 of G4-iM Grinder's algorithm. Returned as counts or density.}
-
-\emph{C2}{: Number of **perfect** C-runs identified with lengths betwen 2 and 5 using method 1 of G4-iM Grinder's algorithm. (CC, CCC, CCCC and CCCCC). Returned as counts or density. }
-
-\emph{C3}{: Number of **perfect** C-runs identified with lengths betwen 3 and 5 using method 1 of G4-iM Grinder's algorithm. (CCC, CCCC and CCCCC). Returned as counts or density. }
-
-\emph{C2X}{: Number of **perfect and imperfect** C-runs identified with lengths betwen 2 and 5 (excluding the bulges) using method 1 of G4-iM Grinder's algorithm. Returned as counts or density.}
-
-\emph{C3X}{: Number of **perfect and imperfect** C-runs identified with lengths betwen 3 and 5 (excluding the bulges) using method 1 of G4-iM Grinder's algorithm. Returned as counts or density.}
+  \describe{
+    \item{\emph{Name}}{Identifier for the analyzed sequence, matching the \code{Name} argument.}
+    \item{\emph{DNA}}{Logical: \code{TRUE} if the sequence was treated as DNA; \code{FALSE} if RNA.}
+    \item{\emph{Length}}{Total length of \code{Sequence}.}
+    \item{\emph{Complementary}}{\code{TRUE} if the complementary strand was analyzed as well, otherwise \code{FALSE}.}
+    \item{\emph{G\%seq}, \emph{C\%seq}, \emph{A\%seq}, \emph{UT\%seq}, \emph{N\%seq}}{Percentages of each nucleotide type within \code{Sequence}. (U and T are combined under UT\%seq if \code{DNA=FALSE}.)}
+    \item{\emph{G2}, \emph{G3}, \emph{G2X}, \emph{G3X}}{Counts or densities of perfect (\emph{G2}, \emph{G3}) and perfect+imperfect (\emph{G2X}, \emph{G3X}) G-runs of length 2 to 4, according to the method 1 approach in G4-iM Grinder.}
+    \item{\emph{C2}, \emph{C3}, \emph{C2X}, \emph{C3X}}{Counts or densities of perfect (\emph{C2}, \emph{C3}) and perfect+imperfect (\emph{C2X}, \emph{C3X}) C-runs of length 2 to 4, according to the same method 1 approach.}
+  }
 }
 \references{
-%% ~put references to the literature/web site here ~
+Belmonte-Reche, E. and Morales, J. C. (2019). G4-iM Grinder: when size and frequency matter. G-Quadruplex, i-Motif and higher order structure search and analysis tool. \emph{NAR Genomics and Bioinformatics}, 2. DOI: 10.1093/nargab/lqz005
+
+\url{https://academic.oup.com/nargab/article/2/1/lqz005/5576141}
 }
 \author{
 Efres Belmonte-Reche
 }
 \note{
-%%  ~~further notes~~
+Any additional notes or implementation details can be placed here.
 }
-
-%% ~Make other sections like Warning with \section{Warning }{....} ~
-
 \seealso{
-%% ~~objects to See Also as \code{\link{help}}, ~~~
+\code{\link{G4iMGrinder}} for broader G4/i-Motif detection and scoring.
 }
 \examples{
-### Creating random nucleotidic sequence
-Seq <- paste0(sample(c("G", "C", "T", "A", "N"), 10000, prob = c(1,1,0.6,0.6,0.01), replace = T), collapse = "")
+# Creating a random nucleotide sequence of length 10,000
+Seq <- paste0(
+  sample(
+    c("G", "C", "T", "A", "N"),
+    10000,
+    prob = c(1, 1, 0.6, 0.6, 0.01),
+    replace = TRUE
+  ),
+  collapse = ""
+)
 
-### Analysing sequence
-Rs <- GiG.Seq.Analysis(Name = "RandomSeq", Sequence = Seq, DNA = TRUE, Complementary = TRUE, Nucleotides = c("G", "C"), BulgeSize = 1, Density = 1e+05, byDensity = TRUE)
+# Running the analysis with default parameters
+Rs <- GiG.Seq.Analysis(
+  Name = "RandomSeq",
+  Sequence = Seq,
+  DNA = TRUE,
+  Complementary = TRUE,
+  byDensity = TRUE
+)
 
-### Adding another analysis
-Seq <- paste0(sample(c("G", "C", "T", "A", "N"), 10000, prob = c(1,1,0.6,0.6,0.01), replace = T), collapse = "")
-Rs[2,] <- GiG.Seq.Analysis(Name = "RandomSeq2", Sequence = Seq, DNA = TRUE, Complementary = TRUE, Nucleotides = c("G", "C"), BulgeSize = 1, Density = 1e+05, byDensity = TRUE)
+# Analyzing a second sequence and storing results in the same data frame
+Seq2 <- paste0(
+  sample(
+    c("G", "C", "T", "A", "N"),
+    10000,
+    prob = c(1, 1, 0.6, 0.6, 0.01),
+    replace = TRUE
+  ),
+  collapse = ""
+)
+Rs[2, ] <- GiG.Seq.Analysis(
+  Name = "RandomSeq2",
+  Sequence = Seq2,
+  DNA = TRUE,
+  Complementary = TRUE,
+  Density = 1e5,
+  byDensity = TRUE
+)
 
+print(Rs)
 }
-% Add one or more standard keywords, see file 'KEYWORDS' in the
-% R documentation directory.
 
