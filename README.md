@@ -6,7 +6,7 @@ Read the open-access paper on the algorithm:
 [G4-iM Grinder: when size and frequency matter. G-Quadruplex, i-Motif and higher order structure search and analysis tool](https://bit.ly/3j2UUjC)
 
 Read about the application of the algorithm to SARS-CoV-2 and the entire Virus Realm in another open-access paper:  
-[Potential G-quadruplexes and i-Motifs in the SARS-CoV-2](https://bit.ly/GiGOriginalData)
+[Potential G-quadruplexes and i-Motifs in the SARS-CoV-2](https://bit.ly/3pFFNkH)
 
 The results from both manuscripts can be found in the “Results” section below.
 
@@ -137,7 +137,7 @@ A large \`list\` grouping each virus family’s results (PQS, PiMS sub-lists). M
 
 ### **G4-iM Grinder’s Results in Humans and Other Pathogens**
 
-Results for humans and 49 pathogenic species using default G4-iM Grinder parameters (published in [the original article](https://bit.ly/3j2UUjC)) are available via [this link](https://1drv.ms/u/s!AvVGQg2rNIwDgTeth6qclA8Rz5UM?e=gmEI1a).
+Results for humans and 49 pathogenic species using default G4-iM Grinder parameters (published in [the original article](https://bit.ly/3j2UUjC)) are available via [this link](https://bit.ly/GiGOriginalData).
 
 <details>
 <summary>Database & Analysis Notes</summary>
@@ -364,4 +364,5 @@ Rs_iM1 <- G4iMGrinder(
 ---
 
 **Enjoy exploring G-quadruplexes and i-Motifs with G4-iM Grinder!**
+
 
