@@ -6,7 +6,7 @@ Read the open-access paper on the algorithm:
 [G4-iM Grinder: when size and frequency matter. G-Quadruplex, i-Motif and higher order structure search and analysis tool](https://bit.ly/3j2UUjC)
 
 Read about the application of the algorithm to SARS-CoV-2 and the entire Virus Realm in another open-access paper:  
-[Potential G-quadruplexes and i-Motifs in the SARS-CoV-2](https://bit.ly/3pFFNkH)
+[Potential G-quadruplexes and i-Motifs in the SARS-CoV-2](https://bit.ly/GiGOriginalData)
 
 The results from both manuscripts can be found in the “Results” section below.
 
@@ -364,3 +364,4 @@ Rs_iM1 <- G4iMGrinder(
 ---
 
 **Enjoy exploring G-quadruplexes and i-Motifs with G4-iM Grinder!**
+
